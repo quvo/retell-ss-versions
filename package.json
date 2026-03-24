@@ -4,12 +4,18 @@
   "type": "module",
   "description": "PremierMD Document Follow-up Voice Agent - Retell AI API deployment",
   "scripts": {
-    "deploy": "node deploy-agent.js",
-    "serve": "node webhook-server.js",
-    "dev": "node --watch webhook-server.js"
+    "deploy": "tsx src/deploy-agent.ts",
+    "download": "tsx src/download-agent.ts",
+    "build": "tsc",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "express": "^4.21.0",
-    "retell-sdk": "^4.0.0"
+    "dotenv": "^16.4.7",
+    "retell-sdk": "^5.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
   }
 }

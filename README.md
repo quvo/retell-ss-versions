@@ -69,10 +69,17 @@ npm install
 
 ### 2. 環境変数
 
+`.env.example` をコピーして `.env` ファイルを作成し、必要な値を設定:
+
 ```bash
-export RETELL_API_KEY="your_retell_api_key"
-export WEBHOOK_URL="https://your-server.com/webhooks/retell"
-export TRANSFER_NUMBER="+12125551234"    # 緊急時の転送先
+cp .env.example .env
+```
+
+`.env`:
+```
+RETELL_API_KEY=your_retell_api_key
+WEBHOOK_URL=https://your-server.com/webhooks/retell
+TRANSFER_NUMBER=+12125551234
 ```
 
 ### 3. デプロイ
@@ -91,25 +98,17 @@ Step 2: Creating Voice Agent...
    ✓ Agent name: PremierMD Document Follow-up Agent
 ```
 
-### 4. Webhook サーバー起動
-
-```bash
-npm run serve
-# or
-npm run dev   # ファイル変更で自動再起動
-```
-
-### 5. テスト
+### 4. テスト
 
 1. **Retell Dashboard** → Agents → 作成した Agent を選択
 2. **Web Call Test** で通話テスト
-3. Webhook サーバーのコンソールにデータが流れることを確認
+3. 別途構築した Webhook サーバーにデータが送信されることを確認
 
 ## カスタマイズ
 
 ### Voice の変更
 
-`deploy-agent.js` の `voice_id` を変更:
+`src/deploy-agent.ts` の `voice_id` を変更:
 ```js
 voice_id: "11labs-Dorothy",  // 穏やかな女性音声
 ```
@@ -140,13 +139,14 @@ model_choice: {
 
 ### Dashboard 連携
 
-`webhook-server.js` の `/webhooks/retell` エンドポイント内で、
-実際のデータストアに接続するコードを追加:
+別途構築する Webhook サーバーで、実際のデータストアに接続するコードを実装:
 
 - **Airtable**: `airtable` npm パッケージ
 - **Google Sheets**: `googleapis` npm パッケージ
 - **PostgreSQL**: `pg` npm パッケージ
 - **Slack 通知**: `@slack/web-api` npm パッケージ
+
+このリポジトリは Agent のデプロイのみを担当します。
 
 ## GUI vs API — なぜ API を選んだか
 
