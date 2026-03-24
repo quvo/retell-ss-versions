@@ -1,0 +1,15 @@
+{
+  "name": "premiermd-retell-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "PremierMD Document Follow-up Voice Agent - Retell AI API deployment",
+  "scripts": {
+    "deploy": "node deploy-agent.js",
+    "serve": "node webhook-server.js",
+    "dev": "node --watch webhook-server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "retell-sdk": "^4.0.0"
+  }
+}
