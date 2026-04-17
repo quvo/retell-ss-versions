@@ -1,0 +1,131 @@
+name: Retell AI Snapshot Collector
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Every 15 minutes
+  workflow_dispatch:        # Manual trigger for testing
+
+permissions:
+  contents: write
+
+jobs:
+  collect-snapshots:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout snapshots-archive branch
+        uses: actions/checkout@v4
+        with:
+          ref: snapshots-archive
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Run snapshot collector
+        env:
+          RETELL_API_KEY: ${{ secrets.RETELL_API_KEY }}
+        run: |
+          npm run snapshot-collect > snapshot-summary.json
+          cat snapshot-summary.json
+
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            TOTAL_NEW=$(jq -r '.totalNew' snapshot-summary.json)
+            echo "total_new=$TOTAL_NEW" >> $GITHUB_OUTPUT
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config user.name "Retell Snapshot Bot"
+          git config user.email "bot@github-actions"
+
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+          TOTAL_NEW="${{ steps.check_changes.outputs.total_new }}"
+
+          git add snapshots/
+          git commit -m "Snapshot update: $TIMESTAMP - $TOTAL_NEW new versions"
+          git push origin snapshots-archive
+
+      - name: Send Slack notification
+        if: steps.check_changes.outputs.changes == 'true'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          COMMIT_SHA=$(git rev-parse HEAD)
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+          TOTAL_NEW="${{ steps.check_changes.outputs.total_new }}"
+
+          # Build detailed change list
+          CHANGES=$(jq -r '
+            (.flows // [] | map("• Flow `\(.id)`: v\(.oldVersion) → v\(.newVersion)")) +
+            (.agents // [] | map("• Agent `\(.id)`: v\(.oldVersion) → v\(.newVersion)")) +
+            (.components // [] | map("• Component `\(.id)`: v\(.oldVersion) → v\(.newVersion)"))
+            | join("\\n")
+          ' snapshot-summary.json)
+
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H 'Content-Type: application/json' \
+            -d @- <<EOF
+          {
+            "text": "🔔 Retell AI Snapshots Updated",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "📸 New Retell AI Snapshots"
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Timestamp:*\\n${TIMESTAMP}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Total Changes:*\\n${TOTAL_NEW} new versions"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "*Updated Resources:*\\n${CHANGES}"
+                }
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View Changes"
+                    },
+                    "url": "https://github.com/${{ github.repository }}/commit/${COMMIT_SHA}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF

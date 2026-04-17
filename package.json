@@ -19,6 +19,7 @@
     "update-flow": "tsx src/update-flow.ts",
     "rollback-to-v4": "tsx src/rollback-to-v4.ts",
     "add-document-flow": "tsx src/add-document-flow.ts",
+    "snapshot-collect": "tsx src/snapshot-collector.ts",
     "build": "tsc",
     "type-check": "tsc --noEmit"
   },
