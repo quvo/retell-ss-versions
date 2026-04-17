@@ -1,7 +1,4 @@
 {
-  "conversation_flow_id": "conversation_flow_91ba2cb61040",
-  "version": 4,
-  "global_prompt": "## Identity\nYou are Ella, Mayo Clinic's customer support agent. You are NOT A real person, or a human. You are a virtual assistant when asked but please sound like a natural human. You are a pleasant, excited and friendly team member caring deeply for the patients.\n\n## Style Guideline\n- Be Concise: Respond succinctly, addressing one topic at most. Embrace Variety: Use diverse language and rephrasing to enhance clarity without repeating content.\n- Be Conversational: Use everyday language, making the chat feel like talking to a friend but always remain professional. Address folks by their first name. \n- Ask one question at a time. Don't ask too many in one go.\n- Adapt and Guess: Try to understand transcripts that may contain transcription errors. Avoid mentioning “transcription error” in the response.\n\n## Handling General Questions Mid-Flow\n\nIf the user asks a general question about the clinic (hours, locations, insurance accepted, services, parking, what to bring, etc.) during any part of the conversation, answer it briefly using what you know, then steer back to where you were.\n\nFor example:\n- User: \"Do you accept Cigna?\" → \"Yes, Premier MD does accept Cigna! Now, back to your appointment...\"\n\n- User: \"What are your hours?\" → \"We're open Monday through Friday 7:45am to 5pm, and Saturdays 8am to 2pm. Anyway, where were we...\"\n\nKeep FAQ answers to one or two sentences. Do NOT go into lengthy detail. If the user wants more info, suggest they visit mypremiermd.com or ask when the \nclinic calls them back.\n\nDo NOT let a general question derail the current flow. \n\nAnswer it and continue.",
   "nodes": [
     {
       "instruction": {
@@ -4055,6 +4052,14 @@
             "type": "prompt",
             "prompt": "User mentions wanting to confirm an appointment"
           }
+        },
+        {
+          "id": "edge-1774319704413-main-to-df",
+          "destination_node_id": "node-1774319704413-df-entry",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is calling about a document, fax, or medical records follow-up"
+          }
         }
       ],
       "id": "node-1773253483385",
@@ -4200,6 +4205,689 @@
         "x": 630,
         "y": 3198
       }
+    },
+    {
+      "id": "node-1774319704413-df-entry",
+      "type": "conversation",
+      "name": "Document Follow-up Welcome",
+      "instruction": {
+        "type": "static_text",
+        "text": "I can help you with document and fax inquiries."
+      },
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-entry-to-name",
+          "destination_node_id": "component-node-1774319704413-df-name",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Always"
+          }
+        }
+      ]
+    },
+    {
+      "id": "component-node-1774319704413-df-name",
+      "type": "component",
+      "name": "[DF] Name",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-name",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-name-to-dob",
+          "destination_node_id": "component-node-1774319704413-df-dob",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_patient_name}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-name-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-dob",
+      "type": "component",
+      "name": "[DF] DOB",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-dob",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-dob-to-type",
+          "destination_node_id": "component-node-1774319704413-df-inquiry-type",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_patient_dob}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-dob-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-inquiry-type",
+      "type": "component",
+      "name": "[DF] Inquiry Type",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-inquiry-type",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-type-to-router",
+          "destination_node_id": "node-1774319704413-df-router",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_inquiry_type}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-type-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "node-1774319704413-df-router",
+      "type": "branch",
+      "name": "Document Type Router",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-router-fax",
+          "destination_node_id": "component-node-1774319704413-df-fax-date",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_inquiry_type}}",
+                "operator": "==",
+                "right": "\"fax\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "edge-1774319704413-df-router-records",
+          "destination_node_id": "component-node-1774319704413-df-records-type",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_inquiry_type}}",
+                "operator": "==",
+                "right": "\"records\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "edge-1774319704413-df-router-status",
+          "destination_node_id": "component-node-1774319704413-df-status-doc",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_inquiry_type}}",
+                "operator": "==",
+                "right": "\"status\""
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-router-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-fax-date",
+      "type": "component",
+      "name": "[DF-FAX] Date Sent",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-fax-date",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-fax-date-to-subject",
+          "destination_node_id": "component-node-1774319704413-df-fax-subject",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_date_sent}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-fax-date-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-fax-subject",
+      "type": "component",
+      "name": "[DF-FAX] Subject",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-fax-subject",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-fax-subject-to-confirm",
+          "destination_node_id": "component-node-1774319704413-df-fax-confirm",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_doc_subject}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-fax-subject-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-fax-confirm",
+      "type": "component",
+      "name": "[DF-FAX] Confirmation",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-fax-confirm",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-fax-confirm-to-urgency",
+          "destination_node_id": "component-node-1774319704413-df-urgency",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_confirmation_number}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-fax-confirm-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-records-type",
+      "type": "component",
+      "name": "[DF-RECORDS] Type",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-records-type",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-records-type-to-dest",
+          "destination_node_id": "component-node-1774319704413-df-records-dest",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_doc_subject}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-records-type-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-records-dest",
+      "type": "component",
+      "name": "[DF-RECORDS] Destination",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-records-dest",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-records-dest-to-urgency",
+          "destination_node_id": "component-node-1774319704413-df-urgency",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_records_destination}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-records-dest-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-status-doc",
+      "type": "component",
+      "name": "[DF-STATUS] Document",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-status-doc",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-status-doc-to-date",
+          "destination_node_id": "component-node-1774319704413-df-status-date",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_doc_subject}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-status-doc-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-status-date",
+      "type": "component",
+      "name": "[DF-STATUS] Date Submitted",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-status-date",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-status-date-to-method",
+          "destination_node_id": "component-node-1774319704413-df-status-method",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_date_sent}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-status-date-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-status-method",
+      "type": "component",
+      "name": "[DF-STATUS] Method",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-status-method",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-status-method-to-urgency",
+          "destination_node_id": "component-node-1774319704413-df-urgency",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_doc_method}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-status-method-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-urgency",
+      "type": "component",
+      "name": "[DF] Urgency Check",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-urgency",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-urgency-to-branch",
+          "destination_node_id": "node-1774319704413-df-urgency-branch",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_is_urgent}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-urgency-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "node-1774319704413-df-urgency-branch",
+      "type": "branch",
+      "name": "Urgency Branch",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-urgent-true",
+          "destination_node_id": "node-1774319704413-df-transfer",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_is_urgent}}",
+                "operator": "==",
+                "right": "true"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-urgent-false",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "node-1774319704413-df-transfer",
+      "type": "conversation",
+      "name": "Transfer to Staff",
+      "instruction": {
+        "type": "static_text",
+        "text": "I understand this is urgent. Let me connect you with a team member who can help you right away."
+      },
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-transfer-done",
+          "destination_node_id": "node-1774319704413-df-end",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Always"
+          }
+        }
+      ]
+    },
+    {
+      "id": "component-node-1774319704413-df-callback",
+      "type": "component",
+      "name": "[DF] Callback Number",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-callback",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-callback-to-final-router",
+          "destination_node_id": "node-1774319704413-df-final-router",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_phone_number}}",
+                "operator": "exists"
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-callback-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "node-1774319704413-df-final-router",
+      "type": "branch",
+      "name": "Finalization Router",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-final-fax",
+          "destination_node_id": "component-node-1774319704413-df-final-fax",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_inquiry_type}}",
+                "operator": "==",
+                "right": "\"fax\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "edge-1774319704413-df-final-records",
+          "destination_node_id": "component-node-1774319704413-df-final-records",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_inquiry_type}}",
+                "operator": "==",
+                "right": "\"records\""
+              }
+            ]
+          }
+        },
+        {
+          "id": "edge-1774319704413-df-final-status",
+          "destination_node_id": "component-node-1774319704413-df-final-status",
+          "transition_condition": {
+            "type": "equation",
+            "operator": "||",
+            "equations": [
+              {
+                "left": "{{df_inquiry_type}}",
+                "operator": "==",
+                "right": "\"status\""
+              }
+            ]
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-final-else",
+        "destination_node_id": "node-1774319704413-df-closing",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-final-fax",
+      "type": "component",
+      "name": "[DF] Finalization Fax",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-final-fax",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-final-fax-to-closing",
+          "destination_node_id": "node-1774319704413-df-closing",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Always"
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-final-fax-else",
+        "destination_node_id": "node-1774319704413-df-closing",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-final-records",
+      "type": "component",
+      "name": "[DF] Finalization Records",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-final-records",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-final-records-to-closing",
+          "destination_node_id": "node-1774319704413-df-closing",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Always"
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-final-records-else",
+        "destination_node_id": "node-1774319704413-df-closing",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "component-node-1774319704413-df-final-status",
+      "type": "component",
+      "name": "[DF] Finalization Status",
+      "component_type": "local",
+      "component_id": "cf-component-1774319704413-df-final-status",
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-final-status-to-closing",
+          "destination_node_id": "node-1774319704413-df-closing",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Always"
+          }
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774319704413-df-final-status-else",
+        "destination_node_id": "node-1774319704413-df-closing",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      }
+    },
+    {
+      "id": "node-1774319704413-df-closing",
+      "type": "conversation",
+      "name": "Document Inquiry Closing",
+      "instruction": {
+        "type": "static_text",
+        "text": "Your document inquiry has been logged. Is there anything else I can assist you with today?"
+      },
+      "edges": [
+        {
+          "id": "edge-1774319704413-df-closing-done",
+          "destination_node_id": "node-1774319704413-df-end",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Patient indicates they are done"
+          }
+        },
+        {
+          "id": "edge-1774319704413-df-closing-more",
+          "destination_node_id": "start-node-1735258608795",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Patient has another question"
+          }
+        }
+      ]
+    },
+    {
+      "id": "node-1774319704413-df-end",
+      "type": "end",
+      "name": "End Document Follow-up"
     }
   ],
   "components": [
@@ -12983,78 +13671,942 @@
         "x": -1042.8136649763564,
         "y": 456.35221928993377
       }
-    }
-  ],
-  "start_node_id": "node-1773066410086",
-  "start_speaker": "agent",
-  "begin_after_user_silence_ms": 1800,
-  "tools": [
-    {
-      "name": "check_appt_detail",
-      "description": "Check the detail of the appointment based on user's name and DOB.",
-      "tool_id": "tool-1735708026985",
-      "type": "custom",
-      "url": "https://api.retellai.com/var_test",
-      "timeout_ms": 4000
     },
     {
-      "tool_id": "tool-1735710605973",
-      "timeout_ms": 4000,
-      "name": "update_appt_detail",
-      "description": "Update the appointment",
-      "type": "custom",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "appointment_new_time": {
-            "type": "string",
-            "description": "The timestamp of the new appointment."
-          }
+      "name": "[DF] Name",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-name",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-name-conv",
+          "type": "conversation",
+          "name": "Collect Patient Name",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask for the patient's full name. Say something like: 'May I have your full name, please?' If they only give first or last name, politely ask for the complete name."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-name-to-extract",
+              "destination_node_id": "node-1774319704413-df-name-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Patient has provided their full name"
+              }
+            }
+          ]
         },
-        "required": [
-          "appointment_new_time"
-        ]
-      },
-      "url": "https://api.retellai.com/random_status"
-    },
-    {
-      "headers": {},
-      "parameter_type": "json",
-      "method": "POST",
-      "query_params": {},
-      "description": "Validate an email address for correctness. Checks format, detects common typos like gmial.com, and verifies the domain actually accepts email. Returns whether valid, error details, and a suggested correction if applicable.",
-      "type": "custom",
-      "url": "https://smartsupport.ubiehealth.com/validation/email",
-      "tool_id": "tool-1773202600566",
-      "args_at_root": false,
-      "timeout_ms": 5000,
-      "speak_after_execution": true,
-      "name": "validate_email",
-      "response_variables": {
-        "email_suggestion": "suggestion",
-        "email_valid": "valid",
-        "email_error": "error"
-      },
-      "speak_during_execution": false,
-      "parameters": {
-        "type": "object",
-        "required": [
-          "email"
-        ],
-        "properties": {
-          "email": {
-            "type": "string",
-            "description": "The email address the user provided"
+        {
+          "id": "node-1774319704413-df-name-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Name",
+          "variables": [
+            {
+              "name": "df_patient_name",
+              "type": "string",
+              "description": "Patient's full name for document inquiry"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-name-extracted",
+              "destination_node_id": "node-1774319704413-df-name-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_patient_name}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-name-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Name collected"
           }
         }
-      }
+      ],
+      "start_node_id": "node-1774319704413-df-name-conv"
+    },
+    {
+      "name": "[DF] DOB",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-dob",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-dob-conv",
+          "type": "conversation",
+          "name": "Collect DOB",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask for the patient's date of birth. Say: 'And your date of birth, please?' Confirm by repeating it back."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-dob-to-extract",
+              "destination_node_id": "node-1774319704413-df-dob-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Patient has provided and confirmed their date of birth"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-dob-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract DOB",
+          "variables": [
+            {
+              "name": "df_patient_dob",
+              "type": "string",
+              "description": "Patient's date of birth"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-dob-extracted",
+              "destination_node_id": "node-1774319704413-df-dob-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_patient_dob}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-dob-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "DOB collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-dob-conv"
+    },
+    {
+      "name": "[DF] Inquiry Type",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-inquiry-type",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-type-conv",
+          "type": "conversation",
+          "name": "Identify Document Inquiry Type",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask what type of document inquiry this is. Say: 'Are you calling about a fax you sent, a medical records request, or checking on a document status?' Wait for their response and confirm."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-type-to-extract",
+              "destination_node_id": "node-1774319704413-df-type-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Patient has clearly indicated the type of document inquiry"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-type-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Inquiry Type",
+          "variables": [
+            {
+              "name": "df_inquiry_type",
+              "type": "enum",
+              "description": "Type of document inquiry",
+              "choices": [
+                "fax",
+                "records",
+                "status"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-type-extracted",
+              "destination_node_id": "node-1774319704413-df-type-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_inquiry_type}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-type-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Inquiry type collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-type-conv"
+    },
+    {
+      "name": "[DF-FAX] Date Sent",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-fax-date",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-fax-date-conv",
+          "type": "conversation",
+          "name": "Collect Fax Date",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask when they sent the fax. Say: 'When did you send the fax to us?' Get a specific date or approximate timeframe."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-fax-date-to-extract",
+              "destination_node_id": "node-1774319704413-df-fax-date-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Date has been provided"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-fax-date-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Fax Date",
+          "variables": [
+            {
+              "name": "df_date_sent",
+              "type": "string",
+              "description": "Date the fax was sent"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-fax-date-extracted",
+              "destination_node_id": "node-1774319704413-df-fax-date-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_date_sent}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-fax-date-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Fax date collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-fax-date-conv"
+    },
+    {
+      "name": "[DF-FAX] Subject",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-fax-subject",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-fax-subject-conv",
+          "type": "conversation",
+          "name": "Collect Fax Subject",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask what the fax was about. Say: 'What was the fax about - was it a referral, medical records, insurance forms, prior authorization, or something else?' Be specific."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-fax-subject-to-extract",
+              "destination_node_id": "node-1774319704413-df-fax-subject-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Subject has been clearly stated"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-fax-subject-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Fax Subject",
+          "variables": [
+            {
+              "name": "df_doc_subject",
+              "type": "string",
+              "description": "Subject or purpose of the fax"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-fax-subject-extracted",
+              "destination_node_id": "node-1774319704413-df-fax-subject-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_doc_subject}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-fax-subject-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Fax subject collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-fax-subject-conv"
+    },
+    {
+      "name": "[DF-FAX] Confirmation",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-fax-confirm",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-fax-confirm-conv",
+          "type": "conversation",
+          "name": "Collect Confirmation Number",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask if they have a confirmation number. Say: 'Do you have a confirmation number or cover page with tracking information?' If they don't, that's okay - note 'none'."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-fax-confirm-to-extract",
+              "destination_node_id": "node-1774319704413-df-fax-confirm-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Confirmation number status is clear"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-fax-confirm-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Confirmation",
+          "variables": [
+            {
+              "name": "df_confirmation_number",
+              "type": "string",
+              "description": "Fax confirmation or tracking number, or 'none'"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-fax-confirm-extracted",
+              "destination_node_id": "node-1774319704413-df-fax-confirm-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_confirmation_number}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-fax-confirm-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Confirmation number collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-fax-confirm-conv"
+    },
+    {
+      "name": "[DF-RECORDS] Type",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-records-type",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-records-type-conv",
+          "type": "conversation",
+          "name": "Collect Record Type",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask what type of records they need. Say: 'What records do you need - therapy notes, medication history, complete file, lab results, imaging, or something else?'"
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-records-type-to-extract",
+              "destination_node_id": "node-1774319704413-df-records-type-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Record type has been specified"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-records-type-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Record Type",
+          "variables": [
+            {
+              "name": "df_doc_subject",
+              "type": "string",
+              "description": "Type of medical records requested"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-records-type-extracted",
+              "destination_node_id": "node-1774319704413-df-records-type-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_doc_subject}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-records-type-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Record type collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-records-type-conv"
+    },
+    {
+      "name": "[DF-RECORDS] Destination",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-records-dest",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-records-dest-conv",
+          "type": "conversation",
+          "name": "Collect Records Destination",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask where the records need to be sent. Say: 'Where do these records need to be sent - another doctor, insurance company, to you directly, or somewhere else?'"
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-records-dest-to-extract",
+              "destination_node_id": "node-1774319704413-df-records-dest-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Destination has been specified"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-records-dest-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Destination",
+          "variables": [
+            {
+              "name": "df_records_destination",
+              "type": "string",
+              "description": "Where the records should be sent"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-records-dest-extracted",
+              "destination_node_id": "node-1774319704413-df-records-dest-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_records_destination}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-records-dest-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Records destination collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-records-dest-conv"
+    },
+    {
+      "name": "[DF-STATUS] Document",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-status-doc",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-status-doc-conv",
+          "type": "conversation",
+          "name": "Collect Document Name",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask what document they're checking on. Say: 'What document are you checking on? Please be specific - is it a referral, lab order, insurance form, or something else?'"
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-status-doc-to-extract",
+              "destination_node_id": "node-1774319704413-df-status-doc-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Document has been clearly identified"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-status-doc-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Document Name",
+          "variables": [
+            {
+              "name": "df_doc_subject",
+              "type": "string",
+              "description": "Name or type of the document being checked"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-status-doc-extracted",
+              "destination_node_id": "node-1774319704413-df-status-doc-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_doc_subject}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-status-doc-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Document name collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-status-doc-conv"
+    },
+    {
+      "name": "[DF-STATUS] Date Submitted",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-status-date",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-status-date-conv",
+          "type": "conversation",
+          "name": "Collect Submission Date",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask when it was submitted. Say: 'When was it submitted?' Get a specific date or timeframe."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-status-date-to-extract",
+              "destination_node_id": "node-1774319704413-df-status-date-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Submission date has been provided"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-status-date-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Submission Date",
+          "variables": [
+            {
+              "name": "df_date_sent",
+              "type": "string",
+              "description": "When the document was submitted"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-status-date-extracted",
+              "destination_node_id": "node-1774319704413-df-status-date-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_date_sent}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-status-date-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Submission date collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-status-date-conv"
+    },
+    {
+      "name": "[DF-STATUS] Method",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-status-method",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-status-method-conv",
+          "type": "conversation",
+          "name": "Collect Submission Method",
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask how it was submitted. Say: 'How was it submitted - by fax, email, patient portal, in person, or mail?'"
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-status-method-to-extract",
+              "destination_node_id": "node-1774319704413-df-status-method-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Method has been identified"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-status-method-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Method",
+          "variables": [
+            {
+              "name": "df_doc_method",
+              "type": "enum",
+              "description": "How the document was submitted",
+              "choices": [
+                "fax",
+                "email",
+                "portal",
+                "in_person",
+                "mail",
+                "other"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-status-method-extracted",
+              "destination_node_id": "node-1774319704413-df-status-method-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_doc_method}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-status-method-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Submission method collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-status-method-conv"
+    },
+    {
+      "name": "[DF] Urgency Check",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-urgency",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-urgency-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Urgency",
+          "variables": [
+            {
+              "name": "df_is_urgent",
+              "type": "boolean",
+              "description": "True if patient mentioned urgency, upcoming surgery, deadline, repeated follow-ups, or frustration"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-urgency-extracted",
+              "destination_node_id": "node-1774319704413-df-urgency-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_is_urgent}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-urgency-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Urgency assessed"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-urgency-extract"
+    },
+    {
+      "name": "[DF] Callback Number",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-callback",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-callback-conv",
+          "type": "conversation",
+          "name": "Collect Callback Number",
+          "instruction": {
+            "type": "prompt",
+            "text": "Confirm callback number. Say: 'What's the best phone number for our team to reach you?' Repeat it back to confirm."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-callback-to-extract",
+              "destination_node_id": "node-1774319704413-df-callback-extract",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Phone number has been confirmed"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-callback-extract",
+          "type": "extract_dynamic_variables",
+          "name": "Extract Phone",
+          "variables": [
+            {
+              "name": "df_phone_number",
+              "type": "string",
+              "description": "Patient's callback phone number"
+            }
+          ],
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-callback-extracted",
+              "destination_node_id": "node-1774319704413-df-callback-end",
+              "transition_condition": {
+                "type": "equation",
+                "operator": "||",
+                "equations": [
+                  {
+                    "left": "{{df_phone_number}}",
+                    "operator": "exists"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-callback-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Callback number collected"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-callback-conv"
+    },
+    {
+      "name": "[DF] Finalization Fax",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-final-fax",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-final-fax-conv",
+          "type": "conversation",
+          "name": "Fax Next Steps",
+          "instruction": {
+            "type": "static_text",
+            "text": "I'll check with our medical records team, and they'll call you back within one business day to confirm receipt."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-final-fax-done",
+              "destination_node_id": "node-1774319704413-df-final-fax-end",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Always"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-final-fax-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Fax finalization complete"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-final-fax-conv"
+    },
+    {
+      "name": "[DF] Finalization Records",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-final-records",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-final-records-conv",
+          "type": "conversation",
+          "name": "Records Next Steps",
+          "instruction": {
+            "type": "static_text",
+            "text": "Medical records requests typically take five to seven business days to process. You'll receive confirmation once they've been sent."
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-final-records-done",
+              "destination_node_id": "node-1774319704413-df-final-records-end",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Always"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-final-records-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Records finalization complete"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-final-records-conv"
+    },
+    {
+      "name": "[DF] Finalization Status",
+      "component_id": null,
+      "conversation_flow_component_id": "cf-component-1774319704413-df-final-status",
+      "nodes": [
+        {
+          "id": "node-1774319704413-df-final-status-conv",
+          "type": "conversation",
+          "name": "Status Next Steps",
+          "instruction": {
+            "type": "prompt",
+            "text": "Say: 'I'll have our administrative team review the status and call you back at {{df_phone_number}} within one business day.'"
+          },
+          "edges": [
+            {
+              "id": "edge-1774319704413-df-final-status-done",
+              "destination_node_id": "node-1774319704413-df-final-status-end",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Always"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node-1774319704413-df-final-status-end",
+          "type": "end",
+          "name": "Exit Component",
+          "instruction": {
+            "type": "static_text",
+            "text": "Status finalization complete"
+          }
+        }
+      ],
+      "start_node_id": "node-1774319704413-df-final-status-conv"
     }
   ],
-  "model_choice": {
-    "type": "cascading",
-    "model": "gpt-4.1",
-    "high_priority": false
-  },
   "default_dynamic_variables": {
     "has_completed_sa_flow": "false",
     "has_started_ca_flow": "false",
@@ -13066,15 +14618,16 @@
     "prev_node": "welcome",
     "has_started_sa_flow": "false",
     "has_visited_other_request_flow": "false",
-    "has_visited_confirm_appointment_flow": "false"
-  },
-  "knowledge_base_ids": [
-    "knowledge_base_802ad84d1e79c582"
-  ],
-  "begin_tag_display_position": {
-    "x": -1844.3852485041991,
-    "y": 661.0780078350155
-  },
-  "is_published": false,
-  "flex_mode": false
+    "has_visited_confirm_appointment_flow": "false",
+    "df_patient_name": "",
+    "df_patient_dob": "",
+    "df_inquiry_type": "",
+    "df_doc_subject": "",
+    "df_date_sent": "",
+    "df_doc_method": "",
+    "df_confirmation_number": "",
+    "df_records_destination": "",
+    "df_is_urgent": "false",
+    "df_phone_number": ""
+  }
 }
