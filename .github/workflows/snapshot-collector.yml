@@ -1,5 +1,6 @@
 name: Retell AI Snapshot Collector
 
+# Automated snapshot collection every 5 minutes
 on:
   schedule:
     - cron: '*/5 * * * *'  # Every 5 minutes (for testing)
