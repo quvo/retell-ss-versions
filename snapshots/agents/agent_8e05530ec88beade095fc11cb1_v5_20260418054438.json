@@ -1,0 +1,32 @@
+{
+  "agent_id": "agent_8e05530ec88beade095fc11cb1",
+  "channel": "voice",
+  "last_modification_timestamp": 1776490432668,
+  "agent_name": "Newtown Gastro Returning Patient Agent",
+  "version_description": "v5 — Newtown Gastro Returning Patient Agent fix (April 2026)\n\n• Fixed agent_swap return target: rp-return-to-base now points to agent_e6cf0d7c969c505dc0354afac6 (Newtown Gastro Base Agent) instead of agent_71b06ec7239ceda05eae083b4c (legacy Premier base). Prevents Premier-branded closings from being spoken at end of call.",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 5,
+    "conversation_flow_id": "conversation_flow_d2f60df080db"
+  },
+  "language": "multi",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "version": 5,
+  "is_published": false,
+  "version_title": "Newtown base swap-back fix",
+  "post_call_analysis_model": "gpt-4.1-mini",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "natural_filler_words": true,
+    "speech_normalization": false
+  },
+  "voice_id": "11labs-Cimo",
+  "max_call_duration_ms": 3600000,
+  "normalize_for_speech": false,
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {}
+}

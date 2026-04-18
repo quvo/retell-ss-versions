@@ -1,0 +1,32 @@
+{
+  "agent_id": "agent_b9906d5645dc6a62ec5b104846",
+  "channel": "voice",
+  "last_modification_timestamp": 1776490430620,
+  "agent_name": "Newtown Gastro Cancel Agent",
+  "version_description": "v5 — Newtown Gastro Cancel Agent fixes (April 2026)\n\n• Fixed agent_swap return target: ca-transfer-back now points to agent_e6cf0d7c969c505dc0354afac6 (Newtown Gastro Base Agent) instead of agent_71b06ec7239ceda05eae083b4c (legacy Premier base). This eliminates the \"Premier MD\" farewell bleed-through observed in call_09ae08d2d6dac62054f1766b574.\n• Added ca-ev-started extract_dynamic_variables node as the new start_node_id (sets has_started_ca_flow=true), mirroring the Premier Cancel flow structure for consistent extraction at hand-off.",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 5,
+    "conversation_flow_id": "conversation_flow_75644bc5909d"
+  },
+  "language": "multi",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "version": 5,
+  "is_published": false,
+  "version_title": "Newtown base swap-back fix + EV start node",
+  "post_call_analysis_model": "gpt-4.1-mini",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "natural_filler_words": true,
+    "speech_normalization": false
+  },
+  "voice_id": "11labs-Cimo",
+  "max_call_duration_ms": 3600000,
+  "normalize_for_speech": false,
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {}
+}

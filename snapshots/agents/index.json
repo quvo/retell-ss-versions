@@ -55,7 +55,7 @@
     ]
   },
   "agent_e6cf0d7c969c505dc0354afac6": {
-    "current_version": 6,
+    "current_version": 7,
     "snapshots": [
       {
         "version": 4,
@@ -80,11 +80,19 @@
         "checksum": "sha256:93795cd2dfb613b84e82afa300225bc7c22e057527c2fa3ce7676b545a67553a",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 7,
+        "timestamp": "2026-04-18T05:44:38.099Z",
+        "file": "agent_e6cf0d7c969c505dc0354afac6_v7_20260418054438.json",
+        "checksum": "sha256:8e81682311eb95578def3b7bf94e09c675ede581bf133b72adb6c77a98006567",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
     ]
   },
   "agent_7f9970d8ffabe265abbb553b56": {
-    "current_version": 4,
+    "current_version": 5,
     "snapshots": [
       {
         "version": 4,
@@ -93,11 +101,19 @@
         "checksum": "sha256:6ce64fddb418ec26d8f5f21c4a737305c77e00fbb4a6c573428c3ebdc09a38f4",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 5,
+        "timestamp": "2026-04-18T05:44:38.275Z",
+        "file": "agent_7f9970d8ffabe265abbb553b56_v5_20260418054438.json",
+        "checksum": "sha256:3aa7782dcd1cf8b153219edbe21a740bedb79829158d19351e4145ddb405876b",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
     ]
   },
   "agent_8e05530ec88beade095fc11cb1": {
-    "current_version": 4,
+    "current_version": 5,
     "snapshots": [
       {
         "version": 3,
@@ -114,11 +130,19 @@
         "checksum": "sha256:9757ef4c44cf2f5631858772e50053bba3c5a817e857b8c915271b746ede4757",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 5,
+        "timestamp": "2026-04-18T05:44:38.155Z",
+        "file": "agent_8e05530ec88beade095fc11cb1_v5_20260418054438.json",
+        "checksum": "sha256:372c74c2012c944773d780dc2d8046d1e855485bd1af4ca060db5b70e1e9e241",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
     ]
   },
   "agent_a8ce7361527f616d5689b65567": {
-    "current_version": 5,
+    "current_version": 6,
     "snapshots": [
       {
         "version": 4,
@@ -135,11 +159,19 @@
         "checksum": "sha256:bb69815780b9a99b2e4a6dc5fda4d81c0fa1c89a96bd8b1ecdf13c5f92c4c99f",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 6,
+        "timestamp": "2026-04-18T05:44:38.215Z",
+        "file": "agent_a8ce7361527f616d5689b65567_v6_20260418054438.json",
+        "checksum": "sha256:3730f44672ff86682a41c28a592e282b6b5924320d2511c76649907a249a0a46",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
     ]
   },
   "agent_b9906d5645dc6a62ec5b104846": {
-    "current_version": 4,
+    "current_version": 5,
     "snapshots": [
       {
         "version": 3,
@@ -154,6 +186,14 @@
         "timestamp": "2026-04-18T01:44:35.197Z",
         "file": "agent_b9906d5645dc6a62ec5b104846_v4_20260418014435.json",
         "checksum": "sha256:e90af0fd65d7263849ca1cc33106f1f35c4a9d93c4a7db45cbb76991540036b2",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 5,
+        "timestamp": "2026-04-18T05:44:38.334Z",
+        "file": "agent_b9906d5645dc6a62ec5b104846_v5_20260418054438.json",
+        "checksum": "sha256:ef4af1292722f86f2a35d14ab41c183ee6c38b6ea572a3fb1da549fdce9492fb",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
       }
