@@ -31,11 +31,19 @@ jobs:
       - name: Build TypeScript
         run: npm run build
 
-      - name: Fetch snapshots-archive branch
+      - name: Fetch snapshots-archive branch and restore index files
         run: |
           git fetch origin snapshots-archive:snapshots-archive || echo "snapshots-archive branch does not exist yet"
-          git checkout snapshots-archive 2>/dev/null || git checkout -b snapshots-archive
-          git checkout main
+
+          # Create snapshots directory structure
+          mkdir -p snapshots/flows snapshots/agents snapshots/components
+
+          # Get existing index files from snapshots-archive branch
+          git show snapshots-archive:snapshots/flows/index.json > snapshots/flows/index.json 2>/dev/null || echo '{}' > snapshots/flows/index.json
+          git show snapshots-archive:snapshots/agents/index.json > snapshots/agents/index.json 2>/dev/null || echo '{}' > snapshots/agents/index.json
+          git show snapshots-archive:snapshots/components/index.json > snapshots/components/index.json 2>/dev/null || echo '{}' > snapshots/components/index.json
+
+          echo "Restored index files from snapshots-archive branch"
 
       - name: Run snapshot collector
         env:
