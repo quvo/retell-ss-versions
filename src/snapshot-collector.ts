@@ -208,7 +208,7 @@ async function main() {
     console.error(`  Stack: ${error.stack}\n`);
   }
 
-  // Process components
+  // Process components (components don't have version numbers in Retell API)
   console.log("🧩 Checking components...");
   try {
     const components = await client.conversationFlowComponent.list();
@@ -216,17 +216,18 @@ async function main() {
 
     for (const component of components) {
       const componentId = component.conversation_flow_component_id;
-      const currentVersion = component.version;
-      const lastVersion = componentIndex[componentId]?.current_version || 0;
+      const componentName = component.name;
 
-      console.log(`  Checking component ${shortId(componentId)}: current v${currentVersion}, last v${lastVersion}`);
+      // Check if component already exists by comparing checksum
+      const fullComponent = await client.conversationFlowComponent.retrieve(componentId);
+      const currentChecksum = calculateChecksum(fullComponent);
+      const lastChecksum = componentIndex[componentId]?.last_checksum;
 
-      if (currentVersion > lastVersion) {
-        console.log(`  ✨ New version detected: ${shortId(componentId)} v${lastVersion} → v${currentVersion}`);
+      if (currentChecksum !== lastChecksum) {
+        const snapshotCount = componentIndex[componentId]?.snapshots?.length || 0;
+        console.log(`  ✨ Change detected: ${shortId(componentId)} (${componentName}) - snapshot #${snapshotCount + 1}`);
 
-        // Download new version
-        const fullComponent = await client.conversationFlowComponent.retrieve(componentId);
-        const filename = `component_${shortId(componentId)}_v${currentVersion}_${formatTimestamp()}.json`;
+        const filename = `component_${shortId(componentId)}_${formatTimestamp()}.json`;
         const filepath = path.join("snapshots/components", filename);
 
         // Save snapshot
@@ -235,16 +236,17 @@ async function main() {
         // Update index
         if (!componentIndex[componentId]) {
           componentIndex[componentId] = {
-            current_version: currentVersion,
+            name: componentName,
+            last_checksum: currentChecksum,
             snapshots: [],
           };
         }
-        componentIndex[componentId].current_version = currentVersion;
+        componentIndex[componentId].last_checksum = currentChecksum;
+        componentIndex[componentId].name = componentName;
         componentIndex[componentId].snapshots.push({
-          version: currentVersion,
           timestamp: new Date().toISOString(),
           file: filename,
-          checksum: `sha256:${calculateChecksum(fullComponent)}`,
+          checksum: `sha256:${currentChecksum}`,
           node_count: fullComponent.nodes?.length || 0,
           captured_by: "github-actions",
         });
@@ -252,8 +254,8 @@ async function main() {
         // Track change
         summary.components.push({
           id: shortId(componentId),
-          oldVersion: lastVersion,
-          newVersion: currentVersion,
+          oldVersion: snapshotCount,
+          newVersion: snapshotCount + 1,
         });
         summary.totalNew++;
       }

@@ -1,0 +1,1169 @@
+{
+  "conversation_flow_id": "conversation_flow_75e48fc7daeb",
+  "version": 24,
+  "global_prompt": "## Identity\nYou are Bea, Ubie Smart Support's AI voice interface agent focused on Lead Generation for our business. You are NOT A real person, or a human. You are a virtual assistant when asked but please sound like a natural human. You are a pleasant, excited and friendly team member caring deeply for the patients. \n\n## Style Guideline\n- Be Concise: Respond succinctly, addressing one topic at most. Embrace Variety: Use diverse language and rephrasing to enhance clarity without repeating content.\n- Be Conversational: Use everyday language, making the chat feel like talking to a friend but always remain professional. Address folks by their first name. \n- Ask one question at a time. Don't ask too many in one go.\n- Adapt and Guess: Try to understand transcripts that may contain transcription errors. Avoid mentioning “transcription error” in the response.\n- Avoid saying \"um\".\n- Be as upbeat and cheery as possible.",
+  "nodes": [
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Start by saying: Excellent. Let's have you pretend to be a patient calling in to book an appointment. \n\nThen: Welcome them as if they are a patient calling from the Organization they just said they were calling from.\n\nAsk how you can help today"
+      },
+      "edges": [
+        {
+          "condition": "User needs to reschedule an appointment",
+          "id": "edge-1",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User needs to schedule an appointment"
+          },
+          "destination_node_id": "node-1735699983139"
+        },
+        {
+          "condition": "User is having a medical condition",
+          "id": "edge-1735699592443",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User asks for help with something else"
+          }
+        }
+      ],
+      "name": "GENERAL DEMO Welcome",
+      "start_speaker": "agent",
+      "id": "start-node-1735258608795",
+      "type": "conversation",
+      "display_position": {
+        "x": 1151.6092216262948,
+        "y": 1297.5687657364097
+      }
+    },
+    {
+      "edges": [
+        {
+          "condition": "got the user name and date of birth",
+          "id": "edge-1735699983139",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "got the user name and date of birth"
+          },
+          "destination_node_id": "node-1770364230394"
+        }
+      ],
+      "name": "GENERAL DEMO Ask user's name and dob",
+      "id": "node-1735699983139",
+      "type": "conversation",
+      "display_position": {
+        "x": 1501.234288709067,
+        "y": 1278.983235394734
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "1. Confirm user wants to schedule appointment. For example: I'd be happy to help you schedule an appointment. Let me get some information from you.\n\n2. Ask user's name and date of birth"
+      }
+    },
+    {
+      "name": "GENERAL DEMO Ask callback number",
+      "edges": [
+        {
+          "destination_node_id": "node-1770366942722",
+          "id": "edge-1770366733136-byeespq0q",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "got the user's callback number"
+          }
+        }
+      ],
+      "id": "node-1770364230394",
+      "type": "conversation",
+      "display_position": {
+        "x": 1838.8811309901703,
+        "y": 1271.4758647864055
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Request best callback number.    Example: \"What's the best phone number to reach you?\"\n \n"
+      }
+    },
+    {
+      "name": "End Call",
+      "id": "node-1770364691637",
+      "type": "end",
+      "speak_during_execution": true,
+      "display_position": {
+        "x": 2421.427351324529,
+        "y": 3645.6450822371057
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Tell the user that someone from our team will reach out. Let them know that our typical onboarding timeine is just 30-60 days."
+      }
+    },
+    {
+      "name": "GENERAL DEMO Ask reason for visit",
+      "edges": [
+        {
+          "destination_node_id": "node-1770367792880",
+          "id": "edge-1770366942722-1dkmv5v6b",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the reasons for user's visit to the clinic"
+          }
+        }
+      ],
+      "id": "node-1770366942722",
+      "type": "conversation",
+      "display_position": {
+        "x": 2186.7937798764056,
+        "y": 1262.1678611649288
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask what patient wants to be seen for. Example: \"What brings you in today?\"\n"
+      }
+    },
+    {
+      "name": "GENERAL DEMO Ask provider preference",
+      "edges": [
+        {
+          "destination_node_id": "node-1770368444639",
+          "id": "edge-1770367792880-0-i1kwuzue0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the provider preference"
+          }
+        }
+      ],
+      "id": "node-1770367792880",
+      "type": "conversation",
+      "display_position": {
+        "x": 2891.4830353722964,
+        "y": 1239.9415166128829
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Asks if patient has a specific provider preference. Example: \"Do you have a preferred provider, or would you like to see any available doctor?\"\nokay?\"\n\n"
+      }
+    },
+    {
+      "name": "GENERAL DEMO Ask preferred days and times",
+      "edges": [
+        {
+          "destination_node_id": "node-1770368536576",
+          "id": "edge-1770368444639-0-h0jgyyj8f",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the preferred days and times."
+          }
+        }
+      ],
+      "id": "node-1770368444639",
+      "type": "conversation",
+      "display_position": {
+        "x": 3237.3660340381134,
+        "y": 1232.4709469760674
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Asks about preferred days/times. Example: \"What days and times work best for you?\"\n\n\n"
+      }
+    },
+    {
+      "name": "GENERAL DEMO Ask insurance",
+      "edges": [
+        {
+          "destination_node_id": "node-1770368640642",
+          "id": "edge-1770368536576-0-9b4gpwtfs",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User shares insurance name"
+          }
+        },
+        {
+          "destination_node_id": "node-1773676152049",
+          "id": "edge-1773675515438-o85h10ifx",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User says they don't have insurance or don't know"
+          }
+        }
+      ],
+      "id": "node-1770368536576",
+      "type": "conversation",
+      "display_position": {
+        "x": 3586.086507648919,
+        "y": 1224.868374806385
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Asks for insurance carrier name. Example: \"What insurance do you have?\"\n\n\n\n"
+      }
+    },
+    {
+      "name": "GENERAL DEMO Confirm collected information",
+      "edges": [
+        {
+          "destination_node_id": "node-1772143880802",
+          "id": "edge-1772483264366-5fofpji8q",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "No changes needed"
+          }
+        }
+      ],
+      "id": "node-1770368640642",
+      "type": "conversation",
+      "display_position": {
+        "x": 4290.6413506853405,
+        "y": 1218.1524860400984
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Read back DOB, phone, reason, preferences.\nExample: \"Let me confirm: I have your date of birth as [DOB], callback at [phone], to be seen for [reason], preferring [days/times] with [provider]. Is that correct?\"\n"
+      }
+    },
+    {
+      "tool_id": "tool-1770806740979",
+      "else_edge": {
+        "id": "node-1770806834062-else-edge",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Saving your details. Please hold on."
+      },
+      "name": "Store Lead",
+      "edges": [
+        {
+          "destination_node_id": "node-1770364691637",
+          "id": "edge-1770808384487-zqlhwhxd2",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Operation is completed."
+          }
+        }
+      ],
+      "id": "node-1770806834062",
+      "type": "function",
+      "tool_type": "local",
+      "speak_during_execution": true,
+      "display_position": {
+        "x": 2049.5186471754555,
+        "y": 3639.9743718943523
+      },
+      "wait_for_result": true
+    },
+    {
+      "name": "END DEMO Lead Capture ",
+      "edges": [
+        {
+          "destination_node_id": "node-1772637955327",
+          "id": "edge-1772487979524-ykf4hxpxo",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Details are confirmed"
+          }
+        }
+      ],
+      "id": "node-1770806917967",
+      "type": "conversation",
+      "display_position": {
+        "x": 5165.356359930159,
+        "y": 1623.643557085897
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "That ends the demo. Confirm that the name of the practice and email they shared at the start of the call is really the best place to reach them so that you can share \"a custom onboarding plan and pricing\". \n\nRead them back those details and allow them the opportunity to change them if need be. "
+      }
+    },
+    {
+      "name": "WELCOME Smart Support Intro",
+      "edges": [
+        {
+          "destination_node_id": "node-1772484901362",
+          "id": "edge-1772144703627-37sb3frer",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirms"
+          }
+        }
+      ],
+      "id": "node-1770835835336",
+      "type": "conversation",
+      "display_position": {
+        "x": 119.81105946343055,
+        "y": 878.8863153433718
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Hi and thank you for calling the Smart Support Demo Line. \n\nI’m Bea. I can be fully customized for small practices, multi-location providers, and even complex hospital systems to answer overflow at peak times and after-hours. \n\nCan I show you how the system works?"
+      }
+    },
+    {
+      "name": "GENERAL DEMO Conversation",
+      "edges": [
+        {
+          "destination_node_id": "node-1770806917967",
+          "id": "edge-1772143880802-n74h1bfv6",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirms "
+          }
+        }
+      ],
+      "id": "node-1772143880802",
+      "type": "conversation",
+      "display_position": {
+        "x": 4638.746249892933,
+        "y": 1215.3403943364199
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Pretend to book them an appointment by suggesting times within their preferred window to meet with their preferred provider (if they mentioned one) or a different doctor that you make up. Once they select a day and time that works, let them know that you'll text and email them with important details including instructions on how to re-schedule if needed. "
+      }
+    },
+    {
+      "name": "WELCOME Company Capture",
+      "edges": [
+        {
+          "destination_node_id": "node-1772144338156",
+          "id": "edge-1772144273815-5feh7soup",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Not one of the companies listed below"
+          }
+        },
+        {
+          "destination_node_id": "node-1772146316125",
+          "id": "edge-1772483432433-zgdoxrc29",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Staten Island Oral And Maxillofacial Surgery"
+          }
+        },
+        {
+          "destination_node_id": "node-1772146316125",
+          "id": "edge-1772483497095-ii9lvka9b",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "S.I. Maxo"
+          }
+        },
+        {
+          "destination_node_id": "node-1772146316125",
+          "id": "edge-1772632838486-nk9a3j3zn",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Staten Island"
+          }
+        },
+        {
+          "destination_node_id": "node-1772146316125",
+          "id": "edge-1772632934230-q6b5x0g0s",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "SIOMS"
+          }
+        }
+      ],
+      "id": "node-1772144273815",
+      "type": "conversation",
+      "display_position": {
+        "x": 493.4780107627979,
+        "y": 869.7020077044848
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Tell them that you're happy to meet them and would like to walk them through a simulation. \n\nAsk them the name of the practice or or organization they're calling from but DO NOT give them choices to pick from."
+      }
+    },
+    {
+      "name": "GENERAL DEMO Start",
+      "edges": [
+        {
+          "destination_node_id": "node-1772486928010",
+          "id": "edge-1772144338156-8pircybf6",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Shares email"
+          }
+        }
+      ],
+      "id": "node-1772144338156",
+      "type": "conversation",
+      "display_position": {
+        "x": 842.496579402852,
+        "y": 1004.3661307985333
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Perfect. one last bit of housekeeping before we get started: What is a good email address to send you custom pricing after we're done?"
+      }
+    },
+    {
+      "name": "SI MAXO Start",
+      "edges": [
+        {
+          "destination_node_id": "node-1772146361168",
+          "id": "edge-1772146316125-0-e00qtophd",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "id": "node-1772146316125",
+      "type": "conversation",
+      "display_position": {
+        "x": 784.5571612511048,
+        "y": 2149.5424847028494
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Perfect. For the demo, let's do a simple new patient booking. You'll pretend to be a patient calling in for the first time and I'll take it from there. Ready to begin?"
+      }
+    },
+    {
+      "instruction": {
+        "type": "static_text",
+        "text": "Hi - thank you for calling Staten Island Oral and Maxillofacial Surgery, New York's Premier Oral Surgery Center.\n\nHow can I help you today?"
+      },
+      "edges": [
+        {
+          "condition": "User needs to reschedule an appointment",
+          "id": "edge-1772146361168-0-dkupr2pj0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User needs to schedule an appointment"
+          },
+          "destination_node_id": "node-1772146818517"
+        },
+        {
+          "condition": "User is having a medical condition",
+          "id": "edge-1772146361168-1-e4mhtd93c",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User asks for help with something else"
+          },
+          "destination_node_id": "node-1772596795182"
+        }
+      ],
+      "name": "SI MAXO Welcome",
+      "start_speaker": "agent",
+      "id": "node-1772146361168",
+      "type": "conversation",
+      "display_position": {
+        "x": 1116.1831055600683,
+        "y": 2137.930594626264
+      }
+    },
+    {
+      "name": "SI MAXO New or Returning",
+      "edges": [
+        {
+          "destination_node_id": "node-1772146936650",
+          "id": "edge-1772146818517-agylil2n0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "New patient"
+          }
+        },
+        {
+          "destination_node_id": "node-1772596594201",
+          "id": "edge-1772146911240-6bz1vvffr",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Returning patient"
+          }
+        }
+      ],
+      "id": "node-1772146818517",
+      "type": "conversation",
+      "display_position": {
+        "x": 1464.7727445197,
+        "y": 2135.3375877371914
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Start with: Perfect (name), I can definitely help with you with that. \n\nNext: Ask if they are a new or returning patient"
+      }
+    },
+    {
+      "name": "SI MAXO New - Referral ",
+      "edges": [
+        {
+          "destination_node_id": "node-1772484706966",
+          "id": "edge-1772146936650-5csaz3052",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "They know the dentist or doctor who referred them"
+          }
+        },
+        {
+          "destination_node_id": "node-1772147031864",
+          "id": "edge-1772147016996-tdrd2m7fq",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "They don't remember"
+          }
+        }
+      ],
+      "id": "node-1772146936650",
+      "type": "conversation",
+      "display_position": {
+        "x": 1824.8147023038355,
+        "y": 2122.931879795957
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask if they remember the name of the dentist or doctor who referred them?"
+      }
+    },
+    {
+      "name": "SI MAXO New - No Referral - Surgery Check ",
+      "edges": [
+        {
+          "destination_node_id": "node-1772484662256",
+          "id": "edge-1772147031864-0-j8xjxz9xe",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "They know the dentist or doctor who referred them"
+          }
+        },
+        {
+          "destination_node_id": "node-1772483941335",
+          "id": "edge-1772147031864-1-0k5ir903z",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "They are looking for a dentist to handle general dentistry, not an oral surgeon"
+          }
+        },
+        {
+          "destination_node_id": "node-1772484662256",
+          "id": "edge-1772483826387-y5u1xeyxh",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "They understand and are looking for the type of services offered by Staten Island Oral Surgery"
+          }
+        }
+      ],
+      "id": "node-1772147031864",
+      "type": "conversation",
+      "display_position": {
+        "x": 2096.8998388551613,
+        "y": 2693.0755829131663
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Confirm that they understand that this is oral and maxillofacial surgery and not dentistry. We do \"dental surgery\" \"teeth in a day\" \"bone grafting\" \"facial deformities\" \"wisdom teeth removal\" and more. Is this what they're interested in?"
+      }
+    },
+    {
+      "edges": [
+        {
+          "condition": "User acknowledges",
+          "id": "edge-1772483755733-0-bxofkmid6",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User acknowledges"
+          },
+          "destination_node_id": "node-1772484503290"
+        }
+      ],
+      "name": "EMERGENCY Conversation",
+      "id": "node-1772483755733",
+      "type": "conversation",
+      "display_position": {
+        "x": 2946.2207066334936,
+        "y": 2527.5754172836573
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Please hang up dial 911 immediately."
+      }
+    },
+    {
+      "name": "SI MAXO New - Looking for dentist",
+      "edges": [
+        {
+          "id": "edge-1772483941335-mdpb1zf49",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User acknowledges "
+          }
+        }
+      ],
+      "id": "node-1772483941335",
+      "type": "conversation",
+      "display_position": {
+        "x": 2600.6705871135655,
+        "y": 2525.6524027765768
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Start by: explaining that it sounds like they're looking for a dentist, not an oral surgeon. \n\nNext: Explain that once we're out of dentist mode, Doctor Hoffman and other leaders at Staten Island Oral and Maxillofacial can designate specific dentists to refer patients out to BUT FOR NOW, you'd like to pretend this patient is looking for \"teeth in a day\"."
+      }
+    },
+    {
+      "name": "EMERGENCY Transition back to demo",
+      "edges": [
+        {
+          "id": "edge-1772484503290-0-176mqfva9",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User acknowledges "
+          }
+        }
+      ],
+      "id": "node-1772484503290",
+      "type": "conversation",
+      "display_position": {
+        "x": 3301.6890413021015,
+        "y": 2534.736708562796
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Ok, because we're in roll play mode, I'm going to assume this isn't a real emergency. \n\nLet's pretend the patient is calling for \"teeth in a day\" and get things back on track. OK?\n\n"
+      }
+    },
+    {
+      "name": "SI MAXO New - Providers",
+      "edges": [
+        {
+          "destination_node_id": "node-1772596076033",
+          "id": "edge-1772484662256-y72vst4ou",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User picks a provider"
+          }
+        },
+        {
+          "destination_node_id": "node-1772596076033",
+          "id": "edge-1772596038211-reho5mwjh",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User says they have no preference "
+          }
+        }
+      ],
+      "id": "node-1772484662256",
+      "type": "conversation",
+      "display_position": {
+        "x": 2889.3851417624796,
+        "y": 2119.560532940018
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask if they have a preferred provider. Let them know that it looks like Dr. David Hoffman, Dr. Lydia Lam, and Dr. Monica Patel have openings over the next few weeks. "
+      }
+    },
+    {
+      "name": "SI MAXO New - Ask what you can help them with",
+      "edges": [
+        {
+          "destination_node_id": "node-1772484662256",
+          "id": "edge-1772484706966-xgh7yi493",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User explains"
+          }
+        }
+      ],
+      "id": "node-1772484706966",
+      "type": "conversation",
+      "display_position": {
+        "x": 2161.1628838534953,
+        "y": 2131.001671292535
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask what brings them in today (ie, what they're looking to have done?)"
+      }
+    },
+    {
+      "name": "WELCOME Name Capture",
+      "edges": [
+        {
+          "destination_node_id": "node-1772144273815",
+          "id": "edge-1772484901362-rl3dqzdy4",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User shares name"
+          }
+        }
+      ],
+      "id": "node-1772484901362",
+      "type": "conversation",
+      "display_position": {
+        "x": 110.7712607196026,
+        "y": 1461.508155329646
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Start with: Great. Our pilot partners have found that answering every call, every time, drives significant increase in bookings.\n\nNext: Ask their name so you know how to address them."
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "name",
+          "description": "the first name the caller gave at the start of the call",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "org_name",
+          "description": "Name of the organization user is calling from. ",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "email_address",
+          "description": "Work email where user can be contacted by sales.",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else_edge-1772486928010-1-abywn24ls",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "start-node-1735258608795",
+          "id": "edge-1772486928010-0-r7qq2k0ky",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "All variables were extracted successfully"
+          }
+        }
+      ],
+      "id": "node-1772486928010",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 866.4781979004786,
+        "y": 1695.8205013828265
+      }
+    },
+    {
+      "name": "End Call",
+      "id": "node-1772488015975",
+      "type": "end",
+      "speak_during_execution": true,
+      "display_position": {
+        "x": 6027.927788501588,
+        "y": 1610.5006999430398
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Thank them for roleplaying with you and let them know that someone will be in touch shortly. "
+      }
+    },
+    {
+      "name": "SI MAXO - Ask preferred days and times",
+      "edges": [
+        {
+          "destination_node_id": "node-1772596131055",
+          "id": "edge-1772596076033-0-dzawv9c2y",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the preferred days and times."
+          }
+        }
+      ],
+      "id": "node-1772596076033",
+      "type": "conversation",
+      "display_position": {
+        "x": 3242.3205067774456,
+        "y": 2133.44428012516
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Asks about preferred days/times. Example: \"What days and times work best for you?\"\n\n\n"
+      }
+    },
+    {
+      "name": "SI MAXO Ask insurance",
+      "edges": [
+        {
+          "destination_node_id": "node-1772596356932",
+          "id": "edge-1772596131055-0-vm15m0y7z",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the user's insurance name"
+          }
+        },
+        {
+          "destination_node_id": "node-1773676244064",
+          "id": "edge-1773676234102-rnks7mbmu",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User says they don't have insurance or don't know"
+          }
+        }
+      ],
+      "id": "node-1772596131055",
+      "type": "conversation",
+      "display_position": {
+        "x": 3600.2152349316952,
+        "y": 2128.8997928032923
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Asks for insurance carrier name. Example: \"What insurance do you have?\"\n\n\n\n"
+      }
+    },
+    {
+      "name": "SI MAXO Confirm collected information",
+      "edges": [
+        {
+          "destination_node_id": "node-1772596411524",
+          "id": "edge-1772596356932-0-tybtgd8md",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "No changes needed"
+          }
+        }
+      ],
+      "id": "node-1772596356932",
+      "type": "conversation",
+      "display_position": {
+        "x": 4134,
+        "y": 1974
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Read back DOB, phone, reason, preferences.\nExample: \"Let me confirm: I have your date of birth as [DOB], callback at [phone], to be seen for [reason], preferring [days/times] with [provider]. Is that correct?\"\n"
+      }
+    },
+    {
+      "name": "SI MAXO Conversation",
+      "edges": [
+        {
+          "destination_node_id": "node-1772597512914",
+          "id": "edge-1772596411524-0-hlhp692tz",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User books appointment  "
+          }
+        }
+      ],
+      "id": "node-1772596411524",
+      "type": "conversation",
+      "display_position": {
+        "x": 4971.4891922574225,
+        "y": 2111.7266002137903
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Pretend to book them an appointment by suggesting times within their preferred window to meet with their preferred provider (if they mentioned one) or a different doctor that you make up. "
+      }
+    },
+    {
+      "name": "SI MAXO Returning",
+      "edges": [
+        {
+          "destination_node_id": "node-1772146936650",
+          "id": "edge-1772596594201-01qzxk66n",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirms"
+          }
+        }
+      ],
+      "id": "node-1772596594201",
+      "type": "conversation",
+      "display_position": {
+        "x": 1640.251247949274,
+        "y": 2527.9493125585896
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Explain that if you weren't in demo mode, you could route existing patients to their Treatment Plan Coordinators, or to the billing department to talk about financing or other issues. For now though, is it OK if we pretend that they are a new patient calling for the first time? "
+      }
+    },
+    {
+      "name": "SI MAXO Something Else",
+      "edges": [
+        {
+          "destination_node_id": "node-1772146936650",
+          "id": "edge-1772596795182-vrq1aj97i",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "id": "node-1772596795182",
+      "type": "conversation",
+      "display_position": {
+        "x": 1268.999747424547,
+        "y": 2526.1144616499014
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Explain that once we get Staten Island Maxo on the system for real we can route calls to Treatment Plan Coordinators, Billing, and more. For now though, let's pretend you're a new patient calling in to make an appointment for some kind of treatment. Is that OK? "
+      }
+    },
+    {
+      "name": "SI MAXO Confirmation ",
+      "edges": [
+        {
+          "destination_node_id": "node-1770806917967",
+          "id": "edge-1772597512914-ahdpkf2yl",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "No more questions"
+          }
+        }
+      ],
+      "id": "node-1772597512914",
+      "type": "conversation",
+      "display_position": {
+        "x": 5315.35635993016,
+        "y": 2112.2149856573255
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Let them know that you'll text and email them with important details including instructions on how to re-schedule if needed. Also let them know that you'll let them know that you'll send an estimate of any out of pocket costs in advance of their visit once you've completed the insurance validation. Ask if they have any last questions?"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "org_name",
+          "description": "Name of the organization user is calling from. ",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "email_address",
+          "description": "Work email where user can be contacted by sales.",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "destination_node_id": "node-1772488015975",
+        "id": "else_edge-1772637955327-1-sqm58tsvs",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1772488015975",
+          "id": "edge-1772637955327-0-v26fw254z",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "All variables were extracted successfully"
+          }
+        }
+      ],
+      "id": "node-1772637955327",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 5574.278197900478,
+        "y": 1609.020501382826
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "If the caller says they're ready to end the call, thank them for calling and ask if it's ok to follow-up with more info."
+      },
+      "name": "Conversation",
+      "edges": [
+        {
+          "destination_node_id": "node-1772770669063",
+          "id": "edge-1772738158689-dc3yn94xy",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Yes"
+          }
+        },
+        {
+          "destination_node_id": "node-1772770720378",
+          "id": "edge-1772770621584-x3x0y9e9i",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "No"
+          }
+        }
+      ],
+      "global_node_setting": {
+        "condition": "Describe the condition to jump to this node"
+      },
+      "id": "node-1772738158689",
+      "type": "conversation",
+      "display_position": {
+        "x": 1191.11482594437,
+        "y": 747.1339448801054
+      }
+    },
+    {
+      "name": "End Call",
+      "id": "node-1772770669063",
+      "type": "end",
+      "speak_during_execution": true,
+      "display_position": {
+        "x": 1526.022488783554,
+        "y": 766.499079536494
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Thank them. Let them know that someone will be in touch shortly. Politely end the call."
+      }
+    },
+    {
+      "name": "End Call",
+      "id": "node-1772770720378",
+      "type": "end",
+      "speak_during_execution": true,
+      "display_position": {
+        "x": 1568.4744515813725,
+        "y": 967.8737748594785
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Tell them that you understand. Not every practice ready to maximize profits and reduce turnover. Thank them for their time and politely let them know that if those things ever become priorities they should call back."
+      }
+    },
+    {
+      "name": "Conversation",
+      "edges": [
+        {
+          "destination_node_id": "node-1772143880802",
+          "id": "edge-1773676152049-g55e0w00h",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "No changes needed"
+          }
+        }
+      ],
+      "id": "node-1773676152049",
+      "type": "conversation",
+      "display_position": {
+        "x": 3942,
+        "y": 1398
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Let them know that it's not a problem and that you'll let them know what to expect in terms of out of pocket cost BEFORE their appointment. \n\nThen: Read back DOB, phone, reason, preferences.\nExample: \"Let me confirm: I have your date of birth as [DOB], callback at [phone], to be seen for [reason], preferring [days/times] with [provider]. Is that correct?\""
+      }
+    },
+    {
+      "name": "Conversation",
+      "edges": [
+        {
+          "destination_node_id": "node-1772596411524",
+          "id": "edge-1773676244064-0-bo3j5lkn7",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "No changes needed"
+          }
+        }
+      ],
+      "id": "node-1773676244064",
+      "type": "conversation",
+      "display_position": {
+        "x": 3942,
+        "y": 2454
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Let them know that it's not a problem and that you'll let them know what to expect in terms of out of pocket cost BEFORE their appointment. \n\nThen: Read back DOB, phone, reason, preferences.\nExample: \"Let me confirm: I have your date of birth as [DOB], callback at [phone], to be seen for [reason], preferring [days/times] with [provider]. Is that correct?\""
+      }
+    }
+  ],
+  "start_node_id": "node-1770835835336",
+  "start_speaker": "agent",
+  "tools": [
+    {
+      "name": "check_appt_detail",
+      "description": "Check the detail of the appointment based on user's name and DOB.",
+      "tool_id": "tool-1735708026985",
+      "type": "custom",
+      "url": "https://api.retellai.com/var_test",
+      "timeout_ms": 4000
+    },
+    {
+      "tool_id": "tool-1735710605973",
+      "timeout_ms": 4000,
+      "name": "update_appt_detail",
+      "description": "Update the appointment",
+      "type": "custom",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appointment_new_time": {
+            "type": "string",
+            "description": "The timestamp of the new appointment."
+          }
+        },
+        "required": [
+          "appointment_new_time"
+        ]
+      },
+      "url": "https://api.retellai.com/random_status"
+    },
+    {
+      "headers": {
+        "x-api-key": "ae6ebfee40086546d38fa94d5261fe9e6f022713a5e2f10b99952586c98b77b1"
+      },
+      "parameter_type": "form",
+      "method": "POST",
+      "query_params": {},
+      "description": "Stores lead contact information (name, email, phone, contact preference) to a spreadsheet for follow-up.",
+      "type": "custom",
+      "url": "https://ubiehealth.com/api/leads",
+      "tool_id": "tool-1770806740979",
+      "args_at_root": false,
+      "timeout_ms": 120000,
+      "name": "store_lead",
+      "response_variables": {
+        "lead_saved": "result"
+      },
+      "parameters": {
+        "type": "object",
+        "required": [
+          "can_contact"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Full name of the lead."
+          },
+          "can_contact": {
+            "type": "string",
+            "description": "Whether the lead has agreed to be contacted. Values: yes or no."
+          },
+          "phone": {
+            "type": "string",
+            "const": "{{user_number}}"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address of the lead."
+          }
+        }
+      }
+    }
+  ],
+  "model_choice": {
+    "type": "cascading",
+    "model": "gpt-4.1"
+  },
+  "begin_tag_display_position": {
+    "x": 0,
+    "y": 1155
+  },
+  "is_published": false
+}

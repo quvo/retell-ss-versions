@@ -1,0 +1,793 @@
+{
+  "conversation_flow_id": "conversation_flow_3c458f4619ba",
+  "version": 13,
+  "global_prompt": "## Identity\nYou are Bea, Downtown Clinic's customer support agent. You are NOT A real person, or a human. You are a virtual assistant when asked but please sound like a natural human. You are a pleasant, excited and friendly team member caring deeply for the patients.\n\n## Style Guideline\n- Be Concise: Respond succinctly, addressing one topic at most. Embrace Variety: Use diverse language and rephrasing to enhance clarity without repeating content.\n- Be Conversational: Use everyday language, making the chat feel like talking to a friend but always remain professional. Address folks by their first name. \n- Ask one question at a time. Don't ask too many in one go.\n- Adapt and Guess: Try to understand transcripts that may contain transcription errors. Avoid mentioning “transcription error” in the response.",
+  "nodes": [
+    {
+      "instruction": {
+        "type": "static_text",
+        "text": "Thanks for calling Downtown Clinic! This is Bea speaking. How can I help you today?"
+      },
+      "edges": [
+        {
+          "condition": "User needs to reschedule an appointment",
+          "id": "edge-1",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User needs to schedule an appointment"
+          },
+          "destination_node_id": "node-1735699983139"
+        },
+        {
+          "condition": "User is having a medical condition",
+          "id": "edge-1735699592443",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is having a medical condition"
+          },
+          "destination_node_id": "node-1735699636733"
+        }
+      ],
+      "name": "Welcome Node",
+      "start_speaker": "agent",
+      "id": "start-node-1735258608795",
+      "type": "conversation",
+      "display_position": {
+        "x": -978,
+        "y": 1758
+      }
+    },
+    {
+      "edges": [
+        {
+          "condition": "If this is an emergency",
+          "id": "edge-1735699636733",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "If this is an emergency"
+          },
+          "destination_node_id": "node-1735699698057"
+        },
+        {
+          "condition": "If this is not an emergency",
+          "id": "edge-1735699684327",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "If this is not an emergency"
+          },
+          "destination_node_id": "node-1735699763121"
+        }
+      ],
+      "name": "Conversation",
+      "id": "node-1735699636733",
+      "type": "conversation",
+      "display_position": {
+        "x": 366,
+        "y": 342
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask user if this is an emergency."
+      }
+    },
+    {
+      "edges": [
+        {
+          "condition": "User acknowledges",
+          "id": "edge-1735699698057",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User acknowledges"
+          },
+          "destination_node_id": "node-1735699753639"
+        }
+      ],
+      "name": "Conversation",
+      "id": "node-1735699698057",
+      "type": "conversation",
+      "display_position": {
+        "x": 1273,
+        "y": 0
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Please hang up dial 911 immediately."
+      }
+    },
+    {
+      "name": "End Call",
+      "id": "node-1735699753639",
+      "type": "end",
+      "display_position": {
+        "x": 1773,
+        "y": 110
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Politely end the call"
+      }
+    },
+    {
+      "edges": [
+        {
+          "condition": "User does not have any questions.",
+          "id": "edge-1735699763121",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User does not have any questions."
+          },
+          "destination_node_id": "node-1735711562449"
+        }
+      ],
+      "name": "Conversation",
+      "id": "node-1735699763121",
+      "type": "conversation",
+      "display_position": {
+        "x": 1468.5263845663394,
+        "y": 450.0630244569468
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask user to describe their medical condition and ask what questions they have, and use your expertise to provide answers to them. Ask if they have any additional questions."
+      }
+    },
+    {
+      "edges": [
+        {
+          "condition": "got the user name and date of birth",
+          "id": "edge-1735699983139",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "got the user name and date of birth"
+          },
+          "destination_node_id": "node-1773941188816"
+        }
+      ],
+      "name": "Ask user's name and dob",
+      "id": "node-1735699983139",
+      "type": "conversation",
+      "display_position": {
+        "x": -498,
+        "y": 1710
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "1. Confirm user wants to schedule appointment. For example: I'd be happy to help you schedule an appointment. Let me get some information from you.\n\n2. Ask user's name and date of birth\n"
+      }
+    },
+    {
+      "instruction": {
+        "type": "static_text",
+        "text": "Hope you have a great day, take care!"
+      },
+      "edges": [
+        {
+          "condition": "Describe the transition condition",
+          "id": "edge-1735711562449",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "name": "Conversation",
+      "id": "node-1735711562449",
+      "type": "conversation",
+      "display_position": {
+        "x": 3657.0913667248783,
+        "y": 1460.722356736988
+      },
+      "skip_response_edge": {
+        "condition": "Skip response",
+        "id": "edge-1735711577124",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        },
+        "destination_node_id": "node-1735711605640"
+      }
+    },
+    {
+      "name": "End Call",
+      "id": "node-1735711605640",
+      "type": "end",
+      "display_position": {
+        "x": 4273,
+        "y": 1944
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Politely end the call"
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask user when is a good time to call back."
+      },
+      "edges": [
+        {
+          "condition": "User specified a call back time.",
+          "id": "edge-1736517211146",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User specified a call back time."
+          },
+          "destination_node_id": "node-1736517256130"
+        }
+      ],
+      "global_node_setting": {
+        "condition": "When user indicates this is not a good time to talk"
+      },
+      "name": "Objection Handle",
+      "id": "node-1736517211146",
+      "type": "conversation",
+      "display_position": {
+        "x": 2257.142857142857,
+        "y": -107.85714285714286
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Tell user you will call them back in the provided time frame."
+      },
+      "edges": [
+        {
+          "condition": "Describe the transition condition",
+          "id": "edge-1736517256130",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "name": "Conversation",
+      "id": "node-1736517256130",
+      "type": "conversation",
+      "display_position": {
+        "x": 2702.8571428571427,
+        "y": -112.14285714285714
+      },
+      "skip_response_edge": {
+        "condition": "Skip response",
+        "id": "edge-1736517277237",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        },
+        "destination_node_id": "node-1736517281355"
+      }
+    },
+    {
+      "name": "End Call",
+      "id": "node-1736517281355",
+      "type": "end",
+      "display_position": {
+        "x": 3143.75,
+        "y": -30.714285714285722
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Politely end the call"
+      }
+    },
+    {
+      "name": "Ask callback number",
+      "edges": [
+        {
+          "destination_node_id": "node-1770366942722",
+          "id": "edge-1770366733136-byeespq0q",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "got the user's callback number"
+          }
+        }
+      ],
+      "id": "node-1770364230394",
+      "type": "conversation",
+      "display_position": {
+        "x": 726,
+        "y": 1566
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Request best callback number.    Example: \"What's the best phone number to reach you?\"\n \n"
+      }
+    },
+    {
+      "name": "End Call",
+      "id": "node-1770364691637",
+      "type": "end",
+      "speak_during_execution": true,
+      "display_position": {
+        "x": 4996.589044431833,
+        "y": 2226.896237185398
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Tell the user thanks and politely end the call. Example: \"Ok. Thanks for giving us a call. Have a great day.\"\n"
+      }
+    },
+    {
+      "name": "Ask reason for visit",
+      "edges": [
+        {
+          "destination_node_id": "node-1770367455823",
+          "id": "edge-1770366942722-1dkmv5v6b",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the reasons for user's visit to the clinic"
+          }
+        }
+      ],
+      "id": "node-1770366942722",
+      "type": "conversation",
+      "display_position": {
+        "x": 1438.523399008339,
+        "y": 1749.3865986055066
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask what patient wants to be seen for. Example: \"What would you like to be seen for today?\"\n"
+      }
+    },
+    {
+      "name": "Ask about urgency",
+      "edges": [
+        {
+          "destination_node_id": "node-1770367792880",
+          "id": "edge-1770367455823-0-c729633a6",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the urgency level of the visit"
+          }
+        }
+      ],
+      "id": "node-1770367455823",
+      "type": "conversation",
+      "display_position": {
+        "x": 1839.9519704369104,
+        "y": 1743.6723128912208
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Assesses if routine or urgent based on reason provided. Example: \"Does this need to be seen urgently, or is a routine appointment okay?\"\n\n"
+      }
+    },
+    {
+      "name": "Ask provider preference",
+      "edges": [
+        {
+          "destination_node_id": "node-1770368444639",
+          "id": "edge-1770367792880-0-i1kwuzue0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the provider preference"
+          }
+        }
+      ],
+      "id": "node-1770367792880",
+      "type": "conversation",
+      "display_position": {
+        "x": 2234.2376847226237,
+        "y": 1737.958027176935
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Asks if patient has a specific provider preference. Example: \"Do you have a preferred provider, or would you like to see any available doctor?\"\nokay?\"\n\n"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "urgency",
+          "description": "Whether the user wants to visit the clinic urgently or not",
+          "type": "boolean",
+          "choices": []
+        },
+        {
+          "name": "provider_preference",
+          "description": "User's preferred provider, if any.",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "visit_reason",
+          "description": "Reason for visit to the clinic",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "callback_num",
+          "description": "User's telephone number",
+          "type": "number",
+          "choices": []
+        },
+        {
+          "name": "name",
+          "description": "User's name",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "birth_date",
+          "description": "User's date of birth",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "preferred_days_and_times",
+          "description": "User's preferred days and times for the visit",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "insurance",
+          "description": "user's insurance plan or provider",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "node-1770367879996-else-edge",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1770368640642",
+          "id": "edge-1770367879996-8xllux14u",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "All variables were extracted successfully"
+          }
+        }
+      ],
+      "id": "node-1770367879996",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 3475.2264070691936,
+        "y": 1815.0281053172664
+      }
+    },
+    {
+      "name": "Ask preferred days and times",
+      "edges": [
+        {
+          "destination_node_id": "node-1770368536576",
+          "id": "edge-1770368444639-0-h0jgyyj8f",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the preferred days and times."
+          }
+        }
+      ],
+      "id": "node-1770368444639",
+      "type": "conversation",
+      "display_position": {
+        "x": 2621.380541865481,
+        "y": 1745.1008843197922
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Asks about preferred days/times. Example: \"What days and times work best for you?\"\n\n\n"
+      }
+    },
+    {
+      "name": "Ask insurance",
+      "edges": [
+        {
+          "destination_node_id": "node-1770367879996",
+          "id": "edge-1770368536576-0-9b4gpwtfs",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Got the user's insurance name"
+          }
+        }
+      ],
+      "id": "node-1770368536576",
+      "type": "conversation",
+      "display_position": {
+        "x": 3022.8091132940526,
+        "y": 1736.5294557483635
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Asks for insurance carrier name. Example: \"What insurance do you have?\"\n\n\n\n"
+      }
+    },
+    {
+      "name": "Confirm collected information",
+      "edges": [
+        {
+          "destination_node_id": "node-1770409611218",
+          "id": "edge-1770368640642-nirc8vuf6",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirms the correctness\n"
+          }
+        }
+      ],
+      "id": "node-1770368640642",
+      "type": "conversation",
+      "display_position": {
+        "x": 3964.017615860404,
+        "y": 2138.3248086139697
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Read back DOB, phone, reason, preferences.\nExample: \"Let me confirm: I have your date of birth as [DOB], callback at [phone], to be seen for [reason], preferring [days/times] with [provider]. Is that correct?\"\n"
+      }
+    },
+    {
+      "name": "Final confirmation",
+      "edges": [
+        {
+          "destination_node_id": "node-1770364691637",
+          "id": "edge-1770409611218-ri8h44h55",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirms they have no further questions\n"
+          }
+        }
+      ],
+      "id": "node-1770409611218",
+      "type": "conversation",
+      "display_position": {
+        "x": 4378,
+        "y": 2151
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Tell the user that we will get back by tomorrow and politely ask if they needed help with anything else.\nExample: \"Perfect. We’ll take a look at the doctor’s schedule and give you a call back [timeframe] to let you know when they can see you. Did you need me to help you with anything else?\""
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "name",
+          "description": "User's name",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "birth_date",
+          "description": "User's date of birth",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else_edge-1773941188816-1-1u4jxor6i",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1773942105960",
+          "id": "edge-1773941188816-0-a98jrx1yq",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "All variables were extracted successfully"
+          }
+        }
+      ],
+      "id": "node-1773941188816",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -42,
+        "y": 1734
+      }
+    },
+    {
+      "name": "Logic Split",
+      "edges": [
+        {
+          "destination_node_id": "node-1770364230394",
+          "id": "edge-1773950848927-jxhfwv2y9",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{name}}",
+                "operator": "==",
+                "right": "jack"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1773942105960",
+      "else_edge": {
+        "destination_node_id": "node-1770364230394",
+        "id": "edge-1773942105960-p6kxb1uep",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "branch",
+      "display_position": {
+        "x": 342,
+        "y": 2046
+      }
+    }
+  ],
+  "components": [
+    {
+      "start_node_id": "node-1772570870418-copy-1773951665423-copy-1773951673468",
+      "nodes": [
+        {
+          "name": "Ask user's first and last name",
+          "edges": [
+            {
+              "destination_node_id": "node-1772572936057-copy-1773951665423-copy-1773951673468",
+              "id": "edge-1773951673468-shwnj1n0n",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "Received the user's full name (first and last) — either confirmed or clearly understood"
+              }
+            },
+            {
+              "destination_node_id": "node-1772573251738-copy-1773951665423-copy-1773951673468",
+              "id": "edge-1773951673468-8aoqdohvx",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "User declines to give any either the first name or last name"
+              }
+            }
+          ],
+          "id": "node-1772570870418-copy-1773951665423-copy-1773951673468",
+          "type": "conversation",
+          "display_position": {
+            "x": -1355.8535232262002,
+            "y": -167.50707066552377
+          },
+          "instruction": {
+            "type": "prompt",
+            "text": "Ask the user for their full name — first and last name.\n\nSay something like: \"Could I get your full name, please?\"\n\nIf the user only gives a first name (e.g. \"Bob\"), ask for the last name too: \"And your last name, Bob?\"\n\nIf the user only gives a last name or it's unclear which is which, clarify: \"Just to be sure — what's your first name?\"\n\nConfirmation — only when needed:\n- If the name is common and clearly heard (e.g. \"Bob Jones\", \"Maria Garcia\"), just acknowledge it and move on: \n  \"Great, thanks Bob!\"\n- If the name is unusual, has an ambiguous spelling, or the user seemed to struggle saying it, read it back: \"Just to make sure I have it right — that's [First] [Last]?\" - If the user spells it out or corrects you, always confirm the corrected version: \"Got it — [corrected name].\"\n\nIf the user gives a middle name as well, acknowledge it but focus on first and last: \"Thanks! I'll have you down as \n[First] [Last].\"\n\nIf the user refuses to provide their name: Explain why it's needed: \"I completely understand — I only ask because the clinic needs your name to set up the appointment and pull \nup your records. It's kept totally confidential.\"\n\nDo NOT ask more than twice."
+          }
+        },
+        {
+          "name": "Exit Component",
+          "id": "node-1772572481339-copy-1773951665423-copy-1773951673468",
+          "type": "end",
+          "speak_during_execution": false,
+          "display_position": {
+            "x": -218.80020960518033,
+            "y": 256.8548557742519
+          },
+          "instruction": {
+            "type": "static_text",
+            "text": "Component completed"
+          }
+        },
+        {
+          "variables": [
+            {
+              "name": "first_name",
+              "description": "First name of the user",
+              "type": "string",
+              "choices": []
+            },
+            {
+              "name": "last_name",
+              "description": "User's last name",
+              "type": "string",
+              "choices": []
+            }
+          ],
+          "else_edge": {
+            "id": "edge-1773951673468-ponerjphs",
+            "transition_condition": {
+              "type": "prompt",
+              "prompt": "Else"
+            }
+          },
+          "name": "Extract Variables",
+          "edges": [
+            {
+              "destination_node_id": "node-1772572481339-copy-1773951665423-copy-1773951673468",
+              "id": "edge-1773951673468-stycofcp0",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "first name and last name received"
+              }
+            }
+          ],
+          "id": "node-1772572936057-copy-1773951665423-copy-1773951673468",
+          "type": "extract_dynamic_variables",
+          "display_position": {
+            "x": -967.0736735425173,
+            "y": 115.58344039689268
+          }
+        },
+        {
+          "name": "Name Fallback node",
+          "edges": [
+            {
+              "destination_node_id": "node-1772570870418-copy-1773951665423-copy-1773951673468",
+              "id": "edge-1773951673468-08pcq96cq",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "User wants to try again or provide more information"
+              }
+            },
+            {
+              "destination_node_id": "node-1772572481339-copy-1773951665423-copy-1773951673468",
+              "id": "edge-1773951673468-0nkdaycqx",
+              "transition_condition": {
+                "type": "prompt",
+                "prompt": "User is done and wants to end the call"
+              }
+            }
+          ],
+          "id": "node-1772573251738-copy-1773951665423-copy-1773951673468",
+          "type": "conversation",
+          "display_position": {
+            "x": -930.360137353331,
+            "y": 579.7180323959657
+          },
+          "instruction": {
+            "type": "prompt",
+            "text": "The user was unable or unwilling to provide their first name or last name\n \nPolitely let them know that you may need this information to complete the booking, and offer alternatives:\n- They can call back when they have the information ready\n\nAsk if there's anything else you can help with.If they still decline after being reassured, let them know that's okay and move on. Do not ask more than two times total for any piece of information."
+          }
+        }
+      ],
+      "user_modified_timestamp": 1773951673468,
+      "name": "[SRCA] Name (Copy)",
+      "conversation_flow_component_id": "cf-component-1773951673468",
+      "tools": [],
+      "flex_mode": false
+    }
+  ],
+  "start_node_id": "start-node-1735258608795",
+  "start_speaker": "agent",
+  "tools": [
+    {
+      "name": "check_appt_detail",
+      "description": "Check the detail of the appointment based on user's name and DOB.",
+      "tool_id": "tool-1735708026985",
+      "type": "custom",
+      "url": "https://api.retellai.com/var_test",
+      "timeout_ms": 4000
+    },
+    {
+      "tool_id": "tool-1735710605973",
+      "timeout_ms": 4000,
+      "name": "update_appt_detail",
+      "description": "Update the appointment",
+      "type": "custom",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "appointment_new_time": {
+            "type": "string",
+            "description": "The timestamp of the new appointment."
+          }
+        },
+        "required": [
+          "appointment_new_time"
+        ]
+      },
+      "url": "https://api.retellai.com/random_status"
+    }
+  ],
+  "model_choice": {
+    "type": "cascading",
+    "model": "gpt-4.1"
+  },
+  "begin_tag_display_position": {
+    "x": -1338,
+    "y": 1950
+  },
+  "is_published": false
+}

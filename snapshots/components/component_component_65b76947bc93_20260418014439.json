@@ -1,0 +1,225 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_65b76947bc93",
+  "name": "Newtown - Location (Copy)",
+  "tools": [],
+  "nodes": [
+    {
+      "variables": [
+        {
+          "name": "prev_node",
+          "type": "string",
+          "description": "Always set as \"sa_location\""
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1776361667414-rwl4o6b8e",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1775693373536-preextract-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+          "id": "edge-1776361667414-ykurdz47o",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{prev_node}}",
+                "operator": "==",
+                "right": "sa_location"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1775693373536-start-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -3066,
+        "y": 510
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "preferred_location",
+          "type": "string",
+          "description": "The caller's preferred office location for the appointment. Extract as 'maspeth' for the Queens location or 'sunset_park' for the Brooklyn location. If the caller has no preference, extract as 'no_preference'. Leave empty if no location was discussed."
+        }
+      ],
+      "else_edge": {
+        "destination_node_id": "node-1775693373536-conv-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+        "id": "edge-1776361667414-nheyewzcy",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1775693373536-exit-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+          "id": "edge-1776361667414-nvmr2w4b5",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{preferred_location}}",
+                "operator": "!=",
+                "right": ""
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1775693373536-preextract-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -2610,
+        "y": 510
+      }
+    },
+    {
+      "name": "Preferred Location",
+      "edges": [
+        {
+          "destination_node_id": "node-1775693373536-extract-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+          "id": "edge-1776361667414-hpee082te",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the caller's preferred location, or they confirmed no preference"
+          }
+        },
+        {
+          "destination_node_id": "node-1775693373536-fallback-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+          "id": "edge-1776361667414-9ziofj71a",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Caller refused to answer after being asked twice"
+          }
+        },
+        {
+          "destination_node_id": "node-1775693373536-fallback-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+          "id": "edge-1776361667414-5ydk6h0zc",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller does not know which location they prefer"
+          }
+        }
+      ],
+      "id": "node-1775693373536-conv-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+      "type": "conversation",
+      "display_position": {
+        "x": -1986,
+        "y": 294
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask which office location the appointment was.\n\nNewtown's locations:\n- Elmhurst — 87-10 51st Ave, Elmhurst, NY 11373\n- Brooklyn — 761 55th St., Brooklyn, NY 11220\n- Manhattan — 198 Canal St., New York, NY 10013\n- Flushing — 37-12 Prince Street, Flushing, NY 11354\n- SoHo Endo Ambulatory Surgery Center — 168 Centre Street, New York, NY 10013\n- Great Neck — 440-450 Northern Boulevard, Great Neck, NY 11021\n\nSay something like:\n\"Which location have you booked?\"\n\nIf the user refuses to engage or wants to skip:\n\"No worries — I'll leave it open and the clinic will find the most convenient option.\"\n\nDo NOT ask more than once. If the caller doesn't know or has no preference, accept it and move on."
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "preferred_location",
+          "type": "string",
+          "description": "The caller's preferred office location for the appointment. Extract as 'maspeth' for the Queens location or 'sunset_park' for the Brooklyn location. If the caller has no preference, extract as 'no_preference'. Leave empty if no location was discussed."
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1776361667414-jyv0io06e",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1775693373536-exit-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+          "id": "edge-1776361667414-s0tk77y6a",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{preferred_location}}",
+                "operator": "!=",
+                "right": ""
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1775693373536-extract-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -1551,
+        "y": 153
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "preferred_location",
+          "type": "string",
+          "description": "Always set as \"not specified\""
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1776361667414-jioihrgu0",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1775693373536-exit-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+          "id": "edge-1776361667414-0l5oh4mbh",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{preferred_location}}",
+                "operator": "==",
+                "right": "not specified"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1775693373536-fallback-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -1554,
+        "y": 822
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "node-1775693373536-exit-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+      "type": "end",
+      "speak_during_execution": false,
+      "display_position": {
+        "x": -777,
+        "y": 524
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    }
+  ],
+  "start_node_id": "node-1775693373536-start-copy-1776346936812-copy-1776347088690-copy-1776361519338-copy-1776361667414",
+  "notes": [],
+  "user_modified_timestamp": 1776362047090,
+  "linked_conversation_flow_ids": []
+}

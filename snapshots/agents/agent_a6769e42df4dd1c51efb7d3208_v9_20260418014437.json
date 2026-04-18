@@ -1,0 +1,34 @@
+{
+  "agent_id": "agent_a6769e42df4dd1c51efb7d3208",
+  "channel": "voice",
+  "last_modification_timestamp": 1772730281532,
+  "agent_name": "Dialpad Initiation Conversation Flow Agent",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 10,
+    "conversation_flow_id": "conversation_flow_e2e8e487b352"
+  },
+  "webhook_url": "https://aviatic-leanora-sprawly.ngrok-free.dev/webhook",
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "version": 10,
+  "is_published": false,
+  "post_call_analysis_model": "gpt-4.1-mini",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "natural_filler_words": true
+  },
+  "voice_id": "retell-Cimo",
+  "max_call_duration_ms": 3600000,
+  "interruption_sensitivity": 0.9,
+  "normalize_for_speech": false,
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {
+    "digit_limit": 10,
+    "timeout_ms": 4000
+  }
+}

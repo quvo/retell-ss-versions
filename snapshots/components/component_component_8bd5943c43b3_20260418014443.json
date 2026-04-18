@@ -1,0 +1,45 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_8bd5943c43b3",
+  "name": "End Call (Copy)",
+  "tools": [],
+  "nodes": [
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Wrap up warmly and naturally using their first name if you have it.\n\nSay something like: \"Thanks so much for calling Premier MD, {{first_name}}! Have a wonderful [morning/afternoon/day/ evening/night]!\"\n\nKeep it brief — one or two sentences max. Don't ask any \nmore questions."
+      },
+      "name": "Conversation",
+      "edges": [],
+      "id": "conversation-1773270756810-copy-1775148840783",
+      "type": "conversation",
+      "display_position": {
+        "x": 222,
+        "y": 30
+      },
+      "skip_response_edge": {
+        "destination_node_id": "component-end-1773270756810-copy-1775148840783",
+        "id": "edge-1775148840783-kuk3aixpj",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        }
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "component-end-1773270756810-copy-1775148840783",
+      "type": "end",
+      "display_position": {
+        "x": 774,
+        "y": 54
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    }
+  ],
+  "start_node_id": "conversation-1773270756810-copy-1775148840783",
+  "user_modified_timestamp": 1775148841223,
+  "linked_conversation_flow_ids": []
+}

@@ -1,0 +1,1494 @@
+{
+  "conversation_flow_id": "conversation_flow_ec05bbbef8a9",
+  "version": 4,
+  "global_prompt": "## Identity\nYou are Ella, Premier MD Clinic's customer support agent.\nYour role is to help a new/existing patient with their request and/or inquiry about the clinic.\nYou have expertise in customer service and information collection.\n\n## Style Guardrails\nBe Concise: Respond succinctly, addressing one topic at most.\nEmbrace Variety: Use diverse language and rephrasing to enhance clarity without repeating content.\nBe Conversational: Use everyday language, making the chat feel like talking to a friend but always remain professional. Use patient-friendly language appropriate for healthcare context. Address folks by their first name.\nAsk one question at a time. Don't ask too many in one go.\nSchedule availabilities: If asked about the opening dates/slots, promptly tell the user you can't check the availabilities and move on to the next question.\nConfirm appointment: If asked to confirm an appointment, promptly tell the user you don't have access to the schedule, but will note for someone to reach out.\nName Usage: Use the caller's first name naturally in conversation, but not in every response. Skip the name when it would sound forced or repetitive — especially in quick back-to-back exchanges. Never use their name twice in the same response.\nUse the name:\n- When greeting them or transitioning between topics\n- When confirming important information back to them\n- When reassuring or empathizing\nSkip the name:\n- When asking quick follow-up questions\n- In back-to-back responses where you just used it\n- When reading back a summary (use it once at the start, not throughout)\n\n## Response Guidelines\nDon't summarize previous collected detail unless it needs clarification.\nDon't read back the summary until at the end of the call.\nWhen speaking the phone number, transform the format as follows:\n- Input formats like 4158923245, (415) 892-3245, or 415-892-3245\n- Should be pronounced as: \"four one five - eight nine two - three two four five\"\n- Important: Don't omit the space around the dash when speaking\n\n## Objection Handling\nIf the caller says they're not interested: \"I understand. Is there anything specific...\"\nIf the caller is frustrated: \"I hear your frustration, let me help resolve this...\"",
+  "nodes": [
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Wrap up warmly and naturally using their first name if you have it.\n\nSay something like: \"Thanks so much for calling Premier MD, {{patient_first_name}}! Have a wonderful [morning/afternoon/day/ evening/night]!\"\n\nKeep it brief — one or two sentences max. Don't ask any \nmore questions."
+      },
+      "name": "End Call",
+      "global_node_setting": {
+        "condition": "Wrap up warmly and naturally using their first name if you have it.\n\nSay something like: \"Thanks so much for calling Premier MD, {{first_name}}! Have a wonderful [morning/afternoon/day/ evening/night]!\"\n\nKeep it brief — one or two sentences max. Don't ask any \nmore questions.",
+        "positive_finetune_examples": [
+          {
+            "transcript": [
+              {
+                "content": "Goodbye / Bye / Bye bye",
+                "role": "user"
+              },
+              {
+                "content": "Thanks, that's all I needed",
+                "role": "user"
+              },
+              {
+                "content": "I'm all set / That's it",
+                "role": "user"
+              },
+              {
+                "content": "Have a good day / Take care",
+                "role": "user"
+              },
+              {
+                "content": "Okay, thanks  (after final confirmation)",
+                "role": "user"
+              },
+              {
+                "content": "No, nothing else / Nope, I'm good",
+                "role": "user"
+              },
+              {
+                "content": "I gotta go / I need to run",
+                "role": "user"
+              },
+              {
+                "content": "That's all for now",
+                "role": "user"
+              },
+              {
+                "content": "Thanks for your help (as a closing)",
+                "role": "user"
+              },
+              {
+                "content": "Alright, cool (after next steps given)",
+                "role": "user"
+              },
+              {
+                "content": "Perfect, I'll wait for the call back",
+                "role": "user"
+              }
+            ]
+          }
+        ],
+        "negative_finetune_examples": []
+      },
+      "id": "end-call-node-1775435168435",
+      "type": "end",
+      "display_position": {
+        "x": 4446,
+        "y": 1638
+      },
+      "speak_during_execution": true
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "transcript": [
+            {
+              "content": "I'd be happy to help you schedule an appointment. Let me get some information from you.",
+              "role": "agent"
+            },
+            {
+              "content": "May I have your full name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "What's the best phone number to reach you?",
+              "role": "agent"
+            },
+            {
+              "content": "What would you like to be seen for today?",
+              "role": "agent"
+            },
+            {
+              "content": "Does this need to be seen urgently, or is a routine appointment okay?",
+              "role": "agent"
+            },
+            {
+              "content": "Do you have a preferred provider, or would you like to see any available doctor?",
+              "role": "agent"
+            },
+            {
+              "content": "What days and times work best for you?",
+              "role": "agent"
+            }
+          ],
+          "id": "fe-1775535349554"
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the following details from the user, one at a time: full name, date of birth, contact phone, reason for visit, provider preference, urgency level, appointment date/time preference. Use the `extract_details` function to collect these details.\n\nAfter collecting all the details, confirm the details with the user, say: \"Let me confirm: I have [name], date of birth [DOB], callback at [phone], to be seen for [reason], preferring [days/times] with [provider]. Is that correct?\""
+      },
+      "name": "Make an Appointment",
+      "edges": [
+        {
+          "destination_node_id": "node-1775536235409",
+          "id": "edge-1775529135972-zinsnsicj",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirmed the correctness of the information"
+          }
+        }
+      ],
+      "id": "node-1775437064807",
+      "knowledge_base_ids": [],
+      "type": "subagent",
+      "display_position": {
+        "x": 2334,
+        "y": 78
+      },
+      "tools": [
+        {
+          "name": "extract_details",
+          "description": "Extract the detail for making a new appointment likes full name, date of birth, contact phone, reason for visit, provider preference, urgency level, appointment date/time preference.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "appt_date_time_preference",
+              "description": "Extract the preferred days of week, time of day, or specific dates if any from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_provider_preference",
+              "description": "Extract the provider name or 'any available provider' from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_first_name",
+              "description": "Extract the patient's first name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_last_name",
+              "description": "Extract the patient's last name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_dob",
+              "description": "Extract the patient's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_reason_for_visit",
+              "description": "Extract the brief description of what patient wants to be seen for from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_urgency_level",
+              "description": "Extract the routine, urgent (within 1 week), or immediate concerns from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_callback_number",
+              "description": "Extract the patient's best callback number with area code"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        }
+      ]
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Use your knowledge to answer any general questions about the clinic. After providing your answer, ask the user if they still have any other questions.\n\nKeep FAQ answers to one or two sentences. Do NOT go into lengthy detail. If the user wants more info, suggest they visit mypremiermd.com or ask when the clinic can call them back."
+      },
+      "name": "FAQs",
+      "edges": [
+        {
+          "destination_node_id": "end-call-node-1775435168435",
+          "id": "edge-1775442671216-zwl2umvky",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User said they don't have any other questions"
+          }
+        }
+      ],
+      "id": "node-1775442671216",
+      "knowledge_base_ids": [
+        "knowledge_base_a577cdffa2f953cc",
+        "knowledge_base_802ad84d1e79c582"
+      ],
+      "type": "conversation",
+      "display_position": {
+        "x": 3918,
+        "y": 1350
+      }
+    },
+    {
+      "name": "Anything else?",
+      "edges": [
+        {
+          "destination_node_id": "end-call-node-1775435168435",
+          "id": "edge-1775443045259-5wb9vvzd0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User said they don't need anything else"
+          }
+        }
+      ],
+      "id": "node-1775443045259",
+      "type": "conversation",
+      "display_position": {
+        "x": 3894,
+        "y": 2142
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask if the user has anything else they need help with"
+      }
+    },
+    {
+      "name": "Greeting",
+      "edges": [
+        {
+          "destination_node_id": "node-1775534538843",
+          "id": "edge-1775568178065-8l6h964kx",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has fully finished stating what they need help with"
+          }
+        },
+        {
+          "destination_node_id": "node-1775567900004",
+          "id": "edge-1775568232286-bda9dache",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has fully finished stating what they need help with, but the intent was not clear"
+          }
+        }
+      ],
+      "id": "node-1775529462138",
+      "type": "conversation",
+      "display_position": {
+        "x": 558,
+        "y": 126
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Hello, this is Ella, how can I help you today?"
+      }
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "transcript": [
+            {
+              "content": "I'd be happy to help you reschedule your appointment.",
+              "role": "agent"
+            },
+            {
+              "content": "May I have your full name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "What date is your current appointment scheduled for?",
+              "role": "agent"
+            }
+          ],
+          "id": "fe-1775536346917"
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the following details from the user, one at a time: full name, date of birth, current appointment date, current provider name, reason for rescheduling, new date/time preference, contact phone. Use the `extract_details` function to collect these details.\n\nAfter getting the current appointment detail, read back the appointment to ensure correct one: \"I have your appointment on [date] at [time] with Dr. [name]. Is that the appointment you'd like to reschedule?\"\n\nThen, continue collecting the rest of the details."
+      },
+      "name": "Reschedule an Appointment",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1775536442166-0",
+          "id": "subagent-1775531403668-0-edge-1775531403668-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has provided all the requested details"
+          }
+        }
+      ],
+      "id": "subagent-1775531403668-0",
+      "type": "subagent",
+      "display_position": {
+        "x": 2406,
+        "y": 702
+      },
+      "tools": [
+        {
+          "name": "extract_details",
+          "description": "Extract the detail for rescheduling an appointment likes full name, date of birth, current appointment date, current provider name, reason for rescheduling, new date/time preference, contact phone.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "appt_date_time_preference",
+              "description": "Extract when patient would like to reschedule to from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_current_provider",
+              "description": "Extract who the current appointment is with (if known) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_first_name",
+              "description": "Extract the patient's first name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_last_name",
+              "description": "Extract the patient's last name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_dob",
+              "description": "Extract the patient's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_reason_for_rescheduling",
+              "description": "Extract brief reason for change (optional but helpful) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_callback_number",
+              "description": "Extract the best callback number to confirm new appointment from conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        }
+      ]
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "transcript": [
+            {
+              "content": "I can help you with that cancellation.",
+              "role": "agent"
+            },
+            {
+              "content": "May I have your name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "Which appointment would you like to cancel?",
+              "role": "agent"
+            },
+            {
+              "content": "I have your appointment on [date] at [time] with Dr. [name]. Is this the one you'd like to cancel?",
+              "role": "agent"
+            },
+            {
+              "content": "Would you like to reschedule this appointment, or just cancel it?",
+              "role": "agent"
+            },
+            {
+              "content": "May I ask why you're cancelling?",
+              "role": "agent"
+            },
+            {
+              "content": "I'll submit this cancellation for your [date] appointment. Our team will process it and you should receive a confirmation shortly.",
+              "role": "agent"
+            },
+            {
+              "content": "And since you'd like to reschedule, when would work better for you?",
+              "role": "agent"
+            }
+          ],
+          "id": "fe-1775562303547"
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the following details from the user, one at a time: full name, date of birth, appointment date, provider name, reason for cancellation, future rescheduling interest. Use the `extract_details` function to collect these details.\n\nAfter collecting all the details, confirm the details with the user, say: \"I have your appointment on [date] at [time] with Dr. [name]. Is this the one you'd like to cancel?\""
+      },
+      "name": "Cancel an Appointment",
+      "edges": [
+        {
+          "destination_node_id": "subagent-1775531403668-0",
+          "id": "edge-1775562369116-lsg519m56",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is interested in rescheduling their appointment"
+          }
+        },
+        {
+          "destination_node_id": "node-1775443045259",
+          "id": "edge-1775563893473-slbaxrynr",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User intended to just cancel their appointment"
+          }
+        }
+      ],
+      "id": "subagent-1775532214922-0",
+      "type": "subagent",
+      "display_position": {
+        "x": 1662,
+        "y": 1062
+      },
+      "tools": [
+        {
+          "name": "extract_details",
+          "description": "Extract the detail for cancelling an appointment likes full name, date of birth, appointment date, provider name, reason for cancellation, future rescheduling interest.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "appt_date_time",
+              "description": "Extract date of appointment to be cancelled from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_current_provider",
+              "description": "Extract who appointment is with (if known) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_first_name",
+              "description": "Extract the patient's first name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_last_name",
+              "description": "Extract the patient's last name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_dob",
+              "description": "Extract the patient's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_reason_for_cancelling",
+              "description": "Extract brief reason (optional but helps with patterns)"
+            },
+            {
+              "type": "string",
+              "name": "appt_future_reschedule_interest",
+              "description": "Extract whether patient wants to reschedule or just cancel from the conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        }
+      ]
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "transcript": [
+            {
+              "content": "I'd be happy to help you confirm your appointment details.",
+              "role": "agent"
+            },
+            {
+              "content": "May I have your name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "What information about your appointment would you like to confirm?",
+              "role": "agent"
+            },
+            {
+              "content": "When is your appointment scheduled?",
+              "role": "agent"
+            },
+            {
+              "content": "I've noted that you need confirmation for your [date] appointment. Our team will look up those details and call you right back.",
+              "role": "agent"
+            },
+            {
+              "content": "What's the best number to call you back at?",
+              "role": "agent"
+            }
+          ],
+          "id": "fe-1775563431055"
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the following details from the user, one at a time: full name, date of birth, appointment date, information needed, contact phone. Use the `extract_details` function to collect these details.\n\nBefore collecting the best callback number, confirm the details with the user, say: \"I've noted that you need confirmation for your [date] appointment. Our team will look up those details and call you right back.\""
+      },
+      "name": "Confirm an appointment",
+      "edges": [
+        {
+          "destination_node_id": "node-1775443045259",
+          "id": "subagent-1775532889528-0-edge-1775532889528-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has provided all the requested details"
+          }
+        }
+      ],
+      "id": "subagent-1775532889528-0",
+      "type": "subagent",
+      "display_position": {
+        "x": 3150,
+        "y": 1446
+      },
+      "tools": [
+        {
+          "name": "extract_details",
+          "description": "Extract the detail for confirming an appointment or appointment details likes full name, date of birth, appointment date, information needed.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "appt_date_time",
+              "description": "Extract when patient believes appointment is scheduled from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_first_name",
+              "description": "Extract the patient's first name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_last_name",
+              "description": "Extract the patient's last name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_dob",
+              "description": "Extract the patient's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_information_needed",
+              "description": "Extract what specifically they want to confirm (time, provider, location, preparation instructions) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_callback_number",
+              "description": "Extract the best callback number from the conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        }
+      ]
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "transcript": [
+            {
+              "content": "I can help you get a message to your provider.",
+              "role": "agent"
+            },
+            {
+              "content": "Before we continue, is this an urgent medical issue or emergency?",
+              "role": "agent"
+            },
+            {
+              "content": "May I have your name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "Which provider is this message for?",
+              "role": "agent"
+            },
+            {
+              "content": "What is this regarding - a medication question, test results, symptoms, or something else?",
+              "role": "agent"
+            },
+            {
+              "content": "Please go ahead and tell me your question or message.",
+              "role": "agent"
+            },
+            {
+              "content": "Do you need a response today, or is 2-3 business days okay?",
+              "role": "agent"
+            },
+            {
+              "content": "Would you like the provider to call you back, or is a message response okay?",
+              "role": "agent"
+            },
+            {
+              "content": "What's the best number to reach you?",
+              "role": "agent"
+            },
+            {
+              "content": "Let me make sure I have this right: [repeats message]. Is that correct?",
+              "role": "agent"
+            },
+            {
+              "content": "Your message will go to Dr. [name]'s team, and you should hear back within [timeframe].",
+              "role": "agent"
+            }
+          ],
+          "id": "fe-1775535114526"
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the following details from the user, one at a time: full name, date of birth, provider name, message category, message content, urgency level, callback preference, contact phone. Use the `extract_details` function to collect these details.\n\nAfter getting all details, read back to confirm message content with patient, say: \"Let me make sure I have this right: [repeats message]. Is that correct?\""
+      },
+      "name": "Messages to Provider from Patient",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1775564234469-0",
+          "id": "subagent-1775533555656-0-edge-1775533555656-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has confirmed the message is correct"
+          }
+        }
+      ],
+      "id": "subagent-1775533555656-0",
+      "type": "subagent",
+      "display_position": {
+        "x": 2406,
+        "y": 2022
+      },
+      "tools": [
+        {
+          "name": "extract_details",
+          "description": "Extract the detail for communicating messages to provider from patient likes full name, date of birth, provider name, message category, message content, urgency level, callback preference, contact phone.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "patient_first_name",
+              "description": "Extract the patient's first name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_last_name",
+              "description": "Extract the patient's last name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_dob",
+              "description": "Extract the patient's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "comm_provider_name",
+              "description": "Extract which provider the message is for from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "comm_message_category",
+              "description": "Extract type of message (medication question, test results question, symptom update, form/documentation request, other) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "comm_message_content",
+              "description": "Extract the actual message/question in patient's own words from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "comm_urgency_level",
+              "description": "Extract urgency level from the conversation. Routine (response in 2-3 business days), urgent (same day response needed), or emergency (needs immediate attention)."
+            },
+            {
+              "type": "string",
+              "name": "comm_callback_preference",
+              "description": "Extract whether patient prefers phone call back or message response"
+            },
+            {
+              "type": "string",
+              "name": "comm_callback_number",
+              "description": "Extract the best callback number from the conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        }
+      ]
+    },
+    {
+      "name": "User Intent",
+      "edges": [
+        {
+          "destination_node_id": "node-1775437064807",
+          "id": "edge-1775534547213-bqk7do95w",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to schedule a new appointment with a provider"
+          }
+        },
+        {
+          "destination_node_id": "subagent-1775531403668-0",
+          "id": "edge-1775534561470-chb1r9787",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has an existing appointment and wants to change the date/time"
+          }
+        },
+        {
+          "destination_node_id": "subagent-1775532214922-0",
+          "id": "edge-1775534567377-ayvvslea9",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to cancel an existing appointment"
+          }
+        },
+        {
+          "destination_node_id": "subagent-1775532889528-0",
+          "id": "edge-1775534574050-z8eypam62",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to confirm they have an appointment or verify appointment details"
+          }
+        },
+        {
+          "destination_node_id": "subagent-1775533555656-0",
+          "id": "edge-1775534580608-akwmcjvgb",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to send a message to their provider (medical question, update, non-urgent concern)"
+          }
+        },
+        {
+          "destination_node_id": "node-1775565275202",
+          "id": "edge-1775565229248-0n23qyi8j",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User needs a prescription refilled"
+          }
+        },
+        {
+          "destination_node_id": "node-1775566315433",
+          "id": "edge-1775566412315-1c4ngijny",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Pharmacy is calling with question or request for provider (prior auth, clarification, etc.)"
+          }
+        },
+        {
+          "destination_node_id": "node-1775569174668",
+          "id": "edge-1775569157587-3fkuhshuo",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is new to the practice and wants to establish care or schedule first appointment"
+          }
+        },
+        {
+          "destination_node_id": "node-1775570267652",
+          "id": "edge-1775570584578-wpv114z4d",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has questions or issues related to insurance, prior authorizations, or case management"
+          }
+        }
+      ],
+      "id": "node-1775534538843",
+      "else_edge": {
+        "destination_node_id": "node-1775567900004",
+        "id": "edge-1775534538843-z7ljc36u3",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "branch",
+      "display_position": {
+        "x": 1110,
+        "y": 6
+      }
+    },
+    {
+      "name": "Set expectation (Make an appointment)",
+      "edges": [
+        {
+          "destination_node_id": "node-1775443045259",
+          "id": "edge-1775536235409-782kj7q73",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "id": "node-1775536235409",
+      "type": "conversation",
+      "display_position": {
+        "x": 3246,
+        "y": 126
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Set expectation, say: \"Perfect. Our scheduling team will review this and call you back within 1 business day to confirm your appointment time.\""
+      }
+    },
+    {
+      "name": "Set expectation (Reschedule)",
+      "edges": [
+        {
+          "destination_node_id": "node-1775443045259",
+          "id": "conversation-1775536442166-0-edge-1775536442166-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "id": "conversation-1775536442166-0",
+      "type": "conversation",
+      "display_position": {
+        "x": 3246,
+        "y": 822
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Set expectation, say: \"Someone will call you back within 1 business day to confirm your new appointment time.\""
+      }
+    },
+    {
+      "name": "Set expectation (Message2Provider)",
+      "edges": [
+        {
+          "destination_node_id": "node-1775443045259",
+          "id": "conversation-1775564234469-0-edge-1775564234469-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "id": "conversation-1775564234469-0",
+      "type": "conversation",
+      "display_position": {
+        "x": 3246,
+        "y": 2118
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Set expectation, say: \"Your message will go to Dr. [name]'s team, and you should hear back within [timeframe].\""
+      }
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "transcript": [
+            {
+              "content": "I can help you request a prescription refill.",
+              "role": "agent"
+            },
+            {
+              "content": "May I have your name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "Which medication do you need refilled, and what's the dosage?",
+              "role": "agent"
+            },
+            {
+              "content": "Which provider prescribes this medication for you?",
+              "role": "agent"
+            },
+            {
+              "content": "Which pharmacy do you use, and where is it located?",
+              "role": "agent"
+            },
+            {
+              "content": "About when did you last refill this medication?",
+              "role": "agent"
+            },
+            {
+              "content": "When do you run out of your current supply?",
+              "role": "agent"
+            },
+            {
+              "content": "What's the best number to reach you?",
+              "role": "agent"
+            },
+            {
+              "content": "Let me confirm: you need [medication] [dosage] sent to [pharmacy] in [location]. Correct?",
+              "role": "agent"
+            }
+          ],
+          "id": "fe-1775565370253"
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the following details from the user, one at a time: full name, date of birth, medication name, medication strength/dosage, pharmacy name, pharmacy location, last refill date, provider name, contact phone. Use the `extract_details` function to collect these details.\n\nAfter collecting all the details, read back medication, dosage, pharmacy, say: \"Let me confirm: you need [medication] [dosage] sent to [pharmacy] in [location]. Correct?\""
+      },
+      "name": "Prescription Refilled",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1775565909133-0",
+          "id": "edge-1775565275202-xfmaddnnt",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirmed the correctness of the information"
+          }
+        }
+      ],
+      "id": "node-1775565275202",
+      "type": "subagent",
+      "display_position": {
+        "x": 2406,
+        "y": 2694
+      },
+      "tools": [
+        {
+          "name": "extract_details",
+          "description": "Extract the detail for prescription refilled likes full name, date of birth, medication name, medication strength/dosage, pharmacy name, pharmacy location, last refill date, provider name, contact phone",
+          "variables": [
+            {
+              "type": "string",
+              "name": "patient_first_name",
+              "description": "Extract the user's first name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_last_name",
+              "description": "Extract the user's last name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_dob",
+              "description": "Extract the user's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pres_medication_name",
+              "description": "Extract the name of medication needing refill from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pres_medication_dosage",
+              "description": "Extract the dosage strength if patient knows it (e.g., '10mg', '50mg twice daily') from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pres_pharmacy_name",
+              "description": "Extract the pharmacy name, where prescription should be sent, from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pres_pharmacy_location",
+              "description": "Extract the pharmacy location (City or cross-streets to identify specific pharmacy) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pres_last_refill_date",
+              "description": "Extract the approximate date of last refill (helps verify timing) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pres_provider_name",
+              "description": "Extract the provider name who prescribes this medication from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pres_callback_number",
+              "description": "Extract the callback number from the conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        }
+      ]
+    },
+    {
+      "name": "Set expectation (Prescription Refilled)",
+      "edges": [
+        {
+          "destination_node_id": "node-1775443045259",
+          "id": "conversation-1775565909133-0-edge-1775565909133-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "id": "conversation-1775565909133-0",
+      "type": "conversation",
+      "display_position": {
+        "x": 3246,
+        "y": 2790
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Set expectation, say: \"I'll send this to Dr. [name]'s team. Refills typically take 2-3 business days to process.\""
+      }
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "transcript": [
+            {
+              "content": "I'll help you get this information to the provider.",
+              "role": "agent"
+            },
+            {
+              "content": "Which pharmacy are you calling from, and may I have your name and callback number?",
+              "role": "agent"
+            },
+            {
+              "content": "Which patient is this regarding? May I have their name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "What do you need from the provider - is this a prior authorization, prescription clarification, or something else?",
+              "role": "agent"
+            },
+            {
+              "content": "What specifically do you need? Please give me all the details.",
+              "role": "agent"
+            },
+            {
+              "content": "Is this urgent - is the patient waiting for this medication?",
+              "role": "agent"
+            },
+            {
+              "content": "Let me confirm I have this correct: [reads back all information]",
+              "role": "agent"
+            }
+          ],
+          "id": "fe-1775566552548"
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the following details from the user, one at a time: pharmacy name, pharmacy contact person, pharmacy phone, pharmacy fax, patient name, patient date of birth, type of request, specific details, urgency. Use the `extract_details` function to collect these details.\n\nAfter collecting all the details, read back all the details, say: \"Let me confirm I have this correct: [reads back all information]\""
+      },
+      "name": "Messages to Provider from Pharmacy",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1775566557303-0",
+          "id": "edge-1775566315433-gqal4rhx9",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirmed the correctness of the information"
+          }
+        }
+      ],
+      "id": "node-1775566315433",
+      "type": "subagent",
+      "display_position": {
+        "x": 2406,
+        "y": 3366
+      },
+      "tools": [
+        {
+          "name": "extract_details",
+          "description": "Extract the detail for prescription refilled likes pharmacy name, pharmacy contact person, pharmacy phone, pharmacy fax, patient name, patient date of birth, type of request, specific details, urgency.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "pharmacy_name",
+              "description": "Extract the name of pharmacy calling from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pharmacy_contact_person",
+              "description": "Extract the name of person calling from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pharmacy_phone",
+              "description": "Extract the direct callback number from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pharmacy_fax",
+              "description": "Extract the fax number if applicable from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_first_name",
+              "description": "Extract the patient's first name the inquiry is regarding from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_last_name",
+              "description": "Extract the patient's last name the inquiry is regarding from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_dob",
+              "description": "Extract the patient's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "comm_request_type",
+              "description": "Extract the type of request (Prior authorization, clarification on prescription, refill request, substitution question, other) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "comm_specific_details",
+              "description": "Extract the details of what pharmacy needs from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "comm_urgency",
+              "description": "Extract the whether patient is waiting or routine from the conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        }
+      ]
+    },
+    {
+      "name": "Set expectation (Messages From Pharmacy)",
+      "edges": [
+        {
+          "destination_node_id": "node-1775443045259",
+          "id": "conversation-1775566557303-0-edge-1775566557303-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "id": "conversation-1775566557303-0",
+      "type": "conversation",
+      "display_position": {
+        "x": 3246,
+        "y": 3462
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Set expectation, say: \"I'll send this to Dr. [name]'s team immediately. Typical response time is 1 business day.\""
+      }
+    },
+    {
+      "name": "Intent Clarification",
+      "edges": [
+        {
+          "destination_node_id": "node-1775534538843",
+          "id": "edge-1775567900004-f8a4e81ue",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User clearly states their intent that they want help with an appointment, leave a message to provider"
+          }
+        }
+      ],
+      "id": "node-1775567900004",
+      "type": "conversation",
+      "display_position": {
+        "x": 1758,
+        "y": 5334
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "User's request wasn't specific enough to determine exactly what they need. Acknowledge what they have shared so far and gently clarify their intent."
+      }
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "transcript": [
+            {
+              "content": "Welcome! I'd be happy to help you become a patient at our practice.",
+              "role": "agent"
+            },
+            {
+              "content": "Let me get some basic information. May I have your full name, date of birth, phone number, and email address?",
+              "role": "agent"
+            },
+            {
+              "content": "What's your current address?",
+              "role": "agent"
+            },
+            {
+              "content": "Are you looking for a primary care provider, or a specialist?",
+              "role": "agent"
+            },
+            {
+              "content": "What brings you to our practice? Are you looking for ongoing care or a specific issue?",
+              "role": "agent"
+            },
+            {
+              "content": "Are you currently taking any medications? Do you have any major medical conditions I should note?",
+              "role": "agent"
+            },
+            {
+              "content": "How did you hear about our practice?",
+              "role": "agent"
+            },
+            {
+              "content": "Do you have a preference for which provider you see?",
+              "role": "agent"
+            },
+            {
+              "content": "When would you like to come in for your first appointment?",
+              "role": "agent"
+            }
+          ],
+          "id": "fe-1775569813234"
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the following details from the user, one at a time: full name, date of birth, contact phone, contact email, current address, reason for seeking care, primary care or specialist, referral source, current medications, medical history highlights, preferred provider, scheduling preference. Use the `extract_details` function to collect these details.\n\nAfter collecting all the details, reads back key details, say: \"Let me make sure I have everything: [confirms name, DOB, contact info, insurance, reason for care]\""
+      },
+      "name": "New Patients",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1775569846339-0",
+          "id": "edge-1775572536264-5le2oe3p9",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirmed the correctness of the information"
+          }
+        }
+      ],
+      "id": "node-1775569174668",
+      "type": "subagent",
+      "display_position": {
+        "x": 2406,
+        "y": 4038
+      },
+      "tools": [
+        {
+          "name": "extract_details",
+          "description": "Extract the detail for making a new appointment for a new patient likes full name, date of birth, contact phone, contact email, current address, reason for seeking care, primary care or specialist, referral source, current medications, medical history highlights, preferred provider, scheduling preference.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "patient_first_name",
+              "description": "Extract the user's first name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_last_name",
+              "description": "Extract the user's last name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_dob",
+              "description": "Extract the user's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_callback_number",
+              "description": "Extract the user's best callback number from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_contact_email",
+              "description": "Extract the user's email address for forms and communications from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_current_address",
+              "description": "Extract the user's full address including zip code from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_reason_seeking_care",
+              "description": "Extract why patient wants to establish care from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_primary_care_specialist",
+              "description": "Extract whether seeking primary care or specialist care from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_referral_source",
+              "description": "Extract how they heard about practice from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_current_medications",
+              "description": "Extract any current medications (brief list) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_medical_history",
+              "description": "Extract major medical conditions if any from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_preferred_provider",
+              "description": "Extract specific provider request or any available from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "appt_scheduling_preference",
+              "description": "Extract preferred days/times for first appointment from the conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        }
+      ]
+    },
+    {
+      "name": "Set expectation (New Patients)",
+      "edges": [
+        {
+          "destination_node_id": "node-1775443045259",
+          "id": "conversation-1775569846339-0-edge-1775569846339-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "id": "conversation-1775569846339-0",
+      "type": "conversation",
+      "display_position": {
+        "x": 3246,
+        "y": 4134
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Set expectation, say: \"Great! Our patient registration team will process this information, send you new patient forms, and call you to schedule your first appointment within 1 business day.\""
+      }
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "transcript": [
+            {
+              "content": "I can help you with that. Is this about a prior authorization, insurance coverage, or something else?",
+              "role": "agent"
+            },
+            {
+              "content": "May I have your name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "Please explain what's happening and what you need help with.",
+              "role": "agent"
+            },
+            {
+              "content": "Is this for a specific appointment, medication, procedure, or service?",
+              "role": "agent"
+            },
+            {
+              "content": "Is there a deadline for this, or does this need to be resolved urgently?",
+              "role": "agent"
+            },
+            {
+              "content": "What's the best number for our billing team to call you back?",
+              "role": "agent"
+            }
+          ],
+          "id": "fe-1775570860767"
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the following details from the user, one at a time: full name, date of birth, issue type, specific issue details, related provider/service, timeline/urgency, contact phone. Use the `extract_details` function to collect these details.\n\nValidation Rules\n- Issue Details: Must be specific enough for billing team to understand and act on. If vague, probe for more details.\n- Prior Authorization: If prior auth issue, note what service needs authorization and if patient has already started the process.\n- Urgency: If appointment or procedure is scheduled soon and needs prior auth, mark as urgent."
+      },
+      "name": "Insurance / Prior Authorization / Case Management",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1775570601268-1",
+          "id": "edge-1775570267652-zkdglr6h7",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has provided all the requested details"
+          }
+        }
+      ],
+      "id": "node-1775570267652",
+      "type": "subagent",
+      "display_position": {
+        "x": 1662,
+        "y": 4590
+      },
+      "tools": [
+        {
+          "name": "extract_details",
+          "description": "Extract the detail for making a new appointment likes full name, date of birth, issue type, specific issue details, related provider/service, timeline/urgency, contact phone.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "patient_first_name",
+              "description": "Extract the user's first name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_last_name",
+              "description": "Extract the user's last name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_dob",
+              "description": "Extract the user's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "case_issue_type",
+              "description": "Extract the issue type (Prior authorization, insurance verification, claim question, case management, coverage question) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "case_specific_details",
+              "description": "Extract the detailed description of what patient needs help with from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "case_related_provider_service",
+              "description": "Extract what service or provider this relates to from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "case_timeline_urgency",
+              "description": "Extract any deadlines or urgency from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "patient_callback_number",
+              "description": "Extract the best callback number from the conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        }
+      ]
+    },
+    {
+      "name": "Set expectation (Insurance / Prior Auth / Case Mgmt)",
+      "edges": [
+        {
+          "destination_node_id": "node-1775443045259",
+          "id": "conversation-1775570601268-0-edge-1775570601268-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Describe the transition condition"
+          }
+        }
+      ],
+      "id": "conversation-1775570601268-0",
+      "type": "conversation",
+      "display_position": {
+        "x": 3246,
+        "y": 4734
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Set expectation, say: \"I'll send this to our billing team. They'll review your case and call you back within 1 business day.\""
+      }
+    },
+    {
+      "name": "Confirmation (Insurance / Prior Auth / Case Mgmt)",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1775570601268-0",
+          "id": "conversation-1775570601268-1-edges-1775570601268-0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirmed the correctness of the information"
+          }
+        }
+      ],
+      "id": "conversation-1775570601268-1",
+      "type": "conversation",
+      "display_position": {
+        "x": 2502,
+        "y": 4734
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Read back key details, say: \"Let me make sure I have this right: [repeats issue details]\""
+      }
+    }
+  ],
+  "start_node_id": "node-1775529462138",
+  "start_speaker": "agent",
+  "model_choice": {
+    "type": "cascading",
+    "model": "gpt-4.1"
+  },
+  "tool_call_strict_mode": true,
+  "kb_config": {
+    "top_k": 3,
+    "filter_score": 0.6
+  },
+  "begin_tag_display_position": {
+    "x": 6,
+    "y": 174
+  },
+  "is_published": false,
+  "is_transfer_cf": false
+}

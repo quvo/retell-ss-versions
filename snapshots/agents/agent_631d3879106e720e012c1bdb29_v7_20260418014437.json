@@ -1,0 +1,25 @@
+{
+  "agent_id": "agent_631d3879106e720e012c1bdb29",
+  "channel": "voice",
+  "last_modification_timestamp": 1770847198440,
+  "agent_name": "Medical Center Receptionist",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 7,
+    "conversation_flow_id": "conversation_flow_b20927afc5cd"
+  },
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "version": 7,
+  "is_published": false,
+  "handbook_config": {
+    "natural_filler_words": true
+  },
+  "analysis_successful_prompt": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail.",
+  "analysis_summary_prompt": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call.",
+  "voice_id": "11labs-Cimo",
+  "max_call_duration_ms": 3600000,
+  "interruption_sensitivity": 0.9,
+  "normalize_for_speech": false,
+  "user_dtmf_options": {}
+}
