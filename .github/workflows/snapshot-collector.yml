@@ -68,11 +68,23 @@ jobs:
           TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
           TOTAL_NEW="${{ steps.check_changes.outputs.total_new }}"
 
+          # Copy snapshots to temp location
+          TEMP_SNAPSHOTS=$(mktemp -d)
+          cp -r snapshots/* "$TEMP_SNAPSHOTS/"
+
+          # Switch to snapshots-archive branch
           git checkout snapshots-archive
+
+          # Copy snapshots back
+          cp -r "$TEMP_SNAPSHOTS"/* snapshots/
+
+          # Commit and push
           git add snapshots/
           git commit -m "Snapshot update: $TIMESTAMP - $TOTAL_NEW new versions"
           git push origin snapshots-archive
-          git checkout main
+
+          # Cleanup
+          rm -rf "$TEMP_SNAPSHOTS"
 
       - name: Send Slack notification
         if: steps.check_changes.outputs.changes == 'true'
