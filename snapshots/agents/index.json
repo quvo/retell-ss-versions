@@ -55,7 +55,7 @@
     ]
   },
   "agent_e6cf0d7c969c505dc0354afac6": {
-    "current_version": 5,
+    "current_version": 6,
     "snapshots": [
       {
         "version": 4,
@@ -70,6 +70,14 @@
         "timestamp": "2026-04-18T01:44:34.529Z",
         "file": "agent_e6cf0d7c969c505dc0354afac6_v5_20260418014434.json",
         "checksum": "sha256:2bb5641202cb6770d151f8d444cf54b0baaefe08acc93fa319e3d0bc1cd2eace",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 6,
+        "timestamp": "2026-04-18T02:57:22.794Z",
+        "file": "agent_e6cf0d7c969c505dc0354afac6_v6_20260418025722.json",
+        "checksum": "sha256:93795cd2dfb613b84e82afa300225bc7c22e057527c2fa3ce7676b545a67553a",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
       }
