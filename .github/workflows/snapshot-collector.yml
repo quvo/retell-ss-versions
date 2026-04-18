@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout snapshots-archive branch
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
-          ref: snapshots-archive
+          ref: main
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,6 +30,12 @@ jobs:
 
       - name: Build TypeScript
         run: npm run build
+
+      - name: Fetch snapshots-archive branch
+        run: |
+          git fetch origin snapshots-archive:snapshots-archive || echo "snapshots-archive branch does not exist yet"
+          git checkout snapshots-archive 2>/dev/null || git checkout -b snapshots-archive
+          git checkout main
 
       - name: Run snapshot collector
         env:
@@ -61,9 +67,11 @@ jobs:
           TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
           TOTAL_NEW="${{ steps.check_changes.outputs.total_new }}"
 
+          git checkout snapshots-archive
           git add snapshots/
           git commit -m "Snapshot update: $TIMESTAMP - $TOTAL_NEW new versions"
           git push origin snapshots-archive
+          git checkout main
 
       - name: Send Slack notification
         if: steps.check_changes.outputs.changes == 'true'
