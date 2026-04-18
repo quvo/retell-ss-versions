@@ -99,10 +99,15 @@ jobs:
           rm -rf "$TEMP_SNAPSHOTS"
 
       - name: Send Slack notification
-        if: steps.check_changes.outputs.changes == 'true' && secrets.SLACK_WEBHOOK_URL != ''
+        if: steps.check_changes.outputs.changes == 'true'
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
+          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
+            echo "⚠️ SLACK_WEBHOOK_URL not configured, skipping notification"
+            exit 0
+          fi
+
           COMMIT_SHA=$(git rev-parse HEAD)
           TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
           TOTAL_NEW="${{ steps.check_changes.outputs.total_new }}"
