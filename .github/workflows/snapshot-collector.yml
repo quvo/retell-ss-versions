@@ -2,7 +2,7 @@ name: Retell AI Snapshot Collector
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Every 15 minutes
+    - cron: '*/5 * * * *'  # Every 5 minutes (for testing)
   workflow_dispatch:        # Manual trigger for testing
 
 permissions:
@@ -63,8 +63,11 @@ jobs:
             echo "changes=true" >> $GITHUB_OUTPUT
             TOTAL_NEW=$(jq -r '.totalNew' snapshot-summary.json)
             echo "total_new=$TOTAL_NEW" >> $GITHUB_OUTPUT
+            echo "✓ Changes detected: $TOTAL_NEW new versions"
           else
             echo "changes=false" >> $GITHUB_OUTPUT
+            echo "total_new=0" >> $GITHUB_OUTPUT
+            echo "✓ No changes detected"
           fi
 
       - name: Commit and push changes
