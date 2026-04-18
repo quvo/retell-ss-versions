@@ -4,18 +4,11 @@
  * Detects new versions and downloads snapshots automatically
  */
 
+import Retell from "retell-sdk";
 import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
-import { RetellClientWrapper } from "./utils/retell-client.js";
-import {
-  formatTimestamp,
-  calculateChecksum,
-  shortId,
-  ensureDirectoryExists,
-  loadIndexFile,
-  saveIndexFile,
-} from "./utils/snapshot-helpers.js";
+import crypto from "crypto";
 
 dotenv.config();
 
@@ -26,6 +19,10 @@ if (!RETELL_API_KEY) {
   process.exit(1);
 }
 
+const client = new Retell({
+  apiKey: RETELL_API_KEY,
+});
+
 interface SnapshotSummary {
   flows: Array<{ id: string; oldVersion: number; newVersion: number }>;
   agents: Array<{ id: string; oldVersion: number; newVersion: number }>;
@@ -34,8 +31,40 @@ interface SnapshotSummary {
   timestamp: string;
 }
 
+// Utility functions
+function formatTimestamp(): string {
+  const now = new Date();
+  return now.toISOString().replace(/[-:]/g, "").split(".")[0].replace("T", "");
+}
+
+function calculateChecksum(data: any): string {
+  const content = JSON.stringify(data);
+  return crypto.createHash("sha256").update(content).digest("hex");
+}
+
+function shortId(fullId: string): string {
+  return fullId.replace(/^(conversation_flow_|agent_|conversation_flow_component_)/, "");
+}
+
+function ensureDirectoryExists(dirPath: string): void {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+}
+
+function loadIndexFile(filePath: string): any {
+  if (!fs.existsSync(filePath)) {
+    return {};
+  }
+  const content = fs.readFileSync(filePath, "utf-8");
+  return JSON.parse(content);
+}
+
+function saveIndexFile(filePath: string, data: any): void {
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+}
+
 async function main() {
-  const client = new RetellClientWrapper(RETELL_API_KEY!);
   const summary: SnapshotSummary = {
     flows: [],
     agents: [],
@@ -56,24 +85,40 @@ async function main() {
   const agentIndex = loadIndexFile("snapshots/agents/index.json");
   const componentIndex = loadIndexFile("snapshots/components/index.json");
 
+  // Verify API key works by making a test request
+  console.log("🔑 Verifying API key...");
+  try {
+    const testFlows = await client.conversationFlow.list();
+    if (!testFlows || !Array.isArray(testFlows)) {
+      console.error("❌ Error: API returned invalid response. Check your RETELL_API_KEY.");
+      process.exit(1);
+    }
+    console.log("  ✓ API key verified\n");
+  } catch (error: any) {
+    console.error("❌ Error: Failed to connect to Retell API.");
+    console.error(`  Message: ${error.message}`);
+    console.error("  Please check your RETELL_API_KEY is correct.");
+    process.exit(1);
+  }
+
   // Process flows
   console.log("📋 Checking conversation flows...");
   try {
-    const flowsResponse: any = await client.listFlows();
-    const flows = flowsResponse.conversation_flows || [];
+    const flows = await client.conversationFlow.list();
+    console.log(`  Debug: API returned ${flows.length || 0} flows`);
 
     for (const flow of flows) {
       const flowId = flow.conversation_flow_id;
       const currentVersion = flow.version;
       const lastVersion = flowIndex[flowId]?.current_version || 0;
 
+      console.log(`  Checking flow ${shortId(flowId)}: current v${currentVersion}, last v${lastVersion}`);
+
       if (currentVersion > lastVersion) {
-        console.log(
-          `  ✨ New version detected: ${shortId(flowId)} v${lastVersion} → v${currentVersion}`
-        );
+        console.log(`  ✨ New version detected: ${shortId(flowId)} v${lastVersion} → v${currentVersion}`);
 
         // Download new version
-        const fullFlow = await client.retrieveFlow(flowId);
+        const fullFlow = await client.conversationFlow.retrieve(flowId);
         const filename = `flow_${shortId(flowId)}_v${currentVersion}_${formatTimestamp()}.json`;
         const filepath = path.join("snapshots/flows", filename);
 
@@ -106,27 +151,28 @@ async function main() {
     }
     console.log(`  ✓ Processed ${flows.length} flows\n`);
   } catch (error: any) {
-    console.error(`  ✗ Error processing flows: ${error.message}\n`);
+    console.error(`  ✗ Error processing flows: ${error.message}`);
+    console.error(`  Stack: ${error.stack}\n`);
   }
 
   // Process agents
   console.log("🤖 Checking agents...");
   try {
-    const agentsResponse: any = await client.listAgents();
-    const agents = agentsResponse.agents || [];
+    const agents = await client.agent.list();
+    console.log(`  Debug: API returned ${agents.length || 0} agents`);
 
     for (const agent of agents) {
       const agentId = agent.agent_id;
       const currentVersion = agent.version;
       const lastVersion = agentIndex[agentId]?.current_version || 0;
 
+      console.log(`  Checking agent ${shortId(agentId)}: current v${currentVersion}, last v${lastVersion}`);
+
       if (currentVersion > lastVersion) {
-        console.log(
-          `  ✨ New version detected: ${shortId(agentId)} v${lastVersion} → v${currentVersion}`
-        );
+        console.log(`  ✨ New version detected: ${shortId(agentId)} v${lastVersion} → v${currentVersion}`);
 
         // Download new version
-        const fullAgent = await client.retrieveAgent(agentId);
+        const fullAgent = await client.agent.retrieve(agentId);
         const filename = `agent_${shortId(agentId)}_v${currentVersion}_${formatTimestamp()}.json`;
         const filepath = path.join("snapshots/agents", filename);
 
@@ -158,27 +204,28 @@ async function main() {
     }
     console.log(`  ✓ Processed ${agents.length} agents\n`);
   } catch (error: any) {
-    console.error(`  ✗ Error processing agents: ${error.message}\n`);
+    console.error(`  ✗ Error processing agents: ${error.message}`);
+    console.error(`  Stack: ${error.stack}\n`);
   }
 
   // Process components
   console.log("🧩 Checking components...");
   try {
-    const componentsResponse: any = await client.listComponents();
-    const components = componentsResponse.conversation_flow_components || [];
+    const components = await client.conversationFlowComponent.list();
+    console.log(`  Debug: API returned ${components.length || 0} components`);
 
     for (const component of components) {
       const componentId = component.conversation_flow_component_id;
       const currentVersion = component.version;
       const lastVersion = componentIndex[componentId]?.current_version || 0;
 
+      console.log(`  Checking component ${shortId(componentId)}: current v${currentVersion}, last v${lastVersion}`);
+
       if (currentVersion > lastVersion) {
-        console.log(
-          `  ✨ New version detected: ${shortId(componentId)} v${lastVersion} → v${currentVersion}`
-        );
+        console.log(`  ✨ New version detected: ${shortId(componentId)} v${lastVersion} → v${currentVersion}`);
 
         // Download new version
-        const fullComponent = await client.retrieveComponent(componentId);
+        const fullComponent = await client.conversationFlowComponent.retrieve(componentId);
         const filename = `component_${shortId(componentId)}_v${currentVersion}_${formatTimestamp()}.json`;
         const filepath = path.join("snapshots/components", filename);
 
@@ -213,7 +260,8 @@ async function main() {
     }
     console.log(`  ✓ Processed ${components.length} components\n`);
   } catch (error: any) {
-    console.error(`  ✗ Error processing components: ${error.message}\n`);
+    console.error(`  ✗ Error processing components: ${error.message}`);
+    console.error(`  Stack: ${error.stack}\n`);
   }
 
   // Save updated indices
@@ -225,14 +273,13 @@ async function main() {
   console.log("📊 Summary:");
   console.log(JSON.stringify(summary, null, 2));
 
-  console.log(
-    `\n✅ Collection complete! ${summary.totalNew} new snapshots captured.`
-  );
+  console.log(`\n✅ Collection complete! ${summary.totalNew} new snapshots captured.`);
 
   process.exit(0);
 }
 
 main().catch((error) => {
   console.error(`\n❌ Fatal error: ${error.message}`);
+  console.error(error.stack);
   process.exit(1);
 });
