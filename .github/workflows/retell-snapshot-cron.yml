@@ -44,6 +44,9 @@ jobs:
           git show snapshots-archive:snapshots/agents/index.json > snapshots/agents/index.json 2>/dev/null || echo '{}' > snapshots/agents/index.json
           git show snapshots-archive:snapshots/components/index.json > snapshots/components/index.json 2>/dev/null || echo '{}' > snapshots/components/index.json
 
+          # Add index.json to git to prevent them from being detected as changes
+          git add snapshots/*/index.json
+
           echo "Restored index files from snapshots-archive branch"
 
       - name: Run snapshot collector
