@@ -72,7 +72,8 @@ jobs:
           TEMP_SNAPSHOTS=$(mktemp -d)
           cp -r snapshots/* "$TEMP_SNAPSHOTS/"
 
-          # Switch to snapshots-archive branch
+          # Discard local changes and switch to snapshots-archive branch
+          git checkout -- snapshots/
           git checkout snapshots-archive
 
           # Copy snapshots back
