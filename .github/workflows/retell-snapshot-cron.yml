@@ -59,14 +59,14 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if [[ -n $(git status --porcelain snapshots/) ]]; then
+          TOTAL_NEW=$(jq -r '.totalNew' snapshot-summary.json)
+          echo "total_new=$TOTAL_NEW" >> $GITHUB_OUTPUT
+
+          if [[ "$TOTAL_NEW" -gt 0 ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
-            TOTAL_NEW=$(jq -r '.totalNew' snapshot-summary.json)
-            echo "total_new=$TOTAL_NEW" >> $GITHUB_OUTPUT
             echo "✓ Changes detected: $TOTAL_NEW new versions"
           else
             echo "changes=false" >> $GITHUB_OUTPUT
-            echo "total_new=0" >> $GITHUB_OUTPUT
             echo "✓ No changes detected"
           fi
 
