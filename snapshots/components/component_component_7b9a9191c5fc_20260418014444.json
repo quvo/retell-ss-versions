@@ -1,0 +1,259 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_7b9a9191c5fc",
+  "name": "[SA] Patient Status",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Conversation",
+      "edges": [
+        {
+          "destination_node_id": "node-1772983936404-copy-1772985584970",
+          "id": "edge-1772985584970-j4s0sx0fk",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "patient is indicated as new\n"
+          }
+        },
+        {
+          "destination_node_id": "node-1772983988838-copy-1772985584970",
+          "id": "edge-1772985584970-0618dk2mq",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "patient is indicating as returning\n"
+          }
+        },
+        {
+          "destination_node_id": "node-1773575948116",
+          "id": "conversation-1772976693427-copy-1772985584970-edge-1773434300400-vkz26w575",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Patient refuses to mention if they are new or returning"
+          }
+        }
+      ],
+      "id": "conversation-1772976693427-copy-1772985584970",
+      "type": "conversation",
+      "display_position": {
+        "x": -354,
+        "y": -186
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask if the user is a new or returning patient.\n\nSay something like: \"Have you been to Newtown Gastroenterology before, or would this be your first visit?\"\n\nIf the user says they've been before: \"Great, welcome back!\"\n\nIf the user says they're new: \"Wonderful, we're happy to have you!\"\n\nIf the user is unsure (e.g. \"I think I came once a long time ago\"): Gently clarify: \"No worries — do you think you'd have a record on file with us, or should we treat this as a new patient visit?\" Accept whatever they decide.\n\nIf the user refuses to answer or doesn't see why it matters: Explain briefly: \"I only ask because new patients sometimes need a little extra paperwork, and we want to make sure everything is ready for you when you arrive.\"\n\nDo NOT ask more than twice. If still unclear, default to \"new\" — it's safer to over-prepare than under-prepare."
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "component-end-1772976693427-copy-1772985584970",
+      "type": "end",
+      "display_position": {
+        "x": 1206,
+        "y": 150
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "is_patient_new",
+          "type": "boolean",
+          "description": "Always set as true"
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1772985584970-h6qvpa609",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772976693427-copy-1772985584970",
+          "id": "edge-1772985584970-hq2nsqweb",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Variable has been extracted"
+          }
+        }
+      ],
+      "id": "node-1772983936404-copy-1772985584970",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 726,
+        "y": -138
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "is_patient_new",
+          "type": "boolean",
+          "description": "Always set as false"
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1772985584970-ecumrwpt1",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772976693427-copy-1772985584970",
+          "id": "edge-1772985584970-ewa1ls38b",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Variable has been extracted"
+          }
+        }
+      ],
+      "id": "node-1772983988838-copy-1772985584970",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 726,
+        "y": 246
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "prev_node",
+          "type": "string",
+          "description": "Always set as \"sa_patient_status\""
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1772985584970-fw6uj7ajs",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1773459598385",
+          "id": "node-1772985462200-copy-1772985584970-edge-1773528447946-2dhcckbqj",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{prev_node}}",
+                "operator": "==",
+                "right": "sa_patient_status"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1772985462200-copy-1772985584970",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -1170,
+        "y": -42
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "is_patient_new",
+          "type": "string",
+          "description": "Only set this variable if the caller has explicitly said they are a new or returning patient.\n\nSet as true if the caller has explicitly mentioned that it is their first time or they are a new patient. i.e It is my first time, I am a new patient, Ive never been to the clinic before\n\nSet as false if the caller has explicitly mentioned that it is not their first time or that they are a returning patient e.g. it is not my first time, I am a returning patient, I have been there before"
+        }
+      ],
+      "else_edge": {
+        "destination_node_id": "conversation-1772976693427-copy-1772985584970",
+        "id": "else_edge-1773459598385-1-erfrxs86b",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1773526719950",
+          "id": "node-1773459598385-edge-1773526611889-s75zhd7uq",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{is_patient_new}}",
+                "operator": "==",
+                "right": "true"
+              }
+            ],
+            "operator": "||"
+          }
+        },
+        {
+          "destination_node_id": "node-1773526719950",
+          "id": "node-1773459598385-edge-1773526634853-winsupj3o",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{is_patient_new}}",
+                "operator": "==",
+                "right": "false"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1773459598385",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -762,
+        "y": 246
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "node-1773526719950",
+      "type": "end",
+      "display_position": {
+        "x": -258,
+        "y": 582
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "The caller has refused to say if they are a new or returning patient.\n\nSimply inform them that you will mark them as a new patient."
+      },
+      "name": "Conversation",
+      "edges": [],
+      "id": "node-1773575948116",
+      "type": "conversation",
+      "display_position": {
+        "x": 270,
+        "y": 438
+      },
+      "skip_response_edge": {
+        "destination_node_id": "node-1772983936404-copy-1772985584970",
+        "id": "skip-response-edge-1773576287935-r3kfsgn4h",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        }
+      }
+    }
+  ],
+  "start_node_id": "node-1772985462200-copy-1772985584970",
+  "user_modified_timestamp": 1776354858978,
+  "linked_conversation_flow_ids": []
+}

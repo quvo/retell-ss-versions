@@ -1,0 +1,728 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_aae991a415c8",
+  "name": "Callback Promise + Name/DOB",
+  "tools": [
+    {
+      "headers": {},
+      "parameter_type": "json",
+      "method": "POST",
+      "query_params": {},
+      "description": "Validate a US phone number for correctness. Call this after the user provides their callback number to check if the number is valid before confirming it.",
+      "type": "custom",
+      "url": "https://smartsupport.ubiehealth.com/validation/phone",
+      "tool_id": "tool-1773268545678",
+      "args_at_root": false,
+      "timeout_ms": 5000,
+      "speak_after_execution": true,
+      "name": "validate_phone",
+      "response_variables": {
+        "phone_valid": "valid",
+        "phone_formatted": "formatted",
+        "phone_error": "error"
+      },
+      "speak_during_execution": false,
+      "parameters": {
+        "type": "object",
+        "required": [
+          "phone_number"
+        ],
+        "properties": {
+          "phone_number": {
+            "type": "string",
+            "const": "{{callback_number}}",
+            "description": "The phone number the user provided, exactly as they said it"
+          }
+        }
+      }
+    },
+    {
+      "headers": {},
+      "parameter_type": "json",
+      "method": "POST",
+      "query_params": {},
+      "description": "Validate a date of birth. Checks if the date is real, not in the future, and within a reasonable age range.",
+      "type": "custom",
+      "url": "https://smartsupport.ubiehealth.com/validation/dob",
+      "tool_id": "tool-cp2-validate-dob",
+      "args_at_root": false,
+      "timeout_ms": 10000,
+      "speak_after_execution": true,
+      "name": "validate_dob",
+      "response_variables": {
+        "dob_error": "error",
+        "dob_formatted": "formatted",
+        "dob_needs_clarification": "needs_clarification",
+        "dob_clarification_reason": "clarification_reason",
+        "dob_valid": "valid",
+        "dob_age": "age"
+      },
+      "speak_during_execution": false,
+      "parameters": {
+        "type": "object",
+        "required": [
+          "date_of_birth"
+        ],
+        "properties": {
+          "date_of_birth": {
+            "type": "string",
+            "const": "{{date_of_birth}}",
+            "description": "The date of birth the user provided, exactly as they said it"
+          }
+        }
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Conversation",
+      "edges": [
+        {
+          "destination_node_id": "cp2-extract_vari-3",
+          "id": "edge-1774616564611-9nllufrl9",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirms a different callback number and has no further questions"
+          }
+        },
+        {
+          "destination_node_id": "cp2-name-check",
+          "id": "edge-1774616564611-gk6zviojc",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirms callback number on the number they called with and has no further questions"
+          }
+        },
+        {
+          "destination_node_id": "cp2-name-check",
+          "id": "edge-1774616564611-u3wvpppfd",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User does not respond"
+          }
+        }
+      ],
+      "id": "cp2-conversation-0",
+      "type": "conversation",
+      "display_position": {
+        "x": 6,
+        "y": 6
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Let the user know that a team member from the clinic will give them a call back.\n\nIf {{callback_number}} is not empty:\n  Say something like: \"I'll make sure someone from the clinic reaches out to you at {{callback_number}}. They'll be able to help you with everything we discussed. Does that number still work?\"\n\nIf {{callback_number}} is empty:\n  Say something like: \"I'll make sure someone from the clinic gives you a call back on this number. They'll be able to help you with everything we discussed. Sound good?\"\n\nIf the user asks when:\n- If {{is_open}} is \"Yes\" and {{can_schedule_same_day}} is \"Yes\":\n  \"You should hear from us soon.\"\n- If {{is_open}} is \"No\" and {{can_schedule_same_day}} is \"Yes\":\n  \"The office opens at {{next_open}}, so you should hear from us soon.\"\n- If {{is_open}} is \"Yes\" and {{can_schedule_same_day}} is \"No\":\n  \"The office is wrapping up for the day, so you'll likely hear from us on {{next_available_for_reviewing}}.\"\n- If {{is_open}} is \"No\" and {{can_schedule_same_day}} is \"No\":\n  \"The office is currently closed, so you should hear from us on {{next_available_for_reviewing}}.\"\n\nIf the user asks who will call:\n\"It'll be one of our front desk team members — they'll have the notes from our conversation so you won't have to repeat anything.\"\n\nIf the user says that's NOT a good number or wants to use a different one:\n\"No problem — what's the best number to reach you?\"\nCollect the number, read it back, and confirm."
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "cp2-exit_compone-1",
+      "type": "end",
+      "display_position": {
+        "x": 6846,
+        "y": 486
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Wrap up warmly and naturally using their first name if you have it.\n\nUse {{current_time}} to choose the appropriate greeting:\n- Before 12:00 PM: \"Have a wonderful morning!\"\n- 12:00 PM to 5:00 PM: \"Have a wonderful afternoon!\"\n- After 5:00 PM: \"Have a wonderful evening!\"\n\nSay something like: \"Thanks so much for calling Premier MD, {{first_name}}! Have a wonderful [morning/afternoon/evening]!\"\n\nKeep it brief — one or two sentences max. Don't ask any more questions."
+      },
+      "name": "Conversation",
+      "edges": [],
+      "id": "cp2-conversation-2",
+      "type": "conversation",
+      "display_position": {
+        "x": 6390,
+        "y": 342
+      },
+      "skip_response_edge": {
+        "destination_node_id": "cp2-exit_compone-1",
+        "id": "edge-1774616564611-maj15xhnl",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        }
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "callback_number",
+          "type": "string",
+          "description": "The user's provided callback number"
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1774616564611-cyg4upa9k",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "cp2-validate_pho-4",
+          "id": "edge-1774616564611-1nwgb8xsl",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{callback_number}}",
+                "operator": "!=",
+                "right": ""
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "cp2-extract_vari-3",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 558,
+        "y": -210
+      }
+    },
+    {
+      "tool_id": "tool-1773268545678",
+      "else_edge": {
+        "destination_node_id": "cp2-name-check",
+        "id": "edge-1774616564611-19xaoe79y",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Give me a moment..."
+      },
+      "name": "Validate Phone",
+      "edges": [
+        {
+          "destination_node_id": "cp2-name-check",
+          "id": "edge-1774616564611-n1jh11fb9",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{phone_valid}}",
+                "operator": "==",
+                "right": "true"
+              }
+            ],
+            "operator": "||"
+          }
+        },
+        {
+          "destination_node_id": "cp2-invalid_phon-5",
+          "id": "edge-1774616564611-x4z0bvk9p",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{phone_valid}}",
+                "operator": "==",
+                "right": "false"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "cp2-validate_pho-4",
+      "type": "function",
+      "display_position": {
+        "x": 1086,
+        "y": -282
+      },
+      "tool_type": "local",
+      "speak_during_execution": true,
+      "wait_for_result": true
+    },
+    {
+      "name": "Invalid Phone Number Fallback",
+      "edges": [
+        {
+          "destination_node_id": "cp2-extract_vari-3",
+          "id": "edge-1774616564611-1m7j4dr1b",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Patient provides another phone number"
+          }
+        },
+        {
+          "destination_node_id": "cp2-name-check",
+          "id": "edge-1774616564611-kcr0lohnx",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Patient insists they use the phone number they are calling from"
+          }
+        },
+        {
+          "destination_node_id": "cp2-conversation-6",
+          "id": "edge-1774616564611-1lfm9tq8s",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Patient refused to provide another callback number"
+          }
+        },
+        {
+          "destination_node_id": "cp2-name-check",
+          "id": "edge-1774616564611-qpt39fea3",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User goes silent"
+          }
+        }
+      ],
+      "id": "cp2-invalid_phon-5",
+      "type": "conversation",
+      "display_position": {
+        "x": 1494,
+        "y": -1050
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The phone number the user gave has an issue. The error was:  {{phone_error}}. \n\nTell the user what seems off in a friendly way. Don't say 'the system says' or 'validation failed.' Make it sound like you noticed it yourself. \n\nFor example, if the error says 'too short — got 6 digits', say something like 'Hmm, that number seems a bit short — I'm only getting 6 digits. Could you give me the full 10-digit number?'  \n\nThen ask them to try again."
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Inform the user that they will be contacted on the phone number they called from."
+      },
+      "name": "Conversation",
+      "edges": [],
+      "id": "cp2-conversation-6",
+      "type": "conversation",
+      "display_position": {
+        "x": 2094,
+        "y": -642
+      },
+      "skip_response_edge": {
+        "destination_node_id": "cp2-name-check",
+        "id": "edge-1774616564611-rhl6anmjh",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        }
+      }
+    },
+    {
+      "name": "Name Check",
+      "edges": [
+        {
+          "destination_node_id": "cp2-dob-check",
+          "id": "e-cp2-nc-1",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{first_name}}",
+                "operator": "!=",
+                "right": ""
+              },
+              {
+                "left": "{{last_name}}",
+                "operator": "!=",
+                "right": ""
+              }
+            ],
+            "operator": "&&"
+          }
+        }
+      ],
+      "id": "cp2-name-check",
+      "else_edge": {
+        "destination_node_id": "cp2-ask-name",
+        "id": "e-cp2-nc-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "branch",
+      "display_position": {
+        "x": 2358,
+        "y": 366
+      }
+    },
+    {
+      "name": "Ask Full Name",
+      "edges": [
+        {
+          "destination_node_id": "cp2-extract-name",
+          "id": "e-cp2-an-1",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User provides their first and last name"
+          }
+        },
+        {
+          "destination_node_id": "cp2-dob-check",
+          "id": "cp2-ask-name-edge-1775605071925-rk210el3t",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User refuses to provide their first and last name"
+          }
+        }
+      ],
+      "id": "cp2-ask-name",
+      "type": "conversation",
+      "display_position": {
+        "x": 2886,
+        "y": 534
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Now, could I get your full name — first and last — so the team knows who to ask for when they call back?\n\nIf the caller gives only a first name, ask: \"And your last name?\"\n\nIf the caller is reluctant: \"No worries, it just helps the team find your info faster when they reach out.\""
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "first_name",
+          "type": "string",
+          "description": "The caller's first name"
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "description": "The caller's last name"
+        }
+      ],
+      "else_edge": {
+        "destination_node_id": "cp2-dob-check",
+        "id": "e-cp2-en-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Name",
+      "edges": [
+        {
+          "destination_node_id": "cp2-dob-check",
+          "id": "e-cp2-en-1",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{first_name}}",
+                "operator": "!=",
+                "right": ""
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "cp2-extract-name",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 3270,
+        "y": 534
+      }
+    },
+    {
+      "name": "DOB Check",
+      "edges": [
+        {
+          "destination_node_id": "cp2-conversation-2",
+          "id": "e-cp2-dc-1",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{date_of_birth}}",
+                "operator": "!=",
+                "right": ""
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "cp2-dob-check",
+      "else_edge": {
+        "destination_node_id": "cp2-ask-dob",
+        "id": "e-cp2-dc-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "branch",
+      "display_position": {
+        "x": 3650,
+        "y": 366
+      }
+    },
+    {
+      "name": "Ask DOB",
+      "edges": [
+        {
+          "destination_node_id": "cp2-extract-dob",
+          "id": "e-cp2-ad-1",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the caller's date of birth — either confirmed or clearly understood"
+          }
+        },
+        {
+          "destination_node_id": "cp2-dob-push",
+          "id": "e-cp2-ad-2",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Caller is reluctant or refuses to provide their date of birth"
+          }
+        }
+      ],
+      "id": "cp2-ask-dob",
+      "type": "conversation",
+      "display_position": {
+        "x": 4150,
+        "y": 534
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask for the caller's date of birth.\n\nSay something like: \"And could I get your date of birth?\"\n\nConfirmation — only when needed:\n- If the date was clearly stated and sounds plausible (e.g. \"January 14th, 1984\"), accept it without repeating.\n- If the date was unclear, mumbled, or only partially given, ask them to repeat it.\n\nAccept any reasonable spoken format (e.g. \"March 5th, 1990\", \"oh three oh five ninety\", \"three five ninety\")."
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "date_of_birth",
+          "type": "string",
+          "description": "User's date of birth. ALWAYS extract in named month format like 'October 12, 1966'. NEVER use numeric-only format like '10/12/1966' or '10-12-1966'."
+        }
+      ],
+      "else_edge": {
+        "destination_node_id": "cp2-ask-dob",
+        "id": "e-cp2-ed-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract DOB",
+      "edges": [
+        {
+          "destination_node_id": "cp2-validate-dob",
+          "id": "e-cp2-ed-1",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{date_of_birth}}",
+                "operator": "!=",
+                "right": ""
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "cp2-extract-dob",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 4650,
+        "y": 534
+      }
+    },
+    {
+      "tool_id": "tool-cp2-validate-dob",
+      "else_edge": {
+        "destination_node_id": "cp2-conversation-2",
+        "id": "e-cp2-vd-else",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "One moment..."
+      },
+      "name": "Validate DOB",
+      "edges": [
+        {
+          "destination_node_id": "cp2-conversation-2",
+          "id": "e-cp2-vd-1",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{dob_valid}}",
+                "operator": "==",
+                "right": "true"
+              },
+              {
+                "left": "{{dob_needs_clarification}}",
+                "operator": "==",
+                "right": "false"
+              }
+            ],
+            "operator": "&&"
+          }
+        },
+        {
+          "destination_node_id": "cp2-dob-clarify",
+          "id": "e-cp2-vd-2",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{dob_needs_clarification}}",
+                "operator": "==",
+                "right": "true"
+              }
+            ],
+            "operator": "||"
+          }
+        },
+        {
+          "destination_node_id": "cp2-dob-invalid",
+          "id": "e-cp2-vd-3",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{dob_valid}}",
+                "operator": "==",
+                "right": "false"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "cp2-validate-dob",
+      "type": "function",
+      "tool_type": "local",
+      "speak_during_execution": true,
+      "display_position": {
+        "x": 5142,
+        "y": 486
+      },
+      "wait_for_result": true
+    },
+    {
+      "name": "DOB Clarification",
+      "edges": [
+        {
+          "destination_node_id": "cp2-extract-dob",
+          "id": "e-cp2-cl-1",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Caller provides a corrected or confirmed date of birth"
+          }
+        },
+        {
+          "destination_node_id": "cp2-conversation-2",
+          "id": "e-cp2-cl-2",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Caller confirmed the date is correct"
+          }
+        },
+        {
+          "destination_node_id": "cp2-conversation-2",
+          "id": "e-cp2-cl-3",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Caller refuses to provide clarification"
+          }
+        }
+      ],
+      "id": "cp2-dob-clarify",
+      "type": "conversation",
+      "display_position": {
+        "x": 5766,
+        "y": 990
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The date of birth needs clarification. The issue is: {{dob_error}}\n\nIf {{dob_clarification_reason}} is \"ambiguous_month_day\":\n  Read back both possible interpretations and ask which\n  one is correct.\n  Example: \"Just to make sure — did you mean October 12th\n  or December 10th?\"\n\nOtherwise, relay the clarification issue naturally —\ndon't read the error word for word."
+      }
+    },
+    {
+      "name": "Invalid DOB Fallback",
+      "edges": [
+        {
+          "destination_node_id": "cp2-extract-dob",
+          "id": "e-cp2-inv-1",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Caller provides another date of birth"
+          }
+        },
+        {
+          "destination_node_id": "cp2-conversation-2",
+          "id": "e-cp2-inv-2",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Caller refuses to provide another date of birth"
+          }
+        }
+      ],
+      "id": "cp2-dob-invalid",
+      "type": "conversation",
+      "display_position": {
+        "x": 5646,
+        "y": -186
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The date of birth the user gave has an issue.\nThe error was: {{dob_error}}\n\nRelay the issue naturally — don't read the error\nword for word. For example:\n- If the date is in the future: \"Hmm, that date seems\n  to be in the future. Could you double-check?\"\n- If the date is implausible: \"That doesn't quite seem\n  right — could you tell me your date of birth one\n  more time?\""
+      }
+    },
+    {
+      "name": "DOB Soft Push",
+      "edges": [
+        {
+          "destination_node_id": "cp2-extract-dob",
+          "id": "e-cp2-dp-1",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Caller provides their date of birth after explanation"
+          }
+        },
+        {
+          "destination_node_id": "cp2-conversation-2",
+          "id": "e-cp2-dp-2",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Caller still declines after explanation"
+          }
+        }
+      ],
+      "id": "cp2-dob-push",
+      "type": "conversation",
+      "display_position": {
+        "x": 4662,
+        "y": 1062
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The caller was reluctant to provide their date of birth.\n\nGently explain why it helps:\n\"No worries at all. The clinic uses your date of birth\nto pull up your records and make sure we have the right\nperson. Would you be comfortable sharing it?\"\n\nIf they provide it after this, accept it.\nIf they still decline, respect their decision and move on."
+      }
+    }
+  ],
+  "start_node_id": "cp2-conversation-0",
+  "begin_tag_display_position": {
+    "x": -234,
+    "y": 126
+  },
+  "notes": [],
+  "user_modified_timestamp": 1776352708703,
+  "linked_conversation_flow_ids": [
+    "conversation_flow_2cb101605a4e",
+    "conversation_flow_7ae57fcd806a"
+  ]
+}

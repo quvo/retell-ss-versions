@@ -1,0 +1,99 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_73702080c311",
+  "name": "General Information",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Conversation",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1773684362851",
+          "id": "conversation-1773684362851-edge-1773684507235-ufg8a2ca3",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User mentions anything to do with wanting to schedule, reschedule, cancelling, or confirming an appointment"
+          }
+        },
+        {
+          "destination_node_id": "component-end-1773684362851",
+          "id": "conversation-1773684362851-edge-1773684522057-plo0ol3so",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has no more questions and wants to end the call"
+          }
+        }
+      ],
+      "id": "conversation-1773684362851",
+      "type": "conversation",
+      "display_position": {
+        "x": 582,
+        "y": 30
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user called with a general question about the clinic rather than to manage an appointment. Answer their question using what you know about Premier MD.\n\nAfter answering, say something like: \"Is there anything else you'd like to know, or would you like to schedule an appointment while you're on the line?\"\n\nKeep answers conversational and concise — don't read out the entire FAQ. If the question is complex or \nyou're not confident in the answer, say: \"That's a great question — for the most detailed answer, I'd recommend calling the office directly at (908) 450-7002, or you can check mypremiermd.com.\"\n\nTopics you can help with:\n- Office hours and locations\n- Insurance accepted\n- Services offered\n- What to bring to a first visit\n- How to access the patient portal\n- Parking and accessibility\n- Appointment length and wait times\n- Cancellation policy (24-hour notice)\n- Telemedicine availability\n- Prescription refills process\n\nTopics to redirect to the office:\n- Specific billing or cost questions\n- Specific medication questions\n- Anything requiring access to patient records\n- Spravato candidacy or NJ registry details  "
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "component-end-1773684362851",
+      "type": "end",
+      "display_position": {
+        "x": 1158,
+        "y": 102
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "has_visited_general_information_flow",
+          "description": "Always set as true",
+          "type": "boolean",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1773684379279",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1773684362851",
+          "id": "node-1773684379279-edge-1773684538782-yv181879k",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{has_visited_general_information_flow}}",
+                "operator": "==",
+                "right": "true"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1773684379279",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 78,
+        "y": 126
+      }
+    }
+  ],
+  "start_node_id": "node-1773684379279",
+  "begin_tag_display_position": {
+    "x": -258,
+    "y": 246
+  },
+  "user_modified_timestamp": 1773684984930,
+  "linked_conversation_flow_ids": []
+}

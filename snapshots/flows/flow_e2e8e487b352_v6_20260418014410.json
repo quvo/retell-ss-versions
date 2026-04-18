@@ -1,0 +1,175 @@
+{
+  "conversation_flow_id": "conversation_flow_e2e8e487b352",
+  "version": 10,
+  "nodes": [
+    {
+      "name": "End Call",
+      "id": "end-call-node-1771963649525",
+      "type": "end",
+      "display_position": {
+        "x": 1993.4384716657687,
+        "y": 335.4361699466964
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Politely end the call"
+      }
+    },
+    {
+      "delay_ms": 1000,
+      "instruction": {
+        "type": "prompt",
+        "text": "You are a call screening handler. Follow these steps exactly:\n\n1. Stay silent. Listen to whatever is said.\n2. When you hear any prompt asking to press a digit (such as \"press 1 to accept\" or \"press one\"), immediately use the   press_digit tool to press digit 1.\n3. After pressing 1, wait 2 seconds, then say: \"Hi there! Thanks for calling Downtown Clinic, this is Bea. One moment while I connect you.\"\n4. Immediately use the agent_transfer tool to transfer to the main clinic agent.\n\nRules:\n- ALWAYS press digit 1. No other digit.\n- ALWAYS transfer after pressing 1 and greeting.\n- If you don't hear a \"press 1\" prompt within 10 seconds, say the greeting and transfer anyway — the caller may already be connected directly."
+      },
+      "name": "Press Digit",
+      "edges": [
+        {
+          "destination_node_id": "node-1772726873968",
+          "id": "edge-1772730217262-ptdv4bsw3",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Always proceed"
+          }
+        }
+      ],
+      "id": "node-1771963835031",
+      "type": "press_digit",
+      "display_position": {
+        "x": 711.6067538521467,
+        "y": 327.3174371240608
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Hello! Welcome to Premier MD Clinic"
+      },
+      "name": "Conversation",
+      "edges": [],
+      "id": "node-1772720446145",
+      "type": "conversation",
+      "display_position": {
+        "x": 812.1228320193807,
+        "y": 614.8718223166632
+      },
+      "skip_response_edge": {
+        "id": "skip-response-edge-1772720491430-to7f9ncna",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        }
+      }
+    },
+    {
+      "agent_id": "agent_21660df1a8f4ae2d82af28b6ec",
+      "edge": {
+        "destination_node_id": "end-call-node-1771963649525",
+        "id": "edge-1772726873968-z3a8j21dj",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Transfer failed"
+        }
+      },
+      "webhook_setting": "both_agents",
+      "name": "Agent Transfer Node",
+      "post_call_analysis_setting": "both_agents",
+      "keep_current_voice": false,
+      "id": "node-1772726873968",
+      "type": "agent_swap",
+      "speak_during_execution": false,
+      "display_position": {
+        "x": 1344.7522138874829,
+        "y": 310.81638683421033
+      }
+    },
+    {
+      "name": "Logic Split",
+      "edges": [
+        {
+          "destination_node_id": "node-1772728262933",
+          "id": "edge-1772727860148-1pr74okbn",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Always proceed"
+          }
+        }
+      ],
+      "id": "node-1772727524927",
+      "else_edge": {
+        "destination_node_id": "node-1772728262933",
+        "id": "edge-1772727524927-4yifjvdaw",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "branch",
+      "display_position": {
+        "x": 675.2739236470989,
+        "y": -228.47280391293015
+      }
+    },
+    {
+      "tool_id": "tool-1772728260457",
+      "else_edge": {
+        "id": "node-1772728262933-else-edge",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Hi there! Thanks for calling Downtown Clinic, this is Bea. How can I help you today?"
+      },
+      "name": "Fake-function",
+      "edges": [],
+      "id": "node-1772728262933",
+      "type": "function",
+      "tool_type": "local",
+      "speak_during_execution": true,
+      "display_position": {
+        "x": 1200.4649202921207,
+        "y": -309.92874954000314
+      },
+      "interruption_sensitivity": 1,
+      "wait_for_result": false
+    }
+  ],
+  "start_node_id": "node-1771963835031",
+  "start_speaker": "agent",
+  "begin_after_user_silence_ms": 2000,
+  "tools": [
+    {
+      "headers": {},
+      "parameter_type": "json",
+      "method": "POST",
+      "query_params": {},
+      "description": "",
+      "type": "custom",
+      "url": "https://aviatic-leanora-sprawly.ngrok-free.dev/noop",
+      "tool_id": "tool-1772728260457",
+      "args_at_root": false,
+      "timeout_ms": 120000,
+      "speak_after_execution": true,
+      "name": "Fake-function",
+      "response_variables": {},
+      "speak_during_execution": false
+    }
+  ],
+  "model_choice": {
+    "type": "cascading",
+    "model": "gpt-4.1"
+  },
+  "tool_call_strict_mode": true,
+  "kb_config": {
+    "top_k": 3,
+    "filter_score": 0.6
+  },
+  "begin_tag_display_position": {
+    "x": 312.06533417010826,
+    "y": 427.2472731422024
+  },
+  "is_published": false,
+  "is_transfer_cf": false
+}
