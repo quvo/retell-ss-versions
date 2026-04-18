@@ -1,6 +1,5 @@
-name: Retell Snapshot Cron
+name: Retell AI Snapshot Collector
 
-# Fresh workflow - scheduled every 5 minutes
 on:
   schedule:
     - cron: '*/5 * * * *'  # Every 5 minutes (for testing)
@@ -44,9 +43,6 @@ jobs:
           git show snapshots-archive:snapshots/agents/index.json > snapshots/agents/index.json 2>/dev/null || echo '{}' > snapshots/agents/index.json
           git show snapshots-archive:snapshots/components/index.json > snapshots/components/index.json 2>/dev/null || echo '{}' > snapshots/components/index.json
 
-          # Add index.json to git to prevent them from being detected as changes
-          git add snapshots/*/index.json
-
           echo "Restored index files from snapshots-archive branch"
 
       - name: Run snapshot collector
@@ -63,9 +59,7 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          # Only check for new snapshot files, not index.json
-          NEW_FILES=$(git status --porcelain snapshots/ | grep -v 'index.json' | wc -l)
-          if [[ $NEW_FILES -gt 0 ]]; then
+          if [[ -n $(git status --porcelain snapshots/) ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
             TOTAL_NEW=$(jq -r '.totalNew' snapshot-summary.json)
             echo "total_new=$TOTAL_NEW" >> $GITHUB_OUTPUT
