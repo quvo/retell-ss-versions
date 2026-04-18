@@ -2,7 +2,7 @@ name: Retell AI Snapshot Collector
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # Every 5 minutes (for testing)
+    - cron: '7,22,37,52 * * * *'  # Every 15 minutes (避けるmixing at :00, :05, etc)
   workflow_dispatch:        # Manual trigger for testing
 
 permissions:
@@ -99,7 +99,7 @@ jobs:
           rm -rf "$TEMP_SNAPSHOTS"
 
       - name: Send Slack notification
-        if: steps.check_changes.outputs.changes == 'true' && env.SLACK_WEBHOOK_URL != ''
+        if: steps.check_changes.outputs.changes == 'true' && secrets.SLACK_WEBHOOK_URL != ''
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
