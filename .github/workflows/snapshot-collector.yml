@@ -44,7 +44,8 @@ jobs:
 
       - name: Extract JSON summary
         run: |
-          grep -A 7 "📊 Summary:" snapshot-output.log | tail -n 7 > snapshot-summary.json
+          # Extract JSON between "📊 Summary:" and the closing brace
+          sed -n '/📊 Summary:/,/^}$/p' snapshot-output.log | tail -n +2 > snapshot-summary.json
           cat snapshot-summary.json
 
       - name: Check for changes
