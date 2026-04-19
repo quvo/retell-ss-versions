@@ -1,0 +1,196 @@
+name: Retell AI Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      resource_type:
+        description: 'Resource type'
+        required: true
+        type: choice
+        options:
+          - agent
+          - flow
+          - component
+      resource_id:
+        description: 'Resource ID (short ID without prefix)'
+        required: true
+        type: string
+      target_version:
+        description: 'Target version number (for agents/flows)'
+        required: false
+        type: number
+      target_timestamp:
+        description: 'Target timestamp (for components)'
+        required: false
+        type: string
+      dry_run:
+        description: 'Dry run mode (recommended - preview changes only)'
+        required: true
+        type: boolean
+        default: true
+      auto_publish:
+        description: 'Auto-publish after rollback (agents only)'
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build TypeScript
+        run: npm run build
+
+      - name: Fetch snapshots from snapshots-archive branch
+        run: |
+          git fetch origin snapshots-archive:snapshots-archive || echo "snapshots-archive branch does not exist"
+
+          mkdir -p snapshots/flows snapshots/agents snapshots/components
+
+          # Restore all snapshot files
+          git checkout snapshots-archive -- snapshots/ 2>/dev/null || echo "No snapshots found"
+
+          echo "Snapshot files restored from snapshots-archive branch"
+          ls -la snapshots/*/
+
+      - name: Execute rollback
+        id: rollback
+        env:
+          RETELL_API_KEY: ${{ secrets.RETELL_API_KEY }}
+        run: |
+          ARGS="--type ${{ inputs.resource_type }} --id ${{ inputs.resource_id }}"
+
+          if [[ "${{ inputs.resource_type }}" == "component" ]]; then
+            if [[ -z "${{ inputs.target_timestamp }}" ]]; then
+              echo "Error: target_timestamp is required for components"
+              exit 1
+            fi
+            ARGS="$ARGS --timestamp ${{ inputs.target_timestamp }}"
+          else
+            if [[ -z "${{ inputs.target_version }}" ]]; then
+              echo "Error: target_version is required for agents/flows"
+              exit 1
+            fi
+            ARGS="$ARGS --version ${{ inputs.target_version }}"
+          fi
+
+          if [[ "${{ inputs.dry_run }}" == "false" ]]; then
+            ARGS="$ARGS --execute"
+          fi
+
+          if [[ "${{ inputs.auto_publish }}" == "false" && "${{ inputs.resource_type }}" == "agent" ]]; then
+            ARGS="$ARGS --no-publish"
+          fi
+
+          echo "Running: npm run rollback -- $ARGS"
+          npm run rollback -- $ARGS 2>&1 | tee rollback-output.log
+
+          EXIT_CODE=${PIPESTATUS[0]}
+          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+          exit $EXIT_CODE
+
+      - name: Generate workflow summary
+        if: always()
+        run: |
+          echo "## Rollback Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Resource Type**: ${{ inputs.resource_type }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Resource ID**: ${{ inputs.resource_id }}" >> $GITHUB_STEP_SUMMARY
+
+          if [[ "${{ inputs.resource_type }}" == "component" ]]; then
+            echo "- **Target Timestamp**: ${{ inputs.target_timestamp }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- **Target Version**: v${{ inputs.target_version }}" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "- **Dry Run**: ${{ inputs.dry_run }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ${{ steps.rollback.outputs.exit_code == '0' && '✅ Success' || '❌ Failed' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### Output" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          cat rollback-output.log >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Send Slack notification
+        if: inputs.dry_run == false && always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [[ -z "$SLACK_WEBHOOK_URL" ]]; then
+            echo "⚠️ SLACK_WEBHOOK_URL not configured, skipping notification"
+            exit 0
+          fi
+
+          STATUS="${{ steps.rollback.outputs.exit_code == '0' && '✅ Success' || '❌ Failed' }}"
+          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
+
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H 'Content-Type: application/json' \
+            -d @- <<EOF
+          {
+            "text": "🔄 Retell AI Rollback ${STATUS}",
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "🔄 Retell AI Rollback"
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Resource:*\n${{ inputs.resource_type }} \`${{ inputs.resource_id }}\`"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Target:*\n${{ inputs.resource_type == 'component' && inputs.target_timestamp || format('v{0}', inputs.target_version) }}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Status:*\n${STATUS}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Timestamp:*\n${TIMESTAMP}"
+                  }
+                ]
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View Workflow Run"
+                    },
+                    "url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
