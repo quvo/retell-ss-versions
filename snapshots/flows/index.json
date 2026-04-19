@@ -2655,5 +2655,28 @@
         "captured_by": "github-actions"
       }
     ]
+  },
+  "conversation_flow_ef88f84a2653": {
+    "current_version": 2,
+    "snapshots": [
+      {
+        "version": 1,
+        "timestamp": "2026-04-19T21:52:15.595Z",
+        "file": "flow_ef88f84a2653_v1_20260419215215.json",
+        "checksum": "sha256:14d0ddb4a697005beb539be547584c3ccab60de637d4c1a35bce6b5055d0dd71",
+        "node_count": 62,
+        "tool_count": 4,
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 2,
+        "timestamp": "2026-04-19T21:52:15.660Z",
+        "file": "flow_ef88f84a2653_v2_20260419215215.json",
+        "checksum": "sha256:14d0ddb4a697005beb539be547584c3ccab60de637d4c1a35bce6b5055d0dd71",
+        "node_count": 62,
+        "tool_count": 4,
+        "captured_by": "github-actions"
+      }
+    ]
   }
 }
