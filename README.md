@@ -1,75 +1,50 @@
-# PremierMD Document Follow-up Voice Agent
+# Retell AI Snapshot Version Control
 
-Retell AI API を使って **プログラマティックに** デプロイする Voice Agent。  
-患者からの文書・FAX 関連の問い合わせを自動で受け付け、構造化されたデータをスタッフ用ダッシュボードに送信します。
+Automated snapshot collection system for Retell AI resources (agents, conversation flows, and components) using GitHub Actions.
 
-## アーキテクチャ
+## Architecture
 
 ```
-患者 (電話)
+Retell AI API
     │
     ▼
 ┌─────────────────────────┐
-│  Retell AI Platform     │
-│  ┌───────────────────┐  │
-│  │ Conversation Flow │  │  ← deploy-agent.js で作成
-│  │  (15 nodes)       │  │
-│  └───────────────────┘  │
-│  ┌───────────────────┐  │
-│  │ Voice Agent       │  │  ← voice_id, post_call_analysis 設定
-│  └───────────────────┘  │
-└─────────┬───────────────┘
-          │ Webhook (JSON)
-          ▼
-┌─────────────────────────┐
-│  webhook-server.js      │  ← 自社サーバー
-│  - /webhooks/retell     │     (通話中: Function Node から)
-│  - /webhooks/postcall   │     (通話後: Post-call Analysis)
+│  GitHub Actions         │
+│  (Cron: every 15 min)   │
+│  - List all resources   │
+│  - Compare versions     │
+│  - Download new ones    │
 └─────────┬───────────────┘
           │
           ▼
 ┌─────────────────────────┐
-│  Dashboard / CRM        │  (Airtable, Google Sheets, DB, etc.)
-│  - 患者名 + DOB         │
-│  - 問い合わせ種別        │
-│  - 緊急フラグ            │
-│  - コールバック番号       │
+│  snapshots-archive      │  ← Orphan branch
+│  - flows/               │
+│  - agents/              │
+│  - components/          │
+│  - index.json (each)    │
 └─────────────────────────┘
 ```
 
-## 会話フローのノード構成
+## Features
 
-| # | Node ID | Type | 役割 |
-|---|---------|------|------|
-| 1 | `opening` | conversation | 挨拶 + 氏名/DOB 収集 |
-| 2 | `extract_patient_info` | extract_dv | patient_name, patient_dob 抽出 |
-| 3 | `identify_inquiry_type` | conversation | 問い合わせ種別の特定 |
-| 4 | `extract_inquiry_type` | extract_dv | inquiry_type (enum: fax/records/status) |
-| 5 | `logic_split_inquiry` | logic_split | 3分岐 |
-| 6a | `fax_inquiry` | conversation | FAX 詳細ヒアリング |
-| 6b | `records_request` | conversation | 医療記録リクエスト |
-| 6c | `status_check` | conversation | 文書ステータス確認 |
-| - | `extract_*_details` | extract_dv | 各パスの変数抽出 |
-| 7 | `urgency_check` | logic_split | 緊急判定 |
-| 8 | `transfer_to_staff` | call_transfer | 人間へハンドオフ (urgent) |
-| 9 | `confirm_contact` | conversation | コールバック番号確認 |
-| 10 | `extract_phone` | extract_dv | phone_number 抽出 |
-| 11 | `next_steps` | conversation | 次のステップを案内 |
-| 12 | `closing` | conversation | クロージング |
-| 13 | `log_to_dashboard` | function | Webhook でデータ送信 |
-| 14 | `end_call` | end_call | 通話終了 |
+- **Automated collection**: Runs every 15 minutes via GitHub Actions
+- **Version tracking**: Only downloads new versions (based on version number or checksum)
+- **Full history**: Git branch keeps all snapshots forever
+- **Slack notifications**: Alerts when new versions are captured
+- **Metadata**: Checksums, timestamps, node/tool counts in index files
 
-## セットアップ
+## Setup
 
-### 1. インストール
+### 1. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 2. 環境変数
+### 2. Environment variables
 
-`.env.example` をコピーして `.env` ファイルを作成し、必要な値を設定:
+Copy `.env.example` to `.env`:
 
 ```bash
 cp .env.example .env
@@ -78,87 +53,101 @@ cp .env.example .env
 `.env`:
 ```
 RETELL_API_KEY=your_retell_api_key
-WEBHOOK_URL=https://your-server.com/webhooks/retell
-TRANSFER_NUMBER=+12125551234
 ```
 
-### 3. デプロイ
+### 3. GitHub Secrets
+
+Add these secrets in repository settings (`Settings → Secrets and variables → Actions`):
+
+- `RETELL_API_KEY`: Your Retell AI API key
+- `SLACK_WEBHOOK_URL`: (Optional) Slack incoming webhook URL
+
+### 4. Deploy
+
+Push to GitHub and the workflow will run automatically every 15 minutes (at :07, :22, :37, :52).
+
+Manual trigger:
+```bash
+gh workflow run retell-snapshot-cron.yml
+```
+
+## Usage
+
+### Local snapshot collection
 
 ```bash
-npm run deploy
+npm run snapshot-collect
 ```
 
-出力:
-```
-Step 1: Creating Conversation Flow...
-   ✓ Conversation Flow created: cf_xxxxxxxxxxxx
+### View snapshots
 
-Step 2: Creating Voice Agent...
-   ✓ Voice Agent created: ag_xxxxxxxxxxxx
-   ✓ Agent name: PremierMD Document Follow-up Agent
-```
+All snapshots are stored in the `snapshots-archive` branch:
 
-### 4. テスト
-
-1. **Retell Dashboard** → Agents → 作成した Agent を選択
-2. **Web Call Test** で通話テスト
-3. 別途構築した Webhook サーバーにデータが送信されることを確認
-
-## カスタマイズ
-
-### Voice の変更
-
-`src/deploy-agent.ts` の `voice_id` を変更:
-```js
-voice_id: "11labs-Dorothy",  // 穏やかな女性音声
-```
-利用可能な voice_id は Retell Dashboard の Voice Library で確認できます。
-
-### LLM モデルの変更
-
-```js
-model_choice: {
-  model: "claude-3.5-sonnet",  // Claude を使う場合
-  type: "cascading",
-},
+```bash
+git checkout snapshots-archive
+ls snapshots/flows/
+ls snapshots/agents/
+ls snapshots/components/
 ```
 
-### ノードの追加
+### Snapshot file naming
 
-例: SMS 確認の送信ノードを追加する場合:
-```js
-{
-  id: "send_sms_confirmation",
-  type: "sms",
-  sms_content: "PremierMD: Your inquiry about {{doc_subject}} has been logged. We will call you at {{phone_number}} within 1 business day.",
-  edges: [
-    { destination_node_id: "end_call", condition: { type: "always" } }
-  ],
-}
+```
+flow_{id}_v{version}_{timestamp}.json
+agent_{id}_v{version}_{timestamp}.json
+component_{id}_{checksum}_{timestamp}.json
 ```
 
-### Dashboard 連携
+Example: `flow_abc123_v42_20260418033000.json`
 
-別途構築する Webhook サーバーで、実際のデータストアに接続するコードを実装:
+## Customization
 
-- **Airtable**: `airtable` npm パッケージ
-- **Google Sheets**: `googleapis` npm パッケージ
-- **PostgreSQL**: `pg` npm パッケージ
-- **Slack 通知**: `@slack/web-api` npm パッケージ
+### Change schedule frequency
 
-このリポジトリは Agent のデプロイのみを担当します。
+Edit `.github/workflows/retell-snapshot-cron.yml`:
 
-## GUI vs API — なぜ API を選んだか
+```yaml
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'  # Every 15 minutes
+```
 
-| | GUI (Dashboard) | API (このアプローチ) |
+For 5-minute intervals:
+```yaml
+- cron: '3,8,13,18,23,28,33,38,43,48,53,58 * * * *'
+```
+
+### Component change detection
+
+Components don't have version numbers, so we use SHA-256 checksums to detect changes.
+
+## Why API over GUI?
+
+| | GUI (Dashboard) | API (This approach) |
 |---|---|---|
-| セットアップ速度 | 速い（ドラッグ&ドロップ） | やや遅い（コード記述） |
-| 再現性 | 低い（手動操作） | 高い（コードで定義） |
-| バージョン管理 | なし | Git で管理可能 |
-| 環境の複製 | 手動コピー | `npm run deploy` で即座に |
-| CI/CD 統合 | 不可 | 可能 |
-| レビュー | 画面共有が必要 | PR レビュー可能 |
-| テスト自動化 | 限定的 | Retell Batch Testing API と連携 |
+| Setup speed | Fast (drag & drop) | Slower (write code) |
+| Reproducibility | Low (manual) | High (code-defined) |
+| Version control | None | Git managed |
+| Environment cloning | Manual copy | `npm run deploy` |
+| CI/CD integration | Not possible | Possible |
+| Review | Screen sharing | PR review |
+| Automation | Limited | Full automation |
 
-API アプローチの最大のメリットは **Infrastructure as Code** として管理できること。  
-Agent の設定変更をコードで追跡し、チームでレビューし、本番環境に安全にデプロイできます。
+API approach enables **Infrastructure as Code**: track changes, review with team, and safely deploy to production.
+
+## Troubleshooting
+
+### Scheduled workflow not running
+
+GitHub Actions may delay scheduled triggers for new repositories (up to 24 hours). If urgent:
+
+1. Trigger manually: `gh workflow run retell-snapshot-cron.yml`
+2. Use n8n to call `workflow_dispatch` via API
+
+### No changes detected despite updates
+
+Check if version numbers actually incremented in Retell Dashboard. Components use checksums instead of versions.
+
+## License
+
+MIT
