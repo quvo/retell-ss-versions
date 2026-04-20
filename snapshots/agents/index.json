@@ -653,5 +653,75 @@
         "captured_by": "github-actions"
       }
     ]
+  },
+  "agent_646255208c7d7a3436cf24f490": {
+    "current_version": 1,
+    "agent_name": "Premier MD Base Agent - Prod v3",
+    "snapshots": [
+      {
+        "version": 1,
+        "timestamp": "2026-04-20T19:48:02.833Z",
+        "file": "Premier_MD_Base_Agent_-_Prod_v3_646255208c7d7a3436cf24f490.json",
+        "checksum": "sha256:6782c27654d38f43071c86a2fec350eba68363cd830863ced9f1179d19d72c05",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
+  },
+  "agent_96331cc9dd80f3e54e40575774": {
+    "current_version": 2,
+    "agent_name": "Premier MD Reschedule Agent",
+    "snapshots": [
+      {
+        "version": 2,
+        "timestamp": "2026-04-20T19:48:02.871Z",
+        "file": "Premier_MD_Reschedule_Agent_96331cc9dd80f3e54e40575774.json",
+        "checksum": "sha256:0ef34b15dee233276087459b0e159e2a01bf93553d3aa60b952e6cc5ef122d9f",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
+  },
+  "agent_96e9b9cb4a603f2c9c7b3e2ca5": {
+    "current_version": 1,
+    "agent_name": "Premier MD Returning Patient Agent",
+    "snapshots": [
+      {
+        "version": 1,
+        "timestamp": "2026-04-20T19:48:02.904Z",
+        "file": "Premier_MD_Returning_Patient_Agent_96e9b9cb4a603f2c9c7b3e2ca5.json",
+        "checksum": "sha256:5e2625c4beadbfa5ece14c04fbbd5350011385e575d4f0f1a75656b06c879924",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
+  },
+  "agent_6188eb77e703fafb960e53ae6d": {
+    "current_version": 1,
+    "agent_name": "Premier MD New Patient Agent",
+    "snapshots": [
+      {
+        "version": 1,
+        "timestamp": "2026-04-20T19:48:02.938Z",
+        "file": "Premier_MD_New_Patient_Agent_6188eb77e703fafb960e53ae6d.json",
+        "checksum": "sha256:ac0a3924f0ec9b6eaebedfb723d6253f59ccab8510e9fdce8038d4845d53186c",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
+  },
+  "agent_7db26b2c83394f235affd72488": {
+    "current_version": 1,
+    "agent_name": "Premier MD Cancel Agent",
+    "snapshots": [
+      {
+        "version": 1,
+        "timestamp": "2026-04-20T19:48:02.979Z",
+        "file": "Premier_MD_Cancel_Agent_7db26b2c83394f235affd72488.json",
+        "checksum": "sha256:6f0cd4899dff0398f4dac00d5f310460a7267295e6c25473d30878171031623d",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
   }
 }

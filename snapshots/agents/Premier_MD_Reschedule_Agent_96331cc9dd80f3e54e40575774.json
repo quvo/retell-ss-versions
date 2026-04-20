@@ -1,0 +1,30 @@
+{
+  "agent_id": "agent_96331cc9dd80f3e54e40575774",
+  "channel": "voice",
+  "last_modification_timestamp": 1776712958750,
+  "agent_name": "Premier MD Reschedule Agent",
+  "version_description": "v1: Global components + fallback updates + finalization improvements\n\n=== Global Components Added ===\n- Emergency Detection (ED): agent-level component with global trigger\n  - Active emergencies → End Call with compassionate tone\n  - Non-active concerns → Back to Normal Flow Split → Reschedule Router\n- Transfer To Human (TTH): agent-level component with global trigger\n  - Callback accepted → Callback Promise → End Call\n  - End call → End Call component → End Call\n  - Continue (de-escalated) → Back to Normal Flow Split → Reschedule Router\n- End Call: global end node with 3-tier instruction\n  - Emergency tone if has_visited_emergency_flow or emergency_exit_reason = end_call\n  - Measured tone if emergency_exit_reason = continue\n  - Warm tone otherwise\n\n=== Routing Layer ===\n- Back to Normal Flow Split: routes to Reschedule Router if prev_node != '', else to Agent Transfer\n- Reschedule Router: 8 branches for all RA flow nodes (ra_name through ra_finalization)\n- Agent Transfer (node-transfer-back-to-base): unpinned from specific version\n- prev_node default changed from 'welcome' to '' (empty)\n\n=== Dynamic Variables ===\n- prev_node (default: '')\n- has_visited_emergency_flow (default: 'false')\n- emergency_exit_reason (default: '')\n- has_visited_transfer_to_human_flow (default: 'false')\n- tth_exit_reason (default: '')\n- transfer_reason (default: '')\n\n=== Fallback Node Updates ===\n- Name Fallback: explains name needed to set up appointment + locate in system; no callback/call-back-later offered\n- DOB Fallback: explains DOB needed to pull up records + verify identity; no callback/call-back-later offered\n- DOB Clarification Fallback: same update as DOB Fallback\n- Callback Fallback: explains callback needed to confirm rescheduled appointment; no callback/call-back-later offered\n\n=== Finalization Update ===\n- Summary & Confirmation: conversational style, does NOT repeat name or DOB\n- Keeps it to 2-3 sentences, weaves details naturally\n- Single correction: brief acknowledgment only; 3+ corrections: full re-read\n\n=== Flow Structure ===\n- 23 nodes, 12 local components\n- 3 global nodes: Emergency Detection, Transfer To Human, End Call\n\n=== Test Results (16 new RA-specific tests) ===\n- [Happy Path]: 3/3 pass\n- [Fallback]: 3/3 pass\n- [Edge Case]: 2/2 pass\n- [ED]: 2/2 pass\n- [TTH]: 1/2 pass (frustration de-escalation inconsistent)\n- [End Call]: 1/1 pass\n- [Validation]: 2/2 pass\n- [Routing]: 1/1 pass\n- Overall: 15/16 pass (94%)",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 2,
+    "conversation_flow_id": "conversation_flow_f6eb00708599"
+  },
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "version": 2,
+  "is_published": false,
+  "post_call_analysis_model": "gpt-4.1-mini",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "natural_filler_words": true
+  },
+  "voice_id": "11labs-Cimo",
+  "max_call_duration_ms": 3600000,
+  "normalize_for_speech": false,
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {}
+}
