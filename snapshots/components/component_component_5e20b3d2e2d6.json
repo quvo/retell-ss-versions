@@ -1,0 +1,54 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_5e20b3d2e2d6",
+  "name": "End Call",
+  "tools": [],
+  "nodes": [
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Wrap up warmly and naturally using their first name if you have it.\n\nSay something like: \"Thanks so much for calling Premier MD, {{first_name}}! Have a wonderful [morning/afternoon/day/ evening/night]!\"\n\nKeep it brief — one or two sentences max. Don't ask any \nmore questions."
+      },
+      "name": "Conversation",
+      "edges": [],
+      "id": "conversation-endcall-main",
+      "type": "conversation",
+      "display_position": {
+        "x": 78,
+        "y": 102
+      },
+      "skip_response_edge": {
+        "destination_node_id": "component-end-endcall",
+        "id": "edge-endcall-skip",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        }
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "component-end-endcall",
+      "type": "end",
+      "display_position": {
+        "x": 510,
+        "y": 102
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    }
+  ],
+  "start_node_id": "conversation-endcall-main",
+  "begin_tag_display_position": {
+    "x": -210,
+    "y": 174
+  },
+  "notes": [],
+  "user_modified_timestamp": 1776718414092,
+  "linked_conversation_flow_ids": [
+    "conversation_flow_53117f297306",
+    "conversation_flow_2cb101605a4e",
+    "conversation_flow_7ae57fcd806a"
+  ]
+}
