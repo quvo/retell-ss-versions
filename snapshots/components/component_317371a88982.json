@@ -1,0 +1,205 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_317371a88982",
+  "name": "[SA] Reason for Care (Copy)",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Ask user's reason for care",
+      "edges": [
+        {
+          "destination_node_id": "node-1772572936057",
+          "id": "edge-1772570870418-0-qqmggwnjo",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received a reason, even if brief"
+          }
+        },
+        {
+          "destination_node_id": "node-1773000359661",
+          "id": "node-1772570870418-edge-1772579256862-pbnoowx0v",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User declined to share or said no particular reason"
+          }
+        }
+      ],
+      "id": "node-1772570870418",
+      "type": "conversation",
+      "display_position": {
+        "x": -1693.617300796399,
+        "y": -16.965077838062598
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask why the patient wants to establish care at the \nclinic. This is different from the \"reason for visit\" \nnode — this is about the bigger picture of why they're \nchoosing this practice.\n\nSay something like: \"What's bringing you to Downtown \nClinic? Are you looking for a new primary care doctor, \nor is there something specific going on?\"\n\nCommon reasons and how to handle them:\n- Just moved to the area: \"Welcome to the area! We'll \n  get you all set up.\"\n- Previous doctor retired or left: \"That happens — \n  we'll make sure you're in good hands.\"\n- Unhappy with previous provider: \"I'm sorry to hear \n  that. We'll do our best to make this a better \n  experience.\"\n- Referred by someone: \"Great — we love hearing \n  that.\" (Note: referral source is captured in a \n  separate node, don't dig into this here.)\n- Specific health concern: \"Got it — we'll make sure \n  that's addressed.\"\n- No particular reason, just needs a doctor: \"Makes \n  sense — it's always good to have someone on file.\"\n\nAny answer is valid here. This is informational, not \na gatekeeper.\n\nIf the user doesn't want to share: \"Totally fine — \nwe'll sort everything out at your first visit.\"\n\nDo NOT push. One ask is enough."
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "node-1772572481339",
+      "type": "end",
+      "speak_during_execution": false,
+      "display_position": {
+        "x": -247.3348490585509,
+        "y": 162.92833424024047
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "reason_for_care",
+          "description": "User's reason for care",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1772572936057",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1772572481339",
+          "id": "edge-1772572936057",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Readon for care received"
+          }
+        }
+      ],
+      "id": "node-1772572936057",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -977.0058251901988,
+        "y": -51.844258806882316
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "prev_node",
+          "description": "Always set as \"sa_reason_for_care\"",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1772999136772",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1772570870418",
+          "id": "edge-1772999136772",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Variable has been extracted"
+          }
+        }
+      ],
+      "id": "node-1772999136772",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -2226.0229925463027,
+        "y": 92.28718233018817
+      }
+    },
+    {
+      "name": "Logic Split",
+      "edges": [
+        {
+          "destination_node_id": "node-1772999136772",
+          "id": "node-1772999719215-edge-1772999725221-csgiaipjn",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{is_patient_new}}",
+                "operator": "==",
+                "right": "true"
+              }
+            ],
+            "operator": "||"
+          }
+        },
+        {
+          "destination_node_id": "node-1772572481339",
+          "id": "node-1772999719215-edge-1772999793834-8mbo06bo9",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{is_patient_new}}",
+                "operator": "==",
+                "right": "false"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1772999719215",
+      "else_edge": {
+        "id": "else-edge-1772999719215",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "branch",
+      "display_position": {
+        "x": -2947.0686763057674,
+        "y": 465.41228420638066
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "reason_for_care",
+          "description": "Always set as 'not specified'",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else_edge-1773000359661-1-o0md650wy",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1772572481339",
+          "id": "edge-1773000359661-0-9rjqpn92b",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Readon for care received"
+          }
+        }
+      ],
+      "id": "node-1773000359661",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -947.4625243371153,
+        "y": 638.9111347442966
+      }
+    }
+  ],
+  "start_node_id": "node-1772999719215",
+  "user_modified_timestamp": 1773002342104,
+  "linked_conversation_flow_ids": []
+}

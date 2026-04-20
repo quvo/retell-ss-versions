@@ -1,0 +1,260 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_8a6172c189a1",
+  "name": "[SA] Appointment for (Copy)",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Appointment for",
+      "edges": [
+        {
+          "destination_node_id": "node-1772971554355",
+          "id": "conversation-1772970352217-edge-1772971502257-42h1ajt6n",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirmed the appointment is for themselves"
+          }
+        },
+        {
+          "destination_node_id": "node-1772971601123",
+          "id": "conversation-1772970352217-edge-1772971515642-cls5msqp6",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirmed the appointment is for someone else"
+          }
+        },
+        {
+          "destination_node_id": "conversation-1772973294226",
+          "id": "conversation-1772970352217-edge-1772971536262-xh36e8bm5",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": " User refused to clarify after being asked twice"
+          }
+        }
+      ],
+      "id": "conversation-1772970352217",
+      "type": "conversation",
+      "display_position": {
+        "x": 200,
+        "y": 100
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Determine whether the appointment is for the caller \nthemselves or for someone else.\n\nSay something like: \"Is this appointment for yourself, \nor are you calling on behalf of someone else?\"\n\nIf the user says it's for themselves: \"Great, let's \nget you set up.\" Move on.\n\nIf the user says it's for someone else: \"No problem — \nI can help with that.\" Move on to collect the \nrelationship.\n\nIf the user gives a name without clarifying (e.g. \n\"it's for my mom, Linda\"): That counts as \"someone \nelse\" — acknowledge it: \"Got it, so we're setting \nthis up for Linda.\" Move on to collect the \nrelationship.\n\nIf the user is vague (e.g. \"sort of\" or \"kind of \nboth\"): Clarify: \"Just so I know who to put the \nappointment under — will it be under your name, or \nsomeone else's?\"\n\nIf the user refuses to answer or says it doesn't \nmatter: Explain why it helps: \"I only ask because the \nclinic needs to know whose records to pull up for the \nvisit. It can be anyone — a family member, a friend, \nwhoever you're helping out.\" \n\nDo NOT ask more than twice."
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "component-end-1772970352217",
+      "type": "end",
+      "display_position": {
+        "x": 3393.210391184356,
+        "y": 248.38703619448373
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "relationship_for",
+          "description": "Always set as \"self\"",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1772971554355",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772970352217",
+          "id": "edge-1772971554355",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Variable has been extracted"
+          }
+        }
+      ],
+      "id": "node-1772971554355",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 1073.7859082473049,
+        "y": -12.532208617004146
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "relationship_for",
+          "description": "Always set as \"other\"",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else_edge-1772971601123-1-qwde35ib0",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1772971848502",
+          "id": "node-1772971601123-edge-1772971822061-htd935kgy",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "variable has been extracted"
+          }
+        }
+      ],
+      "id": "node-1772971601123",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 900.250809550233,
+        "y": 567.6048814050463
+      }
+    },
+    {
+      "name": "Relationship Type",
+      "edges": [
+        {
+          "destination_node_id": "node-1772972487675",
+          "id": "edge-1772971848502",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the relationship, even if general"
+          }
+        },
+        {
+          "destination_node_id": "node-1772973127131",
+          "id": "conversation-1772971848502-edge-1772972119499-1fq3b9x82",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User declined to specify but agreed to continue"
+          }
+        }
+      ],
+      "id": "conversation-1772971848502",
+      "type": "conversation",
+      "display_position": {
+        "x": 1486.878092999764,
+        "y": 489.31992439205305
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user is scheduling an appointment on behalf of someone else. Ask about their relationship to the \npatient.\n\nSay something like: \"And what's your relationship to the person you're scheduling for? For example, are \nyou a parent, spouse, caregiver?\"\n\nAccept any answer as valid — common relationships \ninclude:\n- Parent / guardian\n- Spouse / partner\n- Child (adult child scheduling for elderly parent)\n- Sibling\n- Caregiver or home aide\n- Friend\n- Legal representative or power of attorney\n- Other family member\n\nIf the user gives a clear answer (e.g. \"I'm her daughter\"): Acknowledge it briefly: \"Got it — thanks for helping her out.\"\n\nIf the user gives a vague answer like \"family\" or \"we're related\": That's fine, accept it: \"No problem, I'll note that down.\"\n\nIf the user says \"I'd rather not say\" or seems uncomfortable: Explain briefly: \"Totally understand — we just ask so the clinic knows who to contact if they \nhave questions about the appointment. Even something general like 'family member' works.\"\n\nIf the user still refuses after the explanation: \nAccept it and move on: \"That's okay — we'll make a note that you're scheduling on their behalf.\" Do NOT \nlet this block the flow. Set the relationship to \n\"not provided\" and continue.\n\nDo NOT ask more than twice."
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "relationship",
+          "description": "The caller's relationship to the patient",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1772972487675",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772970352217",
+          "id": "edge-1772972487675",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "relationship is received"
+          }
+        }
+      ],
+      "id": "node-1772972487675",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 1911.7890447524833,
+        "y": 497.13880120728265
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "relationship",
+          "description": "The caller's relationship to the patient",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else_edge-1772973127131-1-icc2sws6j",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772970352217",
+          "id": "edge-1772973127131-0-otgowh3vx",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "relationship is received"
+          }
+        }
+      ],
+      "id": "node-1772973127131",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 1912.8041409946925,
+        "y": 938.8249604808165
+      }
+    },
+    {
+      "name": "Fallback",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1772970352217",
+          "id": "edge-1772973294226",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to try again or provide more information"
+          }
+        },
+        {
+          "destination_node_id": "component-end-1772970352217",
+          "id": "conversation-1772973294226-edge-1772973529374-yo2ir8jml",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is done and wants to end the call"
+          }
+        }
+      ],
+      "id": "conversation-1772973294226",
+      "type": "conversation",
+      "display_position": {
+        "x": 1012.5928502441617,
+        "y": 1211.4729631033515
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user was unable to indicate who the appointment is for.\n \nPolitely let them know that you may need this information to complete the booking, and offer alternatives:\n- They can call back when they have the information ready\n\nAsk if there's anything else you can help with.If they still decline after being reassured, let them know that's okay and move on. Do not ask more than two times total for any piece of information."
+      }
+    }
+  ],
+  "start_node_id": "conversation-1772970352217",
+  "user_modified_timestamp": 1772973597068,
+  "linked_conversation_flow_ids": []
+}

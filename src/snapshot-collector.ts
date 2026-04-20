@@ -120,19 +120,12 @@ async function main() {
         // Download new version
         const fullFlow = await client.conversationFlow.retrieve(flowId);
 
-        // Create folder structure (flows don't have names, use ID only)
+        // Flat structure: conversation_flow_{flow_id}.json
         const flowShortId = shortId(flowId);
-        const folderName = `flow_${flowShortId}`;
-        const folderPath = path.join("snapshots/flows", folderName);
+        const filename = `conversation_flow_${flowShortId}.json`;
+        const filepath = path.join("snapshots/flows", filename);
 
-        // Ensure folder exists
-        ensureDirectoryExists(folderPath);
-
-        // Simplified filename
-        const filename = `v${currentVersion}_${formatTimestamp()}.json`;
-        const filepath = path.join(folderPath, filename);
-
-        // Save snapshot
+        // Save snapshot (overwrites previous version - keeping only latest)
         fs.writeFileSync(filepath, JSON.stringify(fullFlow, null, 2));
 
         // Update index
@@ -143,7 +136,7 @@ async function main() {
         flowIndex[flowId].snapshots.push({
           version: currentVersion,
           timestamp: new Date().toISOString(),
-          file: `${folderName}/${filename}`,
+          file: filename,  // Just the filename, no folder prefix
           checksum: `sha256:${calculateChecksum(fullFlow)}`,
           node_count: fullFlow.nodes?.length || 0,
           tool_count: fullFlow.tools?.length || 0,
@@ -246,19 +239,12 @@ async function main() {
         const snapshotCount = componentIndex[componentId]?.snapshots?.length || 0;
         console.log(`  ✨ Change detected: ${shortId(componentId)} (${componentName}) - snapshot #${snapshotCount + 1}`);
 
-        // Create folder structure: {component_name}_{component_id}
-        const sanitizedComponentName = componentName.replace(/\s/g, "_").replace(/[\/()]/g, "_").replace(/__+/g, "_").replace(/^_|_$/g, "");
-        const folderName = `${sanitizedComponentName}_${componentId}`;
-        const folderPath = path.join("snapshots/components", folderName);
+        // Flat structure: component_{component_id}.json
+        const componentShortId = shortId(componentId);
+        const filename = `component_${componentShortId}.json`;
+        const filepath = path.join("snapshots/components", filename);
 
-        // Ensure folder exists
-        ensureDirectoryExists(folderPath);
-
-        // Simplified filename (timestamp only since components have no version)
-        const filename = `${formatTimestamp()}.json`;
-        const filepath = path.join(folderPath, filename);
-
-        // Save snapshot
+        // Save snapshot (overwrites previous version - keeping only latest)
         fs.writeFileSync(filepath, JSON.stringify(fullComponent, null, 2));
 
         // Update index
@@ -273,7 +259,7 @@ async function main() {
         componentIndex[componentId].name = componentName;
         componentIndex[componentId].snapshots.push({
           timestamp: new Date().toISOString(),
-          file: `${folderName}/${filename}`,
+          file: filename,  // Just the filename, no folder prefix
           checksum: `sha256:${currentChecksum}`,
           node_count: fullComponent.nodes?.length || 0,
           captured_by: "github-actions",

@@ -1,0 +1,126 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_707a5ca352fe",
+  "name": "[SRCA] Name (Copy)",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Ask user's first and last name",
+      "edges": [
+        {
+          "destination_node_id": "node-1772572936057-copy-1773951665423",
+          "id": "edge-1773951665423-lz0vz5c0r",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the user's full name (first and last) — either confirmed or clearly understood"
+          }
+        },
+        {
+          "destination_node_id": "node-1772573251738-copy-1773951665423",
+          "id": "edge-1773951665423-vy50cjh05",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User declines to give any either the first name or last name"
+          }
+        }
+      ],
+      "id": "node-1772570870418-copy-1773951665423",
+      "type": "conversation",
+      "display_position": {
+        "x": -1355.8535232262002,
+        "y": -167.50707066552377
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask the user for their full name — first and last name.\n\nSay something like: \"Could I get your full name, please?\"\n\nIf the user only gives a first name (e.g. \"Bob\"), ask for the last name too: \"And your last name, Bob?\"\n\nIf the user only gives a last name or it's unclear which is which, clarify: \"Just to be sure — what's your first name?\"\n\nConfirmation — only when needed:\n- If the name is common and clearly heard (e.g. \"Bob Jones\", \"Maria Garcia\"), just acknowledge it and move on: \n  \"Great, thanks Bob!\"\n- If the name is unusual, has an ambiguous spelling, or the user seemed to struggle saying it, read it back: \"Just to make sure I have it right — that's [First] [Last]?\" - If the user spells it out or corrects you, always confirm the corrected version: \"Got it — [corrected name].\"\n\nIf the user gives a middle name as well, acknowledge it but focus on first and last: \"Thanks! I'll have you down as \n[First] [Last].\"\n\nIf the user refuses to provide their name: Explain why it's needed: \"I completely understand — I only ask because the clinic needs your name to set up the appointment and pull \nup your records. It's kept totally confidential.\"\n\nDo NOT ask more than twice."
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "node-1772572481339-copy-1773951665423",
+      "type": "end",
+      "speak_during_execution": false,
+      "display_position": {
+        "x": -218.80020960518033,
+        "y": 256.8548557742519
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "first_name",
+          "description": "First name of the user",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "last_name",
+          "description": "User's last name",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1773951665423-kxkyoatc8",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1772572481339-copy-1773951665423",
+          "id": "edge-1773951665423-dqun24bj3",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "first name and last name received"
+          }
+        }
+      ],
+      "id": "node-1772572936057-copy-1773951665423",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -967.0736735425173,
+        "y": 115.58344039689268
+      }
+    },
+    {
+      "name": "Name Fallback node",
+      "edges": [
+        {
+          "destination_node_id": "node-1772570870418-copy-1773951665423",
+          "id": "edge-1773951665423-m774i0exr",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to try again or provide more information"
+          }
+        },
+        {
+          "destination_node_id": "node-1772572481339-copy-1773951665423",
+          "id": "edge-1773951665423-lrpwin4u8",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is done and wants to end the call"
+          }
+        }
+      ],
+      "id": "node-1772573251738-copy-1773951665423",
+      "type": "conversation",
+      "display_position": {
+        "x": -930.360137353331,
+        "y": 579.7180323959657
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user was unable or unwilling to provide their first name or last name\n \nPolitely let them know that you may need this information to complete the booking, and offer alternatives:\n- They can call back when they have the information ready\n\nAsk if there's anything else you can help with.If they still decline after being reassured, let them know that's okay and move on. Do not ask more than two times total for any piece of information."
+      }
+    }
+  ],
+  "start_node_id": "node-1772570870418-copy-1773951665423",
+  "user_modified_timestamp": 1773951665742,
+  "linked_conversation_flow_ids": []
+}

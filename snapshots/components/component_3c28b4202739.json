@@ -1,0 +1,281 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_3c28b4202739",
+  "name": "[SRCA] Name and DOB",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Ask callback number",
+      "edges": [
+        {
+          "destination_node_id": "node-1772572953454-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-ly073hbzt",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the user's callback number"
+          }
+        },
+        {
+          "destination_node_id": "node-1772582198760-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-9ovrrf8go",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "user's phone number is invalid"
+          }
+        },
+        {
+          "destination_node_id": "node-1772579979028-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-4v1md3dyl",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Did not receive the user's callback number"
+          }
+        }
+      ],
+      "id": "node-1772568235171-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+      "type": "conversation",
+      "display_position": {
+        "x": -547.6213139922562,
+        "y": -40.64093601258009
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask for the best phone number to reach the user.\n\nSay something like: \"What's the best phone number to reach you?\"\n\nIf the user says \"use this number\" or \"you already have it\", respond:\n\"Got it, we'll use the number you're calling from.\"\n\nA valid US phone number has exactly 10 digits (or 11 with country code).\n\nWhen the user provides a number:\n- A valid US phone number has exactly 10 digits (or 11 with country code).\n- Always read the number back to confirm. For example: \n  \"Just to make sure I have it right — that's (785) 390-9750, correct?\"\n- If the user says it's wrong, ask them to repeat it slowly.\n- If the number sounds too short or too long, say:\n  \"Hmm, that doesn't sound quite right — could you say it one more time?\"\n"
+      }
+    },
+    {
+      "name": "Ask user's name and dob",
+      "edges": [
+        {
+          "destination_node_id": "node-1772572936057-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-n1ew4a0li",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the user's first name and last name and date of birth"
+          }
+        },
+        {
+          "destination_node_id": "node-1772573251738-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-z2yiwq56g",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User declines to give any information"
+          }
+        }
+      ],
+      "id": "node-1772570870418-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+      "type": "conversation",
+      "display_position": {
+        "x": -1425.7600339646906,
+        "y": -20.204065895133528
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Collect the user's first name, last name and date of birth.\n\nSay something like: \"I'd be happy to help you schedule an appointment! \nCan I get your full name and date of birth?\"\n\nIf the user provides only their first name and last name, ask for their date of birth.\nIf the user provides only their date of birth, ask for their first and last name.\n\nIf the user is hesitant or refuses:\n- Reassure them: \"No worries, we just need that to look up your record \n  or create one for you.\"\n- If they still decline, say: \"That's okay, we can get that when you \n  come in. Let me continue with the other details.\"\n\nDo NOT ask more than twice for information the user has declined to provide."
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "node-1772572481339-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+      "type": "end",
+      "speak_during_execution": false,
+      "display_position": {
+        "x": 739.8698698518074,
+        "y": 230.89087445562518
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "first_name",
+          "description": "First name of the user",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "date_of_birth",
+          "description": "User's date of birth\n",
+          "type": "string",
+          "choices": []
+        },
+        {
+          "name": "last_name",
+          "description": "User's last name",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1772636135428-jhzxfblmn",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1772568235171-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-5wimwxk14",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Name and date of birth received"
+          }
+        }
+      ],
+      "id": "node-1772572936057-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -967.0736735425173,
+        "y": 115.58344039689268
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "callback_number",
+          "description": "Users callback phone number",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "edge-1772636135428-hneemo3j7",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1772572481339-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-ypiy1rf55",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Call back number received"
+          }
+        }
+      ],
+      "id": "node-1772572953454-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 357.2358440074042,
+        "y": 167.60899984113138
+      }
+    },
+    {
+      "name": "Name & DOB Fallback node",
+      "edges": [
+        {
+          "destination_node_id": "node-1772570870418-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-bharl544n",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to try again or provide more information"
+          }
+        },
+        {
+          "destination_node_id": "node-1772582535273-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-692qa2k8q",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is done and wants to end the call"
+          }
+        }
+      ],
+      "id": "node-1772573251738-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+      "type": "conversation",
+      "display_position": {
+        "x": -979.0298117562578,
+        "y": 725.7270556047462
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user was unable or unwilling to provide their first name, last name and/or date of birth.\n \nPolitely let them know that you may need this information to complete the booking, \nand offer alternatives:\n- They can call back when they have the information ready\n\nAsk if there's anything else you can help with.\nIf they still decline after being reassured, let them know that's okay and move on.\nDo not ask more than two times total for any piece of information."
+      }
+    },
+    {
+      "name": "Callback Fallback node",
+      "edges": [
+        {
+          "destination_node_id": "node-1772568235171-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-yungjiedy",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to try again or provide more information"
+          }
+        },
+        {
+          "destination_node_id": "node-1772582535273-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-4grur5kgh",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is done and wants to end the call"
+          }
+        }
+      ],
+      "id": "node-1772579979028-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+      "type": "conversation",
+      "display_position": {
+        "x": -126.40945186553282,
+        "y": 1341.9842245789264
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user was unable or unwilling to provide their call back number.\n \nPolitely let them know that you may need this information to complete the booking, \nand offer alternatives:\n- They can call back when they have the information ready\n\nAsk if there's anything else you can help with.\nIf they still decline after being reassured, let them know that's okay and move on.\nDo not ask more than two times total for any piece of information."
+      }
+    },
+    {
+      "name": "Invalid Phone number fallback",
+      "edges": [
+        {
+          "destination_node_id": "node-1772572953454-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-298sry3u5",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User provides valid phone number"
+          }
+        },
+        {
+          "destination_node_id": "node-1772582535273-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+          "id": "edge-1772636135428-hm4kfp5z6",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is done and wants to end the call"
+          }
+        }
+      ],
+      "id": "node-1772582198760-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+      "type": "conversation",
+      "display_position": {
+        "x": -142.43715840036518,
+        "y": 645.0670073605004
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user provided an invalid phone number.\n\nPolitely tell them that the phone number provided does not seem valid.\n\nWhen the user provides a number:\n- A valid US phone number has exactly 10 digits (or 11 with country code).\n- Always read the number back to confirm. For example: \n  \"Just to make sure I have it right — that's (785) 390-9750, correct?\"\n- If the user says it's wrong, ask them to repeat it slowly.\n- If the number sounds too short or too long, say:\n  \"Hmm, that doesn't sound quite right — could you say it one more time?\"\n"
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "node-1772582535273-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+      "type": "end",
+      "speak_during_execution": false,
+      "display_position": {
+        "x": 475.9552986305678,
+        "y": 1165.5662713015358
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    }
+  ],
+  "start_node_id": "node-1772570870418-copy-1772597026894-copy-1772597665391-copy-1772634223938-copy-1772636135428",
+  "user_modified_timestamp": 1772829831262,
+  "linked_conversation_flow_ids": []
+}
