@@ -1,0 +1,30 @@
+{
+  "agent_id": "agent_6188eb77e703fafb960e53ae6d",
+  "channel": "voice",
+  "last_modification_timestamp": 1776712939751,
+  "agent_name": "Premier MD New Patient Agent",
+  "version_description": "v0: Initial New Patient sub-agent\n\n=== Flow Structure ===\n- 29 nodes, 18 components (14 scheduling + 4 global infrastructure)\n- 1 flow-level tool (get_time_context)\n- Default dynamic variables: appointment_for=self, is_patient_new=true, prev_node='', has_visited_emergency_flow=false, emergency_exit_reason='', has_visited_transfer_to_human_flow=false, tth_exit_reason='', transfer_reason=''\n\n=== Scheduling Components (14) ===\n[SA] Name → [SA] DOB → [SA] Callback → [SA] Email → [SA] Address → [SAN] Insurance Coverage → [SA] Reason for Care → [SA] Provider Type → [SA] Referral Source → [SA] Current Medications → [SA] Medical History → [SAN] Provider Preference → [SAN] Schedule Preference → [SAN] Finalization\n\n=== Global Infrastructure ===\n- Emergency Detection (ED): global trigger, active emergencies → silent end node (np-end-ed), non-active → Back to Normal → Router\n- Transfer To Human (TTH): global trigger, callback → Callback Promise → end, end_call → End Call component → end, continue → Back to Normal → Router\n- End Call: global end node with 3-tier instruction (emergency/measured/warm)\n- Callback Promise: handles callback arrangement before ending\n\n=== Routing Layer ===\n- NP Router (np-router): hub-and-spoke routing on prev_node for all 14 components\n- Back to Normal Flow Split (np-back-to-normal): routes to Router if prev_node != '', else to Return to Base\n- Callback Logic Split (np-cb-logic-split): routes callback exits to Callback Promise or End Call\n- Return to Base (np-return-to-base): agent_swap back to Base Agent after finalization\n\n=== Exit Paths ===\n- np-ev-complete: sets has_completed_sa_flow=true, routes to agent_swap return\n- np-end-tth: silent end for TTH exits\n- np-end-ed: silent end for ED end_call exits\n- np-end-cb: silent end for callback exits\n\n=== Prompt Updates (vs Base Agent originals) ===\n- Name, DOB, Callback, Email, Address fallbacks: removed 'general services' offer\n- [SAN] Finalization: conversational summary style (no name/DOB repetition)\n\n=== Consistency Fixes Applied ===\n- ED exit routing: end_call → silent np-end-ed (not global End Call)\n- Removed redundant validate_email from flow-level tools (embedded in Email component)\n- TTH EV node transitions: equation-type conditions on tth_exit_reason extraction\n\n=== Test Results (14 dedicated tests) ===\n- [Happy Path]: 3/3 pass\n- [Fallback]: 3/3 pass\n- [Correction]: 2/2 pass\n- [Edge Case]: 2/2 pass\n- [ED]: 1/1 pass\n- [TTH]: 1/1 pass\n- [Callback]: 2/2 pass\n- Overall: 14/14 pass (100%)",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 1,
+    "conversation_flow_id": "conversation_flow_6a63c24b141e"
+  },
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "version": 1,
+  "is_published": false,
+  "post_call_analysis_model": "gpt-4.1-mini",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "natural_filler_words": true
+  },
+  "voice_id": "11labs-Cimo",
+  "max_call_duration_ms": 3600000,
+  "normalize_for_speech": false,
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {}
+}
