@@ -131,7 +131,8 @@ async function main() {
         console.log(`  ✨ New version detected: ${shortId(agentId)} v${lastVersion} → v${currentVersion}`);
 
         // Save with flat structure: {agent_name}_{agent_id}.json
-        const filename = `${sanitizedName}_${agentId}.json`;
+        const agentShortId = shortId(agentId);
+        const filename = `${sanitizedName}_${agentShortId}.json`;
         const filepath = path.join("snapshots/agents", filename);
         fs.writeFileSync(filepath, JSON.stringify(fullAgent, null, 2));
 
