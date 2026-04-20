@@ -120,8 +120,18 @@ async function main() {
 
         // Download new version
         const fullFlow = await client.conversationFlow.retrieve(flowId);
-        const filename = `flow_${shortId(flowId)}_v${currentVersion}_${formatTimestamp()}.json`;
-        const filepath = path.join("snapshots/flows", filename);
+
+        // Create folder structure (flows don't have names, use ID only)
+        const flowShortId = shortId(flowId);
+        const folderName = `flow_${flowShortId}`;
+        const folderPath = path.join("snapshots/flows", folderName);
+
+        // Ensure folder exists
+        ensureDirectoryExists(folderPath);
+
+        // Simplified filename
+        const filename = `v${currentVersion}_${formatTimestamp()}.json`;
+        const filepath = path.join(folderPath, filename);
 
         // Save snapshot
         fs.writeFileSync(filepath, JSON.stringify(fullFlow, null, 2));
@@ -134,7 +144,7 @@ async function main() {
         flowIndex[flowId].snapshots.push({
           version: currentVersion,
           timestamp: new Date().toISOString(),
-          file: filename,
+          file: `${folderName}/${filename}`,
           checksum: `sha256:${calculateChecksum(fullFlow)}`,
           node_count: fullFlow.nodes?.length || 0,
           tool_count: fullFlow.tools?.length || 0,
@@ -243,8 +253,16 @@ async function main() {
         const snapshotCount = componentIndex[componentId]?.snapshots?.length || 0;
         console.log(`  ✨ Change detected: ${shortId(componentId)} (${componentName}) - snapshot #${snapshotCount + 1}`);
 
-        const filename = `component_${shortId(componentId)}_${formatTimestamp()}.json`;
-        const filepath = path.join("snapshots/components", filename);
+        // Create folder structure: {component_name}_{component_id}
+        const folderName = getAgentFolderName(componentName, componentId);
+        const folderPath = path.join("snapshots/components", folderName);
+
+        // Ensure folder exists
+        ensureDirectoryExists(folderPath);
+
+        // Simplified filename (timestamp only since components have no version)
+        const filename = `${formatTimestamp()}.json`;
+        const filepath = path.join(folderPath, filename);
 
         // Save snapshot
         fs.writeFileSync(filepath, JSON.stringify(fullComponent, null, 2));
@@ -261,7 +279,7 @@ async function main() {
         componentIndex[componentId].name = componentName;
         componentIndex[componentId].snapshots.push({
           timestamp: new Date().toISOString(),
-          file: filename,
+          file: `${folderName}/${filename}`,
           checksum: `sha256:${currentChecksum}`,
           node_count: fullComponent.nodes?.length || 0,
           captured_by: "github-actions",
