@@ -1,0 +1,135 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_2d858aa4b921",
+  "name": "[RA] Date Preference",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "New Date preference",
+      "edges": [
+        {
+          "destination_node_id": "node-1772600503361",
+          "id": "conversation-1772599971247-edge-1772600026984-jnvkgv5x2",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received a preferred reschedule date/time or general preference"
+          }
+        },
+        {
+          "destination_node_id": "node-1772600503361",
+          "id": "conversation-1772599971247-edge-1772600055349-ixbq46uk0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User said \"as soon as possible\" or \"soonest available\""
+          }
+        },
+        {
+          "destination_node_id": "conversation-1772600089881",
+          "id": "conversation-1772599971247-edge-1772600077548-0rir26tv3",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User cannot decide on a new time after being asked twice"
+          }
+        }
+      ],
+      "id": "conversation-1772599971247",
+      "type": "conversation",
+      "display_position": {
+        "x": 239.41446271971864,
+        "y": -79.63068601925093
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask when the patient would like to reschedule to.\n\nSay something like: \"When would you like to move it to? Any \nparticular days or times that work better?\"\n\nIf the user gives a specific date and time like \"next Thursday \nat 10am\": Confirm it back: \"Got it — next Thursday the [date] \nat 10am. I'll make a note of that.\"\n\nIf the user gives a range like \"sometime next week, mornings\": \n\"Okay — next week, mornings. We'll find the best slot for you.\"\n\nIf the user says \"as soon as possible\" or \"the soonest \navailable\": \"Understood — we'll look for the earliest opening \nand let you know.\"\n\nIf the user has no idea or says \"I don't know yet\": Offer to \nhelp: \"That's okay — would it help if I suggested a few \noptions? Are weekdays or weekends better for you? And do \nyou prefer mornings or afternoons?\"\n\nIf the user still can't provide any preference after two \nattempts: Explain what happens next: \"No worries — what we \ncan do is cancel the current appointment, and you can call \nus back when you know your schedule. Or I can have someone \nfrom the clinic reach out with some available times.\"\n\nDo NOT ask more than twice."
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "component-end-1772599971247",
+      "type": "end",
+      "display_position": {
+        "x": 1440.138029010225,
+        "y": 98.95940597657594
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "name": "Fallback node",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772599971247",
+          "id": "edge-1772600089881",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to be transferred to the front desk\n"
+          }
+        },
+        {
+          "destination_node_id": "component-end-1772599971247",
+          "id": "conversation-1772600089881-edge-1772600251408-ffimyzkf8",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has agreed to be called back after\n"
+          }
+        },
+        {
+          "destination_node_id": "conversation-1772599971247",
+          "id": "conversation-1772600089881-edge-1772600363053-g5jh0b6me",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User changed their mind and now has the information"
+          }
+        }
+      ],
+      "id": "conversation-1772600089881",
+      "type": "conversation",
+      "display_position": {
+        "x": 652.649285510301,
+        "y": 603.8617771378596
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user couldn't provide enough information to complete the reschedule over the phone.\n\nAcknowledge it without making them feel bad: \"That's completely okay —rescheduling can be tricky when you're not sure of the details.\"\n\nThen offer options:\n\n1. \"I can connect you with the front desk — they can pull up your file and sort it out in just a minute.\"\n\n2. \"Or just give us a call back once you've had a chance to check your calendar — no rush at all.\"\n\nWait for the user to choose."
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "date_preference",
+          "description": "User's date preference",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1772600503361",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772599971247",
+          "id": "edge-1772600503361",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received a preferred date preference\n"
+          }
+        }
+      ],
+      "id": "node-1772600503361",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 740.7268487148929,
+        "y": -29.634325723478586
+      }
+    }
+  ],
+  "start_node_id": "conversation-1772599971247",
+  "user_modified_timestamp": 1772634349783,
+  "linked_conversation_flow_ids": []
+}

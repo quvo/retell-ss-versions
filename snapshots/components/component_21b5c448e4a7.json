@@ -1,0 +1,208 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_21b5c448e4a7",
+  "name": "[SA] Patient Status",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Conversation",
+      "edges": [
+        {
+          "destination_node_id": "node-1772983936404",
+          "id": "conversation-1772976693427-edge-1772981129645-y82j97wnh",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "patient is indicated as new\n"
+          }
+        },
+        {
+          "destination_node_id": "node-1772983988838",
+          "id": "conversation-1772976693427-edge-1772983889190-2wukktles",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "patient is indicating as returning\n"
+          }
+        }
+      ],
+      "id": "conversation-1772976693427",
+      "type": "conversation",
+      "display_position": {
+        "x": 222.60351641219137,
+        "y": -283.270689550601
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask if the user is a new or returning patient.\n\nSay something like: \"Have you been to Premier MD Clinic before, or would this be your first visit?\"\n\nIf the user says they've been before: \"Great, welcome back!\"\n\nIf the user says they're new: \"Wonderful, we're happy to have you!\"\n\nIf the user is unsure (e.g. \"I think I came once a long time ago\"): Gently clarify: \"No worries — do you think you'd have a record on file with us, or should we treat this as a new patient visit?\" Accept whatever they decide.\n\nIf the user refuses to answer or doesn't see why it matters: Explain briefly: \"I only ask because new patients sometimes need a little extra paperwork, and we want to make sure everything is ready for you when you arrive.\"\n\nDo NOT ask more than twice. If still unclear, default to \"new\" — it's safer to over-prepare than under-prepare."
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "component-end-1772976693427",
+      "type": "end",
+      "display_position": {
+        "x": 2615.561439636148,
+        "y": 207.58303873631655
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "name": "Logic Split",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1772976693427",
+          "id": "node-1772980943375-edge-1772980947557-0aqjlscjg",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{appointment_for}}",
+                "operator": "==",
+                "right": "self"
+              }
+            ],
+            "operator": "||"
+          }
+        },
+        {
+          "destination_node_id": "component-end-1772976693427",
+          "id": "node-1772980943375-edge-1772980979770-4njrgnxbn",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{appointment_for}}",
+                "operator": "==",
+                "right": "other"
+              }
+            ],
+            "operator": "||"
+          }
+        }
+      ],
+      "id": "node-1772980943375",
+      "else_edge": {
+        "id": "else-edge-1772980943375",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "branch",
+      "display_position": {
+        "x": -231.0731264187687,
+        "y": 127.14815771477947
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "is_patient_new",
+          "description": "Always set as true",
+          "type": "boolean",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1772983936404",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772976693427",
+          "id": "node-1772983936404-edge-1772984457887-7jmwq941r",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Variable has been extracted"
+          }
+        }
+      ],
+      "id": "node-1772983936404",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 700.7144644126248,
+        "y": -189.42379411606643
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "is_patient_new",
+          "description": "Always set as false",
+          "type": "boolean",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else_edge-1772983988838-1-0lrwgsw0c",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772976693427",
+          "id": "edge-1772983988838-0-35zgx1r59",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Variable has been extracted"
+          }
+        }
+      ],
+      "id": "node-1772983988838",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 719.674712144634,
+        "y": 180.36014235844576
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "prev_node",
+          "description": "Always set as \"patient_status\"",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1772985462200",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1772980943375",
+          "id": "edge-1772985462200",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Variable has been extracted"
+          }
+        }
+      ],
+      "id": "node-1772985462200",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -861.6603653115778,
+        "y": 203.77874160984257
+      }
+    }
+  ],
+  "start_node_id": "node-1772985462200",
+  "begin_tag_display_position": {
+    "x": -1319.7527050228114,
+    "y": 372.34340409080653
+  },
+  "user_modified_timestamp": 1772985534978,
+  "linked_conversation_flow_ids": []
+}

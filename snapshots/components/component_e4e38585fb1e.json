@@ -1,0 +1,158 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_e4e38585fb1e",
+  "name": "[SRA] Callback Number (Copy)",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Ask callback number",
+      "edges": [
+        {
+          "destination_node_id": "node-1772634822117",
+          "id": "conversation-1772634677409-edge-1772634721485-ht5qzr3ef",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the user's callback number"
+          }
+        },
+        {
+          "destination_node_id": "conversation-1772634772950",
+          "id": "conversation-1772634677409-edge-1772634736168-1fqt9aexi",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User's phone number is invalid"
+          }
+        },
+        {
+          "destination_node_id": "node-1772635012149",
+          "id": "conversation-1772634677409-edge-1772634758933-nacuj4cxi",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Did not receive the user's callback number"
+          }
+        }
+      ],
+      "id": "conversation-1772634677409",
+      "type": "conversation",
+      "display_position": {
+        "x": 168.71596013397777,
+        "y": 117.87659420915551
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask for the best phone number to reach the user.\n\nSay something like: \"What's the best phone number to reach you?\"\n\nIf the user says \"use this number\" or \"you already have it\", respond:\n\"Got it, we'll use the number you're calling from.\"\n\nA valid US phone number has exactly 10 digits (or 11 with country code).\n\nWhen the user provides a number:\n- A valid US phone number has exactly 10 digits (or 11 with country code).\n- Always read the number back to confirm. For example: \n  \"Just to make sure I have it right — that's (785) 390-9750, correct?\"\n- If the user says it's wrong, ask them to repeat it slowly.\n- If the number sounds too short or too long, say:\n  \"Hmm, that doesn't sound quite right — could you say it one more time?\"\n"
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "component-end-1772634677409",
+      "type": "end",
+      "display_position": {
+        "x": 2037.088765083024,
+        "y": 257.4956880436457
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "name": "Invalid Phone number fallback",
+      "edges": [
+        {
+          "destination_node_id": "node-1772634822117",
+          "id": "edge-1772634772950",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User provides valid phone number"
+          }
+        },
+        {
+          "destination_node_id": "component-end-1772634677409",
+          "id": "conversation-1772634772950-edge-1772634802033-2hrv7jkxj",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is done and wants to end the call"
+          }
+        }
+      ],
+      "id": "conversation-1772634772950",
+      "type": "conversation",
+      "display_position": {
+        "x": 630.2726771807843,
+        "y": 590.7696464619079
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user provided an invalid phone number.\n\nPolitely tell them that the phone number provided does not seem valid.\n\nWhen the user provides a number:\n- A valid US phone number has exactly 10 digits (or 11 with country code).\n- Always read the number back to confirm. For example: \n  \"Just to make sure I have it right — that's (785) 390-9750, correct?\"\n- If the user says it's wrong, ask them to repeat it slowly.\n- If the number sounds too short or too long, say:\n  \"Hmm, that doesn't sound quite right — could you say it one more time?\"\n"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "callback_number",
+          "description": "Users callback phone number",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1772634822117",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772634677409",
+          "id": "edge-1772634822117",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Call back number received"
+          }
+        }
+      ],
+      "id": "node-1772634822117",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 990.8978086836757,
+        "y": 198.3257463515616
+      }
+    },
+    {
+      "name": "Callback Fallback node",
+      "edges": [
+        {
+          "destination_node_id": "conversation-1772634677409",
+          "id": "edge-1772635012149-0-6c458kxcs",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User wants to try again or provide more information"
+          }
+        },
+        {
+          "destination_node_id": "component-end-1772634677409",
+          "id": "edge-1772635012149-1-hhaep4tez",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User is done and wants to end the call"
+          }
+        }
+      ],
+      "id": "node-1772635012149",
+      "type": "conversation",
+      "display_position": {
+        "x": 656.0097918037569,
+        "y": 1722.9304046273905
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The user provided an invalid phone number.\n\nPolitely tell them that the phone number provided does not seem valid.\n\nWhen the user provides a number:\n- A valid US phone number has exactly 10 digits (or 11 with country code).\n- Always read the number back to confirm. For example: \n  \"Just to make sure I have it right — that's (785) 390-9750, correct?\"\n- If the user says it's wrong, ask them to repeat it slowly.\n- If the number sounds too short or too long, say:\n  \"Hmm, that doesn't sound quite right — could you say it one more time?\"\n"
+      }
+    }
+  ],
+  "start_node_id": "conversation-1772634677409",
+  "user_modified_timestamp": 1772636265824,
+  "linked_conversation_flow_ids": []
+}

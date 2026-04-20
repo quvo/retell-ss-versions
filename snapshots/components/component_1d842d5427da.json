@@ -1,0 +1,148 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_1d842d5427da",
+  "name": "[RA] Reason for Change (Copy)",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Exit Component",
+      "id": "component-end-1772567428423",
+      "type": "end",
+      "speak_during_execution": false,
+      "display_position": {
+        "x": 2978.6371072954958,
+        "y": 427.86019520176495
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    },
+    {
+      "name": "Reason for Change",
+      "edges": [
+        {
+          "destination_node_id": "node-1772575485858",
+          "id": "edge-1772568303095-0-eit599l6l",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User provided a reason, even if brief\n\n"
+          }
+        },
+        {
+          "id": "node-1772568303095-edge-1772575704922-b2t4qm5vh",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User declined to give a reason or said they'd rather not say\n"
+          }
+        }
+      ],
+      "id": "node-1772568303095",
+      "type": "conversation",
+      "display_position": {
+        "x": -2231.4023993240867,
+        "y": 178.69726117747538
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Ask why the patient is rescheduling. This is optional but helps \nthe clinic with scheduling patterns.\n\nSay something like: \"No problem at all. Is there a particular \nreason for the change, or just a scheduling conflict?\"\n\nAccept ANY answer as valid — this is not a required field:\n- \"Something came up\" → \"Totally understand.\"\n- \"I have a work thing\" → \"No worries at all.\"\n- \"I'd rather not say\" → \"That's completely fine.\"\n- \"I just need a different time\" → \"Got it.\"\n\nDo NOT push for more detail. One ask is enough. \nWhatever they say, acknowledge briefly and move on.\n"
+      }
+    },
+    {
+      "name": "Confirm Collected information",
+      "edges": [
+        {
+          "destination_node_id": "node-1772568867988",
+          "id": "edge-1772568821577-0-ucj7f4mpy",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the user's insurance name"
+          }
+        }
+      ],
+      "id": "node-1772568821577",
+      "type": "conversation",
+      "display_position": {
+        "x": 1745.6664297536095,
+        "y": 291.46229957738245
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Read back DOB, phone, reason, preferences.\nExample: \"Let me confirm: I have your date of birth as [DOB], callback at [phone], to be seen for [reason], preferring [days/times] with [provider]. Is that correct?\"\n"
+      }
+    },
+    {
+      "name": "Final confirmation",
+      "edges": [
+        {
+          "destination_node_id": "component-end-1772567428423",
+          "id": "edge-1772568867988-0-lmu1owivx",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the user's insurance name"
+          }
+        }
+      ],
+      "id": "node-1772568867988",
+      "type": "conversation",
+      "display_position": {
+        "x": 2300.324463723821,
+        "y": 304.83168256978206
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Tell the user that we will get back to them in due course and politely ask if they needed help with anything else.\nExample: \"Perfect. We’ll take a look at the doctor’s schedule and give you a call back soon to let you know when they can see you. Did you need me to help you with anything else?\"\n"
+      }
+    },
+    {
+      "variables": [
+        {
+          "name": "reason_for_change",
+          "description": "user's reason for changing their appointment\n",
+          "type": "string",
+          "choices": []
+        }
+      ],
+      "else_edge": {
+        "id": "else-edge-1772575485858",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Variables",
+      "edges": [
+        {
+          "destination_node_id": "node-1772589965715",
+          "id": "edge-1772575485858",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "Received the reason for the changing their appointment "
+          }
+        }
+      ],
+      "id": "node-1772575485858",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -1723.7362193332642,
+        "y": 283.4428397397792
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "node-1772589965715",
+      "type": "end",
+      "speak_during_execution": false,
+      "display_position": {
+        "x": -1321.7976497503955,
+        "y": 410.0419694017212
+      },
+      "instruction": {
+        "type": "static_text",
+        "text": "Component completed"
+      }
+    }
+  ],
+  "start_node_id": "node-1772568303095",
+  "user_modified_timestamp": 1772601945596,
+  "linked_conversation_flow_ids": []
+}

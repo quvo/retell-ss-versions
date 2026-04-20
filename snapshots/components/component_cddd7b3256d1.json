@@ -1,0 +1,298 @@
+{
+  "conversation_flow_component_id": "conversation_flow_component_cddd7b3256d1",
+  "name": "TTH Direct Request",
+  "tools": [],
+  "nodes": [
+    {
+      "name": "Set TTH Visited",
+      "variables": [
+        {
+          "type": "boolean",
+          "name": "has_visited_transfer_to_human_flow",
+          "description": "Always set as true"
+        }
+      ],
+      "id": "tth-ev-entry",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": -400,
+        "y": 200
+      },
+      "always_edge": {
+        "destination_node_id": "tth-subagent",
+        "id": "edge-ev-entry-to-subagent",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Always"
+        }
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "You just interrupted the conversation because the caller asked to speak with a human, expressed frustration, or has a request you can't handle directly.\n\nSTEP 1 — Be direct (do this IMMEDIATELY):\nTell the caller you cannot transfer them to a person right now, but the clinic will follow up with them. Keep the acknowledgment to one or two sentences.\n\nIf the caller is frustrated, acknowledge it with empathy: \"I hear you, and I'm sorry this has been frustrating.\"\nIf they asked for a human directly: \"Absolutely, I understand.\"\nThen immediately say: \"I can't transfer you directly, but I'll make sure someone from the clinic gets back to you.\"\n\nFollow-up timing — use these variables to tell them WHEN:\n- If is_open is \"No\" and can_schedule_same_day is \"No\": \"The office is closed right now, but someone will reach out on {{next_available_for_reviewing}}.\"\n- If is_open is \"No\" and can_schedule_same_day is \"Yes\": \"The office isn't open yet today, but someone will follow up once they're in at {{next_open}}.\"\n- If is_open is \"Yes\" and can_schedule_same_day is \"No\": \"The office is wrapping up, so the earliest someone can get back to you is {{next_available_for_reviewing}}.\"\n- If is_open is \"Yes\" and can_schedule_same_day is \"Yes\": \"Someone from the clinic will follow up with you today.\"\n\nSTEP 2 — Collect identity (move to this QUICKLY):\nImmediately ask for the caller's name and date of birth so the clinic knows who to call back.\n\nSay something like: \"So the office knows who to follow up with, could I get your name and date of birth?\"\n\nCheck existing variables first:\n- If {{first_name}} and {{last_name}} are both already set, skip asking for name.\n- If {{first_name}} is set but {{last_name}} is empty, ask for the last name: \"Could I also get your last name?\"\n- If {{date_of_birth}} is already set AND {{dob_valid}} is \"true\", skip DOB.\n- If {{date_of_birth}} is set but {{dob_valid}} is NOT \"true\", call validate_dob immediately. If valid, skip. If not, ask for correction.\n- If all identity is already captured and valid, proceed to exit immediately.\n\nWhen the caller provides their name and/or date of birth, you MUST call extract_caller_identity FIRST to persist the values, THEN call validate_dob. Always call both tools — even if the caller gives name and DOB in a single message. Never skip extract_caller_identity.\n\nAfter calling validate_dob:\n- If valid: acknowledge briefly (\"Got it.\") and move on.\n- If needs_clarification: ask the caller to clarify. Do NOT read the raw error to the caller.\n- If invalid: \"Hmm, that date doesn't seem quite right — could you try again?\"\n\nHandling pushback:\n- If they ask WHY: \"Just so the clinic can pull up your records and make sure they're calling the right person back.\"\n- If they refuse: \"No problem at all — I'll still make sure someone reaches out.\" Then exit to the refusal path.\n- Do NOT ask more than twice for any piece of information.\n\nIf the caller calms down and wants to continue with AI assistance instead of a callback, let them know that's fine and exit to the \"continue\" path.\n\nIMPORTANT:\n- Do NOT say \"I'm just an AI\" or \"I'm not a real person.\"\n- Do NOT promise a live transfer or say \"let me transfer you.\"\n- Keep this interaction SHORT."
+      },
+      "name": "TTH Subagent",
+      "edges": [
+        {
+          "destination_node_id": "tth-callback-confirmation",
+          "id": "edge-sa-identity-collected",
+          "transition_condition": {
+            "type": "equation",
+            "equations": [
+              {
+                "left": "{{first_name}}",
+                "operator": "!=",
+                "right": ""
+              },
+              {
+                "left": "{{last_name}}",
+                "operator": "!=",
+                "right": ""
+              },
+              {
+                "left": "{{dob_valid}}",
+                "operator": "==",
+                "right": "true"
+              }
+            ],
+            "operator": "&&"
+          }
+        },
+        {
+          "destination_node_id": "tth-limited-info-goodbye",
+          "id": "edge-sa-identity-refused",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller has refused to provide their name or date of birth, or has been asked twice and still hasn't provided the information."
+          }
+        },
+        {
+          "destination_node_id": "tth-ev-exit-continue",
+          "id": "edge-sa-continue",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller has calmed down and wants to continue with AI assistance instead of a callback."
+          }
+        },
+        {
+          "destination_node_id": "tth-ev-exit-end-call",
+          "id": "edge-sa-end-call",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller wants to end the call or says they will call back later."
+          }
+        }
+      ],
+      "id": "tth-subagent",
+      "type": "subagent",
+      "tools": [
+        {
+          "name": "extract_caller_identity",
+          "description": "Extract the caller's name and date of birth from the conversation.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "first_name",
+              "description": "The caller's first name"
+            },
+            {
+              "type": "string",
+              "name": "last_name",
+              "description": "The caller's last name"
+            },
+            {
+              "type": "string",
+              "name": "date_of_birth",
+              "description": "User's date of birth. ALWAYS extract in named month format like 'October 12, 1966'. NEVER use numeric-only format like '10/12/1966' or '10-12-1966'."
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        },
+        {
+          "code": "const MN={january:1,jan:1,february:2,feb:2,march:3,mar:3,april:4,apr:4,may:5,june:6,jun:6,july:7,jul:7,august:8,aug:8,september:9,sep:9,sept:9,october:10,oct:10,november:11,nov:11,december:12,dec:12};\nconst ML=[\"\",\"January\",\"February\",\"March\",\"April\",\"May\",\"June\",\"July\",\"August\",\"September\",\"October\",\"November\",\"December\"];\nconst MD=[0,31,28,31,30,31,30,31,31,30,31,30,31];\nfunction isLY(y){return(y%4===0&&y%100!==0)||y%400===0}\nfunction dim(m,y){return m===2&&isLY(y)?29:MD[m]}\nfunction parse(raw){\n  const c=raw.toLowerCase().replace(/\\b(\\d+)(st|nd|rd|th)\\b/g,\"$1\").replace(/[,]/g,\" \").replace(/\\s+/g,\" \").trim();\n  let m;\n  m=c.match(/^([a-z]+)\\s+(\\d{1,2})\\s+(\\d{2,4})$/);\n  if(m&&MN[m[1]])return{month:MN[m[1]],day:+m[2],year:+m[3],amb:false};\n  const c2=c.replace(/\\bof\\b/g,\"\").replace(/\\s+/g,\" \").trim();\n  m=c2.match(/^(\\d{1,2})\\s+([a-z]+)\\s+(\\d{2,4})$/);\n  if(m&&MN[m[2]])return{month:MN[m[2]],day:+m[1],year:+m[3],amb:false};\n  m=c.match(/^(\\d{1,2})[/\\-.](\\d{1,2})[/\\-.](\\d{2,4})$/);\n  if(m){const a=+m[1],b=+m[2];return{month:a,day:b,year:+m[3],amb:a<=12&&b<=12&&a!==b}}\n  m=c.match(/^(\\d{4})[/\\-.](\\d{1,2})[/\\-.](\\d{1,2})$/);\n  if(m)return{month:+m[2],day:+m[3],year:+m[1],amb:false};\n  m=c.match(/^(\\d{4})$/);\n  if(m)return{month:0,day:0,year:+m[1],amb:false};\n  m=c.match(/^([a-z]+)\\s+(\\d{4})$/);\n  if(m&&MN[m[1]])return{month:MN[m[1]],day:0,year:+m[2],amb:false};\n  return null;\n}\nconst dob=dv.date_of_birth;\nif(!dob||!dob.trim()){return{valid:false,error:\"No date of birth provided\",age:null,formatted:null,needs_clarification:false,clarification_reason:null}}\nconst p=parse(dob.trim());\nif(!p){return{valid:false,error:\"Could not understand the date of birth. Could you say it as month, day, year?\",age:null,formatted:null,needs_clarification:true,clarification_reason:\"format_unclear\"}}\nlet{month,day,year,amb}=p;\nif(!month||!day||!year){const ms=[];if(!month)ms.push(\"month\");if(!day)ms.push(\"day\");if(!year)ms.push(\"year\");return{valid:false,error:\"The date is missing the \"+ms.join(\" and \")+\". Could you give the full date?\",age:null,formatted:null,needs_clarification:true,clarification_reason:\"missing_components\"}}\nif(year<100){const cy=new Date().getFullYear();const c21=2000+year;year=c21<=cy?c21:1900+year}\nif(month<1||month>12)return{valid:false,error:\"Month \"+month+\" is not valid.\",age:null,formatted:null,needs_clarification:false,clarification_reason:null};\nconst mx=dim(month,year);\nif(day<1||day>mx)return{valid:false,error:ML[month]+\" \"+year+\" only has \"+mx+\" days, so day \"+day+\" doesn't exist.\",age:null,formatted:null,needs_clarification:false,clarification_reason:null};\nconst today=new Date();today.setHours(0,0,0,0);const d=new Date(year,month-1,day);\nif(d>today)return{valid:false,error:\"That date is in the future.\",age:null,formatted:ML[month]+\" \"+day+\", \"+year,needs_clarification:false,clarification_reason:null};\nlet age=today.getFullYear()-d.getFullYear();const md=today.getMonth()-d.getMonth();if(md<0||(md===0&&today.getDate()<d.getDate()))age--;\nif(age>120)return{valid:false,error:\"That would make the patient \"+age+\" years old, which seems unlikely. Could you double-check the year?\",age,formatted:ML[month]+\" \"+day+\", \"+year,needs_clarification:true,clarification_reason:\"age_over_120\"};\nif(amb)return{valid:false,error:\"Just to be sure — is that \"+ML[month]+\" \"+day+\" or \"+ML[day]+\" \"+month+\"?\",age,formatted:ML[month]+\" \"+day+\", \"+year,needs_clarification:true,clarification_reason:\"ambiguous_month_day\"};\nif(age<1)return{valid:true,error:null,age:0,formatted:ML[month]+\" \"+day+\", \"+year,needs_clarification:true,clarification_reason:\"infant_under_one\"};\nreturn{valid:true,error:null,age,formatted:ML[month]+\" \"+day+\", \"+year,needs_clarification:false,clarification_reason:null};",
+          "timeout_ms": 10000,
+          "speak_after_execution": true,
+          "name": "validate_dob",
+          "description": "Validate the caller's date of birth. Call this whenever a date of birth is newly provided or needs checking. Reads dv.date_of_birth automatically.",
+          "response_variables": {
+            "dob_error": "error",
+            "dob_formatted": "formatted",
+            "dob_needs_clarification": "needs_clarification",
+            "dob_clarification_reason": "clarification_reason",
+            "dob_valid": "valid",
+            "dob_age": "age"
+          },
+          "type": "code",
+          "speak_during_execution": false
+        }
+      ],
+      "display_position": {
+        "x": 246,
+        "y": -186
+      }
+    },
+    {
+      "name": "Callback Confirmation",
+      "edges": [
+        {
+          "destination_node_id": "tth-ev-exit-end-call",
+          "id": "edge-cc-goodbye",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller says goodbye, thanks, has no more questions, or the conversation reaches a natural conclusion."
+          }
+        },
+        {
+          "destination_node_id": "tth-ev-exit-appointment",
+          "id": "edge-cc-appointment",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller wants to schedule, reschedule, cancel, or confirm an appointment."
+          }
+        }
+      ],
+      "id": "tth-callback-confirmation",
+      "type": "conversation",
+      "display_position": {
+        "x": 846,
+        "y": -162
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The caller has provided their name and date of birth during this transfer request. The agent has already informed them that a live transfer isn't possible and given them callback timing information.\n\n## What to say\n\nThank them for providing their information. Confirm that the office will follow up with them. Ask if there's anything else you can help with.\n\nKeep it brief — do not repeat the callback timing unless the caller specifically asks.\n\n## Dr. Boguslavsky's direct number\n\nONLY mention Dr. Boguslavsky's direct number (908-938-7717) when the office is closed ({{is_open}} is \"No\"). When the office is open, do NOT offer the direct number under any circumstances.\n\n## Handling follow-up conversation\n\n- If the caller asks a general question (office hours, location, etc.), answer if you know. If you don't, say so honestly.\n- If the caller wants to add details to their request, listen and acknowledge.\n- If the caller is still frustrated, validate their feelings. When the office is open, reassure them the message will be passed along promptly.\n\nDo not rush the caller. Let them lead the conversation to a natural close."
+      }
+    },
+    {
+      "name": "Limited Info Goodbye",
+      "edges": [
+        {
+          "destination_node_id": "tth-subagent",
+          "id": "edge-lig-reentry",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller changes their mind and agrees to provide or just provided their name or date of birth."
+          }
+        },
+        {
+          "destination_node_id": "tth-ev-exit-end-call",
+          "id": "edge-lig-goodbye",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller says goodbye, thanks, has no more questions, or the conversation reaches a natural conclusion."
+          }
+        },
+        {
+          "destination_node_id": "tth-ev-exit-appointment",
+          "id": "edge-lig-appointment",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "The caller wants to schedule, reschedule, cancel, or confirm an appointment."
+          }
+        }
+      ],
+      "id": "tth-limited-info-goodbye",
+      "type": "conversation",
+      "display_position": {
+        "x": 894,
+        "y": 966
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "The caller was not able or willing to provide their full name and date of birth during this transfer request. The agent has already informed them that a live transfer isn't possible and given them callback timing information.\n\n## What to say\n\nLet them know the office will still do their best to follow up. Ask if there's anything else you can help with.\n\nKeep it brief — do not repeat the callback timing unless the caller specifically asks. You may gently mention that having their name and date of birth would help, but keep it light and do not repeat if already declined.\n\n## Dr. Boguslavsky's direct number\n\nONLY mention Dr. Boguslavsky's direct number (908-938-7717) when the office is closed ({{is_open}} is \"No\"). When the office is open, do NOT offer the direct number under any circumstances.\n\n## Handling follow-up conversation\n\n- If the caller changes their mind and wants to provide their name or date of birth, let them know you'd be happy to take it.\n- If the caller asks a general question, answer if you know.\n- If the caller is still frustrated, validate their feelings.\n\nDo not rush the caller. Let them lead the conversation to a natural close."
+      }
+    },
+    {
+      "name": "Set Exit: end_call",
+      "variables": [
+        {
+          "type": "string",
+          "name": "tth_exit_reason",
+          "description": "Always set as 'end_call'"
+        }
+      ],
+      "id": "tth-ev-exit-end-call",
+      "else_edge": {
+        "destination_node_id": "tth-exit",
+        "id": "tth-ev-exit-end-call-else-edge",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 1806,
+        "y": -18
+      }
+    },
+    {
+      "name": "Set Exit: appointment",
+      "variables": [
+        {
+          "type": "string",
+          "name": "tth_exit_reason",
+          "description": "Always set as 'appointment'"
+        }
+      ],
+      "id": "tth-ev-exit-appointment",
+      "else_edge": {
+        "destination_node_id": "tth-exit",
+        "id": "tth-ev-exit-appointment-else-edge",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 1782,
+        "y": 366
+      }
+    },
+    {
+      "name": "Set Exit: continue",
+      "variables": [
+        {
+          "type": "string",
+          "name": "tth_exit_reason",
+          "description": "Always set as 'continue'"
+        }
+      ],
+      "id": "tth-ev-exit-continue",
+      "else_edge": {
+        "destination_node_id": "tth-exit",
+        "id": "tth-ev-exit-continue-else-edge",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 1782,
+        "y": 726
+      }
+    },
+    {
+      "name": "Exit Component",
+      "id": "tth-exit",
+      "type": "end",
+      "display_position": {
+        "x": 2310,
+        "y": 438
+      }
+    }
+  ],
+  "start_node_id": "tth-ev-entry",
+  "begin_tag_display_position": {
+    "x": -700,
+    "y": 180
+  },
+  "notes": [],
+  "user_modified_timestamp": 1776359725124,
+  "linked_conversation_flow_ids": [
+    "conversation_flow_7ae57fcd806a"
+  ]
+}

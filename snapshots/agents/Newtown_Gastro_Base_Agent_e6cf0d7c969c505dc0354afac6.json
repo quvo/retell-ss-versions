@@ -1,22 +1,22 @@
 {
   "agent_id": "agent_e6cf0d7c969c505dc0354afac6",
   "channel": "voice",
-  "last_modification_timestamp": 1776439681413,
+  "last_modification_timestamp": 1776706188135,
   "agent_name": "Newtown Gastro Base Agent",
-  "version_description": "v49: TTH component swap + Confirm Appointments silent edge + GI Identity Collection prompt sync\n\n=== Changes ===\n\n**TTH Direct Request:**\n- Replaced 13-node local Transfer To Human component with 8-node TTH Direct Request (local copy of Premier's shared component)\n- Single subagent handles all TTH scenarios (frustration, direct request, multiple appointments, sensitive info)\n- Subagent collects caller identity (name + DOB) before routing to internal Callback Confirmation / Limited Info Goodbye\n- External edges: end_call → End Call, appointment → Logic Split, else → Back to Normal Flow Split\n- Old Transfer To Human component orphaned (unreferenced)\n\n**Confirm Appointments:**\n- Added missing 5th edge: \"User goes silent\" → End Call (matching Premier)\n\n**GI Identity Collection:**\n- Synced prompt with Premier — adds explicit \"MUST call extract_caller_identity FIRST, THEN validate_dob\" instruction\n\n=== Node count ===\n- 57 top-level nodes (unchanged)\n- 9 components (was 8, +1 TTH Direct Request local copy)",
+  "version_description": "Renamed can_schedule_same_day to can_review_same_day across global_prompt, nodes, and components (48 refs). Updated get_time_context tool response_variables mapping. Added {{}} to plain variable refs in component condition labels. Updated webhook URL to production (smartsupport.ubiehealth.com).",
   "response_engine": {
     "type": "conversation-flow",
-    "version": 5,
+    "version": 14,
     "conversation_flow_id": "conversation_flow_f9c858e769f5"
   },
-  "webhook_url": "https://7b0f-2600-4041-42a7-bc00-9ddd-43a2-3c99-a6e0.ngrok-free.app/webhook/retellai",
+  "webhook_url": "https://smartsupport.ubiehealth.com/webhook/retellai",
   "webhook_timeout_ms": 5000,
   "language": "multi",
   "data_storage_setting": "everything",
   "end_call_after_silence_ms": 60000,
-  "version": 5,
+  "version": 14,
   "is_published": false,
-  "version_title": "Long-form subagent prompt test",
+  "version_title": "Rename can_schedule_same_day to can_review_same_day; update webhook URL",
   "handbook_config": {
     "natural_filler_words": true,
     "speech_normalization": true
