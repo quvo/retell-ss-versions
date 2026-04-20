@@ -9,7 +9,6 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
-import { getAgentFolderName } from "./utils/folder-naming.js";
 
 dotenv.config();
 
@@ -185,19 +184,13 @@ async function main() {
         // Download new version
         const fullAgent = await client.agent.retrieve(agentId);
 
-        // Extract agent name and create folder structure
+        // Extract agent name for flat structure: {agent_name}_{agent_id}.json
         const agentName = fullAgent.agent_name || "Unknown_Agent";
-        const folderName = getAgentFolderName(agentName, agentId);
-        const folderPath = path.join("snapshots/agents", folderName);
+        const sanitizedName = agentName.replace(/\s/g, "_").replace(/[\/()]/g, "_").replace(/__+/g, "_").replace(/^_|_$/g, "");
+        const filename = `${sanitizedName}_${agentId}.json`;
+        const filepath = path.join("snapshots/agents", filename);
 
-        // Ensure folder exists
-        ensureDirectoryExists(folderPath);
-
-        // Simplified filename (no agent ID prefix since it's in folder name)
-        const filename = `v${currentVersion}_${formatTimestamp()}.json`;
-        const filepath = path.join(folderPath, filename);
-
-        // Save snapshot
+        // Save snapshot (overwrites previous version - keeping only latest)
         fs.writeFileSync(filepath, JSON.stringify(fullAgent, null, 2));
 
         // Update index
@@ -213,7 +206,7 @@ async function main() {
         agentIndex[agentId].snapshots.push({
           version: currentVersion,
           timestamp: new Date().toISOString(),
-          file: `${folderName}/${filename}`,  // Include folder prefix
+          file: filename,  // Just the filename, no folder prefix
           checksum: `sha256:${calculateChecksum(fullAgent)}`,
           voice_id: fullAgent.voice_id,
           captured_by: "github-actions",
@@ -254,7 +247,8 @@ async function main() {
         console.log(`  ✨ Change detected: ${shortId(componentId)} (${componentName}) - snapshot #${snapshotCount + 1}`);
 
         // Create folder structure: {component_name}_{component_id}
-        const folderName = getAgentFolderName(componentName, componentId);
+        const sanitizedComponentName = componentName.replace(/\s/g, "_").replace(/[\/()]/g, "_").replace(/__+/g, "_").replace(/^_|_$/g, "");
+        const folderName = `${sanitizedComponentName}_${componentId}`;
         const folderPath = path.join("snapshots/components", folderName);
 
         // Ensure folder exists

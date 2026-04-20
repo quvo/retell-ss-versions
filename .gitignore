@@ -5,4 +5,6 @@ dist
 .DS_Store
 snapshot-summary.json
 snapshot-output.log
-snapshots/
+# Ignore flows and components completely
+snapshots/flows/
+snapshots/components/
