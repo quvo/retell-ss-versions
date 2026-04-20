@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import { getAgentFolderName } from "./utils/folder-naming.js";
 
 dotenv.config();
 
@@ -173,21 +174,36 @@ async function main() {
 
         // Download new version
         const fullAgent = await client.agent.retrieve(agentId);
-        const filename = `agent_${shortId(agentId)}_v${currentVersion}_${formatTimestamp()}.json`;
-        const filepath = path.join("snapshots/agents", filename);
+
+        // Extract agent name and create folder structure
+        const agentName = fullAgent.agent_name || "Unknown_Agent";
+        const folderName = getAgentFolderName(agentName, agentId);
+        const folderPath = path.join("snapshots/agents", folderName);
+
+        // Ensure folder exists
+        ensureDirectoryExists(folderPath);
+
+        // Simplified filename (no agent ID prefix since it's in folder name)
+        const filename = `v${currentVersion}_${formatTimestamp()}.json`;
+        const filepath = path.join(folderPath, filename);
 
         // Save snapshot
         fs.writeFileSync(filepath, JSON.stringify(fullAgent, null, 2));
 
         // Update index
         if (!agentIndex[agentId]) {
-          agentIndex[agentId] = { current_version: currentVersion, snapshots: [] };
+          agentIndex[agentId] = {
+            current_version: currentVersion,
+            agent_name: agentName,
+            snapshots: []
+          };
         }
         agentIndex[agentId].current_version = currentVersion;
+        agentIndex[agentId].agent_name = agentName;  // Update name if changed
         agentIndex[agentId].snapshots.push({
           version: currentVersion,
           timestamp: new Date().toISOString(),
-          file: filename,
+          file: `${folderName}/${filename}`,  // Include folder prefix
           checksum: `sha256:${calculateChecksum(fullAgent)}`,
           voice_id: fullAgent.voice_id,
           captured_by: "github-actions",

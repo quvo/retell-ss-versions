@@ -21,6 +21,8 @@
     "add-document-flow": "tsx src/add-document-flow.ts",
     "snapshot-collect": "tsx src/snapshot-collector.ts",
     "rollback": "tsx src/rollback-single.ts",
+    "migrate-snapshots": "tsx src/migrate-snapshots-to-folders.ts",
+    "verify-migration": "tsx src/verify-snapshot-migration.ts",
     "build": "tsc",
     "type-check": "tsc --noEmit"
   },
