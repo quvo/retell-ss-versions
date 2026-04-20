@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   collect-snapshots:
@@ -114,9 +115,9 @@ jobs:
 
           ## Changes
           $(jq -r '
-            (.flows // [] | map("- Flow \`\(.id)\`: v\(.oldVersion) → v\(.newVersion)")) +
-            (.agents // [] | map("- Agent \`\(.id)\`: v\(.oldVersion) → v\(.newVersion)")) +
-            (.components // [] | map("- Component \`\(.id)\`: checksum updated"))
+            (.flows // [] | map("- Flow " + .id + ": v" + (.oldVersion | tostring) + " → v" + (.newVersion | tostring))) +
+            (.agents // [] | map("- Agent " + .id + ": v" + (.oldVersion | tostring) + " → v" + (.newVersion | tostring))) +
+            (.components // [] | map("- Component " + .id + ": checksum updated"))
             | join("\n")
           ' snapshot-summary.json)
 
@@ -157,9 +158,9 @@ jobs:
 
           # Build detailed change list
           CHANGES=$(jq -r '
-            (.flows // [] | map("• Flow `\(.id)`: v\(.oldVersion) → v\(.newVersion)")) +
-            (.agents // [] | map("• Agent `\(.id)`: v\(.oldVersion) → v\(.newVersion)")) +
-            (.components // [] | map("• Component `\(.id)`: checksum updated"))
+            (.flows // [] | map("• Flow " + .id + ": v" + (.oldVersion | tostring) + " → v" + (.newVersion | tostring))) +
+            (.agents // [] | map("• Agent " + .id + ": v" + (.oldVersion | tostring) + " → v" + (.newVersion | tostring))) +
+            (.components // [] | map("• Component " + .id + ": checksum updated"))
             | join("\\n")
           ' snapshot-summary.json)
 
