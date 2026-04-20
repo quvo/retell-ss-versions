@@ -1,0 +1,40 @@
+{
+  "agent_id": "agent_3ed252c7885a37bf8ac5265b52",
+  "channel": "voice",
+  "last_modification_timestamp": 1775824159058,
+  "agent_name": "LI - Subagent Test",
+  "version_description": "Remove \"confirmation\" node",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 4,
+    "conversation_flow_id": "conversation_flow_ec05bbbef8a9"
+  },
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "version": 4,
+  "is_published": false,
+  "version_title": "Initial",
+  "post_call_analysis_model": "gpt-4.1-mini",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "echo_verification": true,
+    "speech_normalization": true,
+    "default_personality": true,
+    "scope_boundaries": false,
+    "natural_filler_words": true,
+    "nato_phonetic_alphabet": true,
+    "high_empathy": false,
+    "ai_disclosure": true,
+    "smart_matching": false
+  },
+  "voice_id": "retell-Cimo",
+  "max_call_duration_ms": 3600000,
+  "interruption_sensitivity": 0.9,
+  "normalize_for_speech": true,
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {}
+}

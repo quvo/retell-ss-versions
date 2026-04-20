@@ -1,0 +1,64 @@
+{
+  "agent_id": "agent_17ccc0b686517d0ad30ec3a1e7",
+  "channel": "voice",
+  "last_modification_timestamp": 1775673494840,
+  "agent_name": "[Deprecated] Premier MD Agent - Dev v1",
+  "version_description": "Removed orphaned insurance node and updated simulation tests",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 2,
+    "conversation_flow_id": "conversation_flow_7ed48b730fac"
+  },
+  "webhook_url": "https://aviatic-leanora-sprawly.ngrok-free.dev/webhook/retellai",
+  "webhook_timeout_ms": 5000,
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "end_call_after_silence_ms": 60000,
+  "version": 2,
+  "is_published": false,
+  "handbook_config": {
+    "natural_filler_words": true,
+    "speech_normalization": true
+  },
+  "analysis_successful_prompt": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail.",
+  "analysis_summary_prompt": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call.",
+  "analysis_user_sentiment_prompt": "Evaluate user's sentiment, mood and satisfaction level.",
+  "post_call_analysis_data": [
+    {
+      "type": "system-presets",
+      "name": "call_summary",
+      "description": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call."
+    },
+    {
+      "type": "system-presets",
+      "name": "call_successful",
+      "description": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail."
+    },
+    {
+      "type": "system-presets",
+      "name": "user_sentiment",
+      "description": "Evaluate user's sentiment, mood and satisfaction level."
+    }
+  ],
+  "voice_id": "11labs-Cimo",
+  "enable_backchannel": false,
+  "backchannel_frequency": 0.1,
+  "backchannel_words": [
+    "'yeah'",
+    "'uh-huh'"
+  ],
+  "max_call_duration_ms": 3600000,
+  "interruption_sensitivity": 0.8,
+  "ambient_sound": "coffee-shop",
+  "ambient_sound_volume": 1.42,
+  "normalize_for_speech": true,
+  "begin_message_delay_ms": 400,
+  "ring_duration_ms": 30000,
+  "user_dtmf_options": {},
+  "webhook_events": [
+    "call_ended",
+    "call_analyzed",
+    "call_started",
+    "transcript_updated"
+  ]
+}

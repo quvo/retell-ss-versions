@@ -1,0 +1,65 @@
+{
+  "agent_id": "agent_71b06ec7239ceda05eae083b4c",
+  "channel": "voice",
+  "last_modification_timestamp": 1776474790218,
+  "agent_name": "Base Agent - local",
+  "version_description": "v49: TTH component swap + Confirm Appointments silent edge + GI Identity Collection prompt sync\n\n=== Changes ===\n\n**TTH Direct Request:**\n- Replaced 13-node local Transfer To Human component with 8-node TTH Direct Request (local copy of Premier's shared component)\n- Single subagent handles all TTH scenarios (frustration, direct request, multiple appointments, sensitive info)\n- Subagent collects caller identity (name + DOB) before routing to internal Callback Confirmation / Limited Info Goodbye\n- External edges: end_call → End Call, appointment → Logic Split, else → Back to Normal Flow Split\n- Old Transfer To Human component orphaned (unreferenced)\n\n**Confirm Appointments:**\n- Added missing 5th edge: \"User goes silent\" → End Call (matching Premier)\n\n**GI Identity Collection:**\n- Synced prompt with Premier — adds explicit \"MUST call extract_caller_identity FIRST, THEN validate_dob\" instruction\n\n=== Node count ===\n- 57 top-level nodes (unchanged)\n- 9 components (was 8, +1 TTH Direct Request local copy)",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 52,
+    "conversation_flow_id": "conversation_flow_53117f297306"
+  },
+  "webhook_url": "https://aviatic-leanora-sprawly.ngrok-free.dev/webhook/retellai",
+  "webhook_timeout_ms": 5000,
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "end_call_after_silence_ms": 60000,
+  "version": 52,
+  "is_published": false,
+  "version_title": "TTH Direct Request + Confirm Appointments + GI prompt alignment",
+  "handbook_config": {
+    "natural_filler_words": true,
+    "speech_normalization": true
+  },
+  "analysis_successful_prompt": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail.",
+  "analysis_summary_prompt": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call.",
+  "analysis_user_sentiment_prompt": "Evaluate user's sentiment, mood and satisfaction level.",
+  "post_call_analysis_data": [
+    {
+      "type": "system-presets",
+      "name": "call_summary",
+      "description": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call."
+    },
+    {
+      "type": "system-presets",
+      "name": "call_successful",
+      "description": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail."
+    },
+    {
+      "type": "system-presets",
+      "name": "user_sentiment",
+      "description": "Evaluate user's sentiment, mood and satisfaction level."
+    }
+  ],
+  "voice_id": "11labs-Cimo",
+  "enable_backchannel": false,
+  "backchannel_frequency": 0.1,
+  "backchannel_words": [
+    "'yeah'",
+    "'uh-huh'"
+  ],
+  "max_call_duration_ms": 3600000,
+  "interruption_sensitivity": 0.9,
+  "ambient_sound": "coffee-shop",
+  "ambient_sound_volume": 1.42,
+  "normalize_for_speech": true,
+  "begin_message_delay_ms": 400,
+  "ring_duration_ms": 30000,
+  "user_dtmf_options": {},
+  "webhook_events": [
+    "call_ended",
+    "call_analyzed",
+    "call_started",
+    "transcript_updated"
+  ]
+}
