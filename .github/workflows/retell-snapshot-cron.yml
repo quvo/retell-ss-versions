@@ -164,9 +164,8 @@ jobs:
             | join("\\n")
           ' snapshot-summary.json)
 
-          curl -X POST "$SLACK_WEBHOOK_URL" \
-            -H 'Content-Type: application/json' \
-            -d @- <<EOF
+          # Create JSON payload with proper variable substitution
+          PAYLOAD=$(cat <<EOF
           {
             "text": "🔔 Retell AI Snapshots Updated",
             "blocks": [
@@ -198,18 +197,17 @@ jobs:
                 }
               },
               {
-                "type": "actions",
-                "elements": [
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "View Pull Request"
-                    },
-                    "url": "${PR_URL}"
-                  }
-                ]
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "<${PR_URL}|View Pull Request>"
+                }
               }
             ]
           }
           EOF
+          )
+
+          curl -X POST "$SLACK_WEBHOOK_URL" \
+            -H 'Content-Type: application/json' \
+            -d "$PAYLOAD"
