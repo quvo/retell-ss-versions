@@ -92,12 +92,19 @@
   },
   "conversation_flow_component_5e20b3d2e2d6": {
     "name": "End Call",
-    "last_checksum": "318855e7dfe094feb7e54d24af657f9386566258f97acdb4086686bbadcc4207",
+    "last_checksum": "2f10eec1a418755b1daef045964ccb755d05f0aa00f156693298980e6c3c0f7c",
     "snapshots": [
       {
         "timestamp": "2026-04-18T01:44:38.851Z",
         "file": "component_component_5e20b3d2e2d6_20260418014438.json",
         "checksum": "sha256:318855e7dfe094feb7e54d24af657f9386566258f97acdb4086686bbadcc4207",
+        "node_count": 2,
+        "captured_by": "github-actions"
+      },
+      {
+        "timestamp": "2026-04-20T21:09:38.267Z",
+        "file": "component_component_5e20b3d2e2d6.json",
+        "checksum": "sha256:2f10eec1a418755b1daef045964ccb755d05f0aa00f156693298980e6c3c0f7c",
         "node_count": 2,
         "captured_by": "github-actions"
       }
