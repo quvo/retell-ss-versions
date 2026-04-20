@@ -101,6 +101,74 @@ async function main() {
     process.exit(1);
   }
 
+  // First, process agents to build flow → agent mapping
+  console.log("🤖 Checking agents...");
+  const flowToAgentMap: Record<string, string> = {};
+  try {
+    const agents = await client.agent.list();
+    console.log(`  Debug: API returned ${agents.length || 0} agents`);
+
+    for (const agent of agents) {
+      const agentId = agent.agent_id;
+      const currentVersion = agent.version;
+      const lastVersion = agentIndex[agentId]?.current_version || 0;
+
+      console.log(`  Checking agent ${shortId(agentId)}: current v${currentVersion}, last v${lastVersion}`);
+
+      // Always retrieve full agent to build flow mapping
+      const fullAgent = await client.agent.retrieve(agentId);
+      const agentName = fullAgent.agent_name || "Unknown_Agent";
+      const sanitizedName = agentName.replace(/\s/g, "_").replace(/[\/()]/g, "_").replace(/__+/g, "_").replace(/^_|_$/g, "");
+
+      // Build flow → agent mapping for all agents
+      if (fullAgent.response_engine?.type === "conversation-flow" && fullAgent.response_engine.conversation_flow_id) {
+        const flowId = fullAgent.response_engine.conversation_flow_id;
+        flowToAgentMap[flowId] = sanitizedName;
+      }
+
+      // Save if version changed
+      if (currentVersion > lastVersion) {
+        console.log(`  ✨ New version detected: ${shortId(agentId)} v${lastVersion} → v${currentVersion}`);
+
+        // Save with flat structure: {agent_name}_{agent_id}.json
+        const filename = `${sanitizedName}_${agentId}.json`;
+        const filepath = path.join("snapshots/agents", filename);
+        fs.writeFileSync(filepath, JSON.stringify(fullAgent, null, 2));
+
+        // Update index
+        if (!agentIndex[agentId]) {
+          agentIndex[agentId] = {
+            current_version: currentVersion,
+            agent_name: agentName,
+            snapshots: []
+          };
+        }
+        agentIndex[agentId].current_version = currentVersion;
+        agentIndex[agentId].agent_name = agentName;
+        agentIndex[agentId].snapshots.push({
+          version: currentVersion,
+          timestamp: new Date().toISOString(),
+          file: filename,
+          checksum: `sha256:${calculateChecksum(fullAgent)}`,
+          voice_id: fullAgent.voice_id,
+          captured_by: "github-actions",
+        });
+
+        // Track change
+        summary.agents.push({
+          id: shortId(agentId),
+          oldVersion: lastVersion,
+          newVersion: currentVersion,
+        });
+        summary.totalNew++;
+      }
+    }
+    console.log(`  ✓ Processed ${agents.length} agents\n`);
+  } catch (error: any) {
+    console.error(`  ✗ Error processing agents: ${error.message}`);
+    console.error(`  Stack: ${error.stack}\n`);
+  }
+
   // Process flows
   console.log("📋 Checking conversation flows...");
   try {
@@ -120,9 +188,12 @@ async function main() {
         // Download new version
         const fullFlow = await client.conversationFlow.retrieve(flowId);
 
-        // Flat structure: conversation_flow_{flow_id}.json
+        // Flat structure with optional agent prefix: [{agent_name}_]conversation_flow_{flow_id}.json
         const flowShortId = shortId(flowId);
-        const filename = `conversation_flow_${flowShortId}.json`;
+        const agentPrefix = flowToAgentMap[flowId];
+        const filename = agentPrefix
+          ? `${agentPrefix}_conversation_flow_${flowShortId}.json`
+          : `conversation_flow_${flowShortId}.json`;
         const filepath = path.join("snapshots/flows", filename);
 
         // Save snapshot (overwrites previous version - keeping only latest)
@@ -155,68 +226,6 @@ async function main() {
     console.log(`  ✓ Processed ${flows.length} flows\n`);
   } catch (error: any) {
     console.error(`  ✗ Error processing flows: ${error.message}`);
-    console.error(`  Stack: ${error.stack}\n`);
-  }
-
-  // Process agents
-  console.log("🤖 Checking agents...");
-  try {
-    const agents = await client.agent.list();
-    console.log(`  Debug: API returned ${agents.length || 0} agents`);
-
-    for (const agent of agents) {
-      const agentId = agent.agent_id;
-      const currentVersion = agent.version;
-      const lastVersion = agentIndex[agentId]?.current_version || 0;
-
-      console.log(`  Checking agent ${shortId(agentId)}: current v${currentVersion}, last v${lastVersion}`);
-
-      if (currentVersion > lastVersion) {
-        console.log(`  ✨ New version detected: ${shortId(agentId)} v${lastVersion} → v${currentVersion}`);
-
-        // Download new version
-        const fullAgent = await client.agent.retrieve(agentId);
-
-        // Extract agent name for flat structure: {agent_name}_{agent_id}.json
-        const agentName = fullAgent.agent_name || "Unknown_Agent";
-        const sanitizedName = agentName.replace(/\s/g, "_").replace(/[\/()]/g, "_").replace(/__+/g, "_").replace(/^_|_$/g, "");
-        const filename = `${sanitizedName}_${agentId}.json`;
-        const filepath = path.join("snapshots/agents", filename);
-
-        // Save snapshot (overwrites previous version - keeping only latest)
-        fs.writeFileSync(filepath, JSON.stringify(fullAgent, null, 2));
-
-        // Update index
-        if (!agentIndex[agentId]) {
-          agentIndex[agentId] = {
-            current_version: currentVersion,
-            agent_name: agentName,
-            snapshots: []
-          };
-        }
-        agentIndex[agentId].current_version = currentVersion;
-        agentIndex[agentId].agent_name = agentName;  // Update name if changed
-        agentIndex[agentId].snapshots.push({
-          version: currentVersion,
-          timestamp: new Date().toISOString(),
-          file: filename,  // Just the filename, no folder prefix
-          checksum: `sha256:${calculateChecksum(fullAgent)}`,
-          voice_id: fullAgent.voice_id,
-          captured_by: "github-actions",
-        });
-
-        // Track change
-        summary.agents.push({
-          id: shortId(agentId),
-          oldVersion: lastVersion,
-          newVersion: currentVersion,
-        });
-        summary.totalNew++;
-      }
-    }
-    console.log(`  ✓ Processed ${agents.length} agents\n`);
-  } catch (error: any) {
-    console.error(`  ✗ Error processing agents: ${error.message}`);
     console.error(`  Stack: ${error.stack}\n`);
   }
 
