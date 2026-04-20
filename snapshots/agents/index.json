@@ -553,5 +553,27 @@
         "captured_by": "github-actions"
       }
     ]
+  },
+  "agent_604a4194a4eb9fa3cbae51c89c": {
+    "current_version": 5,
+    "agent_name": "LI - Base Agent - local (copy)",
+    "snapshots": [
+      {
+        "version": 4,
+        "timestamp": "2026-04-20T02:55:16.322Z",
+        "file": "LI_Base_Agent_local_(copy)_604a4194a4eb9fa3cbae51c89c/v4_20260420025516.json",
+        "checksum": "sha256:0ed471ce7497370762bd462ad8ad0a3713458a4fd8665915afbc59da89c09db8",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 5,
+        "timestamp": "2026-04-20T02:55:16.375Z",
+        "file": "LI_Base_Agent_local_(copy)_604a4194a4eb9fa3cbae51c89c/v5_20260420025516.json",
+        "checksum": "sha256:0ed471ce7497370762bd462ad8ad0a3713458a4fd8665915afbc59da89c09db8",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
   }
 }
