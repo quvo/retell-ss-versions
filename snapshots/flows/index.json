@@ -1196,7 +1196,7 @@
     ]
   },
   "conversation_flow_53117f297306": {
-    "current_version": 53,
+    "current_version": 54,
     "snapshots": [
       {
         "version": 1,
@@ -1671,6 +1671,15 @@
         "timestamp": "2026-04-18T06:18:56.688Z",
         "file": "flow_53117f297306_v53_20260418061856.json",
         "checksum": "sha256:1cc6500ab3e853c054e595959a0c58379b6a729a3e55fc7724a01d507efd590b",
+        "node_count": 56,
+        "tool_count": 4,
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 54,
+        "timestamp": "2026-04-20T07:24:34.456Z",
+        "file": "flow_53117f297306/v54_20260420072434.json",
+        "checksum": "sha256:9fb58bb0b1da223971b0adcb4e17703600b51454bfd3cfefda066c39f140d3c4",
         "node_count": 56,
         "tool_count": 4,
         "captured_by": "github-actions"

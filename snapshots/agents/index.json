@@ -1,6 +1,6 @@
 {
   "agent_71b06ec7239ceda05eae083b4c": {
-    "current_version": 53,
+    "current_version": 54,
     "snapshots": [
       {
         "version": 52,
@@ -17,8 +17,17 @@
         "checksum": "sha256:03f6e2bfee8ec2631f378b2c6b28b3ffab313245080f5ba1ad3367bab56785c0",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 54,
+        "timestamp": "2026-04-20T07:24:34.712Z",
+        "file": "Base_Agent_local_71b06ec7239ceda05eae083b4c/v54_20260420072434.json",
+        "checksum": "sha256:44ea816fdaa633482325db19ba07578a72981cf958fae2befb505e94e1c70047",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
-    ]
+    ],
+    "agent_name": "Base Agent - local"
   },
   "agent_cbdb63a2eb6ac93a5edf8fb885": {
     "current_version": 5,
