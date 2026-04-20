@@ -1,0 +1,65 @@
+{
+  "agent_id": "agent_e6cf0d7c969c505dc0354afac6",
+  "channel": "voice",
+  "last_modification_timestamp": 1776703442284,
+  "agent_name": "Newtown Gastro Base Agent",
+  "version_description": "v6 — Newtown Gastro Base Agent (April 2026)\n\nSingle-node behavior change since v5:\n• \"Returning Node\" (node-1773066400352, conversation): replaced its always-edge auto-transition to node-1772566858962 with a prompt-gated edge (\"User has fully finished stating what they need help with\"). The node now waits for the caller to finish stating their need before advancing instead of auto-forwarding.\n\nNo other agent, flow, prompt, component, tool, KB, or dynamic-variable changes since v5.",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 8,
+    "conversation_flow_id": "conversation_flow_f9c858e769f5"
+  },
+  "webhook_url": "https://7b0f-2600-4041-42a7-bc00-9ddd-43a2-3c99-a6e0.ngrok-free.app/webhook/retellai",
+  "webhook_timeout_ms": 5000,
+  "language": "multi",
+  "data_storage_setting": "everything",
+  "end_call_after_silence_ms": 60000,
+  "version": 8,
+  "is_published": false,
+  "version_title": "Returning Node: prompt-gated transition",
+  "handbook_config": {
+    "natural_filler_words": true,
+    "speech_normalization": true
+  },
+  "analysis_successful_prompt": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail.",
+  "analysis_summary_prompt": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call.",
+  "analysis_user_sentiment_prompt": "Evaluate user's sentiment, mood and satisfaction level.",
+  "post_call_analysis_data": [
+    {
+      "type": "system-presets",
+      "name": "call_summary",
+      "description": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call."
+    },
+    {
+      "type": "system-presets",
+      "name": "call_successful",
+      "description": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail."
+    },
+    {
+      "type": "system-presets",
+      "name": "user_sentiment",
+      "description": "Evaluate user's sentiment, mood and satisfaction level."
+    }
+  ],
+  "voice_id": "11labs-Cimo",
+  "enable_backchannel": false,
+  "backchannel_frequency": 0.1,
+  "backchannel_words": [
+    "'yeah'",
+    "'uh-huh'"
+  ],
+  "max_call_duration_ms": 3600000,
+  "interruption_sensitivity": 0.9,
+  "ambient_sound": "coffee-shop",
+  "ambient_sound_volume": 1.42,
+  "normalize_for_speech": true,
+  "begin_message_delay_ms": 400,
+  "ring_duration_ms": 30000,
+  "user_dtmf_options": {},
+  "webhook_events": [
+    "call_ended",
+    "call_analyzed",
+    "call_started",
+    "transcript_updated"
+  ]
+}

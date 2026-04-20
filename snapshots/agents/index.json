@@ -72,7 +72,7 @@
     ]
   },
   "agent_e6cf0d7c969c505dc0354afac6": {
-    "current_version": 7,
+    "current_version": 8,
     "snapshots": [
       {
         "version": 4,
@@ -105,8 +105,17 @@
         "checksum": "sha256:8e81682311eb95578def3b7bf94e09c675ede581bf133b72adb6c77a98006567",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 8,
+        "timestamp": "2026-04-20T16:47:35.094Z",
+        "file": "Newtown_Gastro_Base_Agent_agent_e6cf0d7c969c505dc0354afac6.json",
+        "checksum": "sha256:1cbd2a393b08eb4a6f5edec5fb815ea1c4304f19f6f175c5767872d5fdd9fc9c",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
-    ]
+    ],
+    "agent_name": "Newtown Gastro Base Agent"
   },
   "agent_7f9970d8ffabe265abbb553b56": {
     "current_version": 5,

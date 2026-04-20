@@ -2520,7 +2520,7 @@
     ]
   },
   "conversation_flow_f9c858e769f5": {
-    "current_version": 7,
+    "current_version": 8,
     "snapshots": [
       {
         "version": 1,
@@ -2581,6 +2581,15 @@
         "timestamp": "2026-04-18T05:44:37.911Z",
         "file": "flow_f9c858e769f5_v7_20260418054437.json",
         "checksum": "sha256:6cb1412a051abe9e113d5d6cd70d104e189be4fb87bc37d82338c57e6b593d93",
+        "node_count": 51,
+        "tool_count": 4,
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 8,
+        "timestamp": "2026-04-20T16:47:34.899Z",
+        "file": "flow_f9c858e769f5/v8_20260420164734.json",
+        "checksum": "sha256:a5782e16f685ff8b7d5d72b301043bbf00c94ea317d8612209b921c6376d33f5",
         "node_count": 51,
         "tool_count": 4,
         "captured_by": "github-actions"

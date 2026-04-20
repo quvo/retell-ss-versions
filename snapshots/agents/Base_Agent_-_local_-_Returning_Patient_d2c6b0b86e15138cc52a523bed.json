@@ -1,0 +1,31 @@
+{
+  "agent_id": "agent_d2c6b0b86e15138cc52a523bed",
+  "channel": "voice",
+  "last_modification_timestamp": 1776219247265,
+  "agent_name": "Base Agent - local - Returning Patient",
+  "version_description": "v0: Initial creation — Returning Patient scheduling sub-agent\n\n=== Flow Structure ===\n- 9 scheduling components migrated from Base Agent: Name, DOB, Callback, Reason for Visit, Urgency, Provider Preference, Schedule Preference, Insurance Coverage, Finalization\n- 4 global components: Emergency Detection (global trigger), Transfer To Human (global trigger), End Call (global trigger), End Call (TTH exits)\n- Routing: Start → Name → DOB → Callback → Reason for Visit → Urgency → Provider Preference → Schedule Preference → Insurance Coverage → Finalization → agent_swap back to Base\n- Callback bail-out paths: Logic Split routes to End Call (call back later) or Callback Promise (clinic calls back)\n\n=== Consistency with NP/RA/CA ===\n- TTH exit conditions use equation type (tth_exit_reason == callback/end_call/continue)\n- Finalization Summary & Confirmation uses conversational style matching NP/RA\n- Callback edge prompts standardized: 'Caller wants to call back later when ready' / 'Caller wants someone from the clinic to call them back'\n\n=== Test Results ===\n- 13/13 dedicated RP tests pass (happy path, fallbacks, corrections, edge cases, global triggers, callbacks)\n- 8/8 Base Agent integration tests pass (round trip, post-scheduling, bail-out)",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 2,
+    "conversation_flow_id": "conversation_flow_23f912e46965"
+  },
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "version": 2,
+  "is_published": false,
+  "version_title": "Initial RP sub-agent",
+  "post_call_analysis_model": "gpt-4.1-mini",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "natural_filler_words": true
+  },
+  "voice_id": "11labs-Cimo",
+  "max_call_duration_ms": 3600000,
+  "normalize_for_speech": false,
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {}
+}
