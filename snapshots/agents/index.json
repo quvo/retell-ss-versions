@@ -779,5 +779,75 @@
         "captured_by": "github-actions"
       }
     ]
+  },
+  "agent_f1718cbbafbaedd5c780b097c1": {
+    "current_version": 2,
+    "agent_name": "Robin Warner Base Agent",
+    "snapshots": [
+      {
+        "version": 2,
+        "timestamp": "2026-04-21T23:07:50.658Z",
+        "file": "Robin_Warner_Base_Agent_f1718cbbafbaedd5c780b097c1.json",
+        "checksum": "sha256:e15590353624e05a63a9ff5865e8575679611e4f82b86ac34733e37dfe2bbda6",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
+  },
+  "agent_90f8288ab92e5595809d0e2bb5": {
+    "current_version": 2,
+    "agent_name": "Robin Warner Returning Patient Agent",
+    "snapshots": [
+      {
+        "version": 2,
+        "timestamp": "2026-04-21T23:07:50.707Z",
+        "file": "Robin_Warner_Returning_Patient_Agent_90f8288ab92e5595809d0e2bb5.json",
+        "checksum": "sha256:1903570ec29e953ca77acb25dddf736862a089e463a1f785feca81f8103d100c",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
+  },
+  "agent_d8bef870be3a426a64b63dabf8": {
+    "current_version": 2,
+    "agent_name": "Robin Warner New Patient Agent",
+    "snapshots": [
+      {
+        "version": 2,
+        "timestamp": "2026-04-21T23:07:50.877Z",
+        "file": "Robin_Warner_New_Patient_Agent_d8bef870be3a426a64b63dabf8.json",
+        "checksum": "sha256:524f6aadf5b2f79dcc88ad75ba4fe82fee1deb8d8bcf4a6fa7fbd4b73f865180",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
+  },
+  "agent_5c50eac6dc86a7237701d0e861": {
+    "current_version": 2,
+    "agent_name": "Robin Warner Cancel Agent",
+    "snapshots": [
+      {
+        "version": 2,
+        "timestamp": "2026-04-21T23:07:50.938Z",
+        "file": "Robin_Warner_Cancel_Agent_5c50eac6dc86a7237701d0e861.json",
+        "checksum": "sha256:ae6974e083a0086261112e5c00bffa769d037d8f9413221079eb8bbae28d9eb7",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
+  },
+  "agent_9c7d62ce3add39b5febd5fa67d": {
+    "current_version": 2,
+    "agent_name": "Robin Warner Reschedule Agent",
+    "snapshots": [
+      {
+        "version": 2,
+        "timestamp": "2026-04-21T23:07:50.998Z",
+        "file": "Robin_Warner_Reschedule_Agent_9c7d62ce3add39b5febd5fa67d.json",
+        "checksum": "sha256:0a047606bfa6588345286b26775336848a13cc877c4642c41ef61104f0cd2e9d",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      }
+    ]
   }
 }
