@@ -2970,7 +2970,7 @@
     ]
   },
   "conversation_flow_4968edbd6605": {
-    "current_version": 5,
+    "current_version": 6,
     "snapshots": [
       {
         "version": 1,
@@ -3013,6 +3013,15 @@
         "timestamp": "2026-04-21T11:06:18.942Z",
         "file": "Premier_MD_Base_Agent_-_Prod_v3_conversation_flow_4968edbd6605.json",
         "checksum": "sha256:134128a8418b1a8b2ced55cf259d83054137fd26dec62f7163cca833430c8a50",
+        "node_count": 63,
+        "tool_count": 4,
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 6,
+        "timestamp": "2026-04-21T14:56:25.505Z",
+        "file": "Premier_MD_Base_Agent_-_Prod_v3_conversation_flow_4968edbd6605.json",
+        "checksum": "sha256:ae9cd96802f286c816ee10676ba2af83af950fbffded1a4ce6795e5f29b2f0d1",
         "node_count": 63,
         "tool_count": 4,
         "captured_by": "github-actions"
