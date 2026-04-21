@@ -1,18 +1,18 @@
 {
   "agent_id": "agent_96e9b9cb4a603f2c9c7b3e2ca5",
   "channel": "voice",
-  "last_modification_timestamp": 1776712940754,
+  "last_modification_timestamp": 1776723008621,
   "agent_name": "Premier MD Returning Patient Agent",
-  "version_description": "v0: Initial creation — Returning Patient scheduling sub-agent\n\n=== Flow Structure ===\n- 9 scheduling components migrated from Base Agent: Name, DOB, Callback, Reason for Visit, Urgency, Provider Preference, Schedule Preference, Insurance Coverage, Finalization\n- 4 global components: Emergency Detection (global trigger), Transfer To Human (global trigger), End Call (global trigger), End Call (TTH exits)\n- Routing: Start → Name → DOB → Callback → Reason for Visit → Urgency → Provider Preference → Schedule Preference → Insurance Coverage → Finalization → agent_swap back to Base\n- Callback bail-out paths: Logic Split routes to End Call (call back later) or Callback Promise (clinic calls back)\n\n=== Consistency with NP/RA/CA ===\n- TTH exit conditions use equation type (tth_exit_reason == callback/end_call/continue)\n- Finalization Summary & Confirmation uses conversational style matching NP/RA\n- Callback edge prompts standardized: 'Caller wants to call back later when ready' / 'Caller wants someone from the clinic to call them back'\n\n=== Test Results ===\n- 13/13 dedicated RP tests pass (happy path, fallbacks, corrections, edge cases, global triggers, callbacks)\n- 8/8 Base Agent integration tests pass (round trip, post-scheduling, bail-out)",
+  "version_description": "v2: Premier MD conversion\n- Flow fix: removed [SA] Insurance Coverage (returning patients do not provide insurance)\n- Test updates: removed insurance references from 14 simulation test prompts and metrics\n- Identity: Bea → Ella (global prompt + End Call node)\n- Time context: wrapped bare is_open and can_schedule_same_day in {{}} (TTH Direct Request)\n- Knowledge bases: added 3 KBs (Manually added FAQs, Site w/ FAQs, General Info)\n- Integration tests: 44/44 pass on parent agent",
   "response_engine": {
     "type": "conversation-flow",
-    "version": 1,
+    "version": 2,
     "conversation_flow_id": "conversation_flow_2c103f662f04"
   },
   "language": "en-US",
   "data_storage_setting": "everything",
   "opt_in_signed_url": false,
-  "version": 1,
+  "version": 2,
   "is_published": false,
   "version_title": "Initial RP sub-agent",
   "post_call_analysis_model": "gpt-4.1-mini",
