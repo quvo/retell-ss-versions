@@ -655,7 +655,7 @@
     ]
   },
   "agent_646255208c7d7a3436cf24f490": {
-    "current_version": 5,
+    "current_version": 6,
     "agent_name": "Premier MD Base Agent - Prod v3",
     "snapshots": [
       {
@@ -671,6 +671,14 @@
         "timestamp": "2026-04-21T11:05:25.794Z",
         "file": "Premier_MD_Base_Agent_-_Prod_v3_646255208c7d7a3436cf24f490.json",
         "checksum": "sha256:6840ba63b33c521b64d611b3e562d8f63a96d49550c2b8fe1d4977d3079ee3a6",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 6,
+        "timestamp": "2026-04-21T14:55:30.986Z",
+        "file": "Premier_MD_Base_Agent_-_Prod_v3_646255208c7d7a3436cf24f490.json",
+        "checksum": "sha256:fbaf80a772e045eea3da52bcbc07da456ce4ef8dbcd3ae9c065dc01d41ec9e66",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
       }
