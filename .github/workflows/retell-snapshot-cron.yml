@@ -88,8 +88,11 @@ jobs:
           TEMP_SNAPSHOTS=$(mktemp -d)
           cp -r snapshots/* "$TEMP_SNAPSHOTS/"
 
-          # Discard local changes and switch to snapshots-archive branch
-          git checkout -- snapshots/
+          # Remove all snapshot files (including untracked) before branch switch
+          rm -rf snapshots/
+          mkdir -p snapshots/flows snapshots/agents snapshots/components
+
+          # Switch to snapshots-archive branch
           git fetch origin snapshots-archive:snapshots-archive
           git checkout snapshots-archive
 
