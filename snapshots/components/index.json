@@ -92,7 +92,7 @@
   },
   "conversation_flow_component_5e20b3d2e2d6": {
     "name": "End Call",
-    "last_checksum": "2f10eec1a418755b1daef045964ccb755d05f0aa00f156693298980e6c3c0f7c",
+    "last_checksum": "b47c66a7126d75707de8b89de687c335bf1bdd51bc62da5bfcc3dd7dd5655493",
     "snapshots": [
       {
         "timestamp": "2026-04-18T01:44:38.851Z",
@@ -105,6 +105,13 @@
         "timestamp": "2026-04-21T11:06:19.324Z",
         "file": "component_component_5e20b3d2e2d6.json",
         "checksum": "sha256:2f10eec1a418755b1daef045964ccb755d05f0aa00f156693298980e6c3c0f7c",
+        "node_count": 2,
+        "captured_by": "github-actions"
+      },
+      {
+        "timestamp": "2026-04-21T22:09:00.974Z",
+        "file": "component_component_5e20b3d2e2d6.json",
+        "checksum": "sha256:b47c66a7126d75707de8b89de687c335bf1bdd51bc62da5bfcc3dd7dd5655493",
         "node_count": 2,
         "captured_by": "github-actions"
       }
