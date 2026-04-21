@@ -1,0 +1,73 @@
+{
+  "agent_id": "agent_604a4194a4eb9fa3cbae51c89c",
+  "channel": "voice",
+  "last_modification_timestamp": 1776784311104,
+  "agent_name": "LI - Base Agent - local (copy)",
+  "version_description": "Add a global prompt for pronouncing website url correctly",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 6,
+    "conversation_flow_id": "conversation_flow_ef88f84a2653"
+  },
+  "webhook_url": "https://modernistic-lettie-acceptably.ngrok-free.dev/webhook/retellai",
+  "webhook_timeout_ms": 5000,
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "end_call_after_silence_ms": 60000,
+  "version": 6,
+  "is_published": false,
+  "version_title": "prompt for pronouncing website correctly",
+  "handbook_config": {
+    "echo_verification": false,
+    "speech_normalization": true,
+    "default_personality": true,
+    "scope_boundaries": false,
+    "natural_filler_words": false,
+    "nato_phonetic_alphabet": false,
+    "high_empathy": false,
+    "ai_disclosure": true,
+    "smart_matching": false
+  },
+  "timezone": "America/New_York",
+  "analysis_successful_prompt": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail.",
+  "analysis_summary_prompt": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call.",
+  "analysis_user_sentiment_prompt": "Evaluate user's sentiment, mood and satisfaction level.",
+  "post_call_analysis_data": [
+    {
+      "type": "system-presets",
+      "name": "call_summary",
+      "description": "Write a 1-3 sentence summary of the call based on the call transcript. Should capture the important information and actions taken during the call."
+    },
+    {
+      "type": "system-presets",
+      "name": "call_successful",
+      "description": "Evaluate whether the agent had a successful call with the user. For a successful call, the agent should have a complete conversation with user, finished the task, and have not ran into technical issues, or caused user frustration. Besides, the agent was not blocked by a call screen or encountered voicemail."
+    },
+    {
+      "type": "system-presets",
+      "name": "user_sentiment",
+      "description": "Evaluate user's sentiment, mood and satisfaction level."
+    }
+  ],
+  "voice_id": "11labs-Cimo",
+  "enable_backchannel": false,
+  "backchannel_frequency": 0.1,
+  "backchannel_words": [
+    "'yeah'",
+    "'uh-huh'"
+  ],
+  "max_call_duration_ms": 3600000,
+  "interruption_sensitivity": 0.9,
+  "ambient_sound": "coffee-shop",
+  "ambient_sound_volume": 1.42,
+  "normalize_for_speech": true,
+  "begin_message_delay_ms": 400,
+  "ring_duration_ms": 30000,
+  "user_dtmf_options": {},
+  "webhook_events": [
+    "call_ended",
+    "call_analyzed",
+    "call_started",
+    "transcript_updated"
+  ]
+}
