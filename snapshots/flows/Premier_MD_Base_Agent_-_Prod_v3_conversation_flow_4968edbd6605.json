@@ -1,6 +1,6 @@
 {
   "conversation_flow_id": "conversation_flow_4968edbd6605",
-  "version": 1,
+  "version": 5,
   "global_prompt": "## Identity\nYou are Ella, Premier MD Clinic's customer support agent. You are NOT A real person, or a human. You are a virtual assistant when asked but please sound like a natural human. You are a pleasant, excited and friendly team member caring deeply for the patients.\n\n## Time Context\nYou have access to real-time date and time information for the clinic's timezone (Eastern Time):\n- Today's date: {{current_date}}\n- Day of week: {{current_day}}\n- Current time: {{current_time}}\n- Clinic currently open: {{is_open}}\n- Can schedule same-day appointment: {{can_schedule_same_day}}\n- Next opening: {{next_open}}\n- Earliest request reviewing availability: {{next_available_for_reviewing}}\n\nYou MUST proactively mention the clinic's current status when it is relevant to the caller's request:\n- If {{is_open}} is \"No\" and {{can_schedule_same_day}} is \"Yes\": the clinic hasn't opened yet today. Mention that the clinic opens at {{next_open}} and that their request will be reviewed once the office opens. Proceed normally otherwise.\n- If {{is_open}} is \"No\" and {{can_schedule_same_day}} is \"No\": the clinic is closed and won't reopen until {{next_open}}. Tell the caller early. Do not wait for them to ask.\n- If {{is_open}} is \"Yes\" and {{can_schedule_same_day}} is \"No\": the clinic is open but same-day appointments are no longer available. Tell the caller the earliest their request can be reviewed is on {{next_available_for_reviewing}}. Do not wait for them to ask.\n- If {{is_open}} is \"Yes\" and {{can_schedule_same_day}} is \"Yes\": proceed normally.\n\nWhen {{is_open}} is \"No\" AND {{can_schedule_same_day}} is \"No\", and the caller's request requires office follow-up (e.g. appointments, prescription refills, medical questions, callback requests), let them know:\n- Their request will be reviewed on {{next_available_for_reviewing}}.\n- If it is urgent, they can contact Dr. Boguslavsky directly at 908-938-7717.\nDo NOT mention Dr. Boguslavsky's number in any other situation.\n\nNever guess or assume the day or time — always rely on the variables above.\n\n## Style Guideline\n- Be Concise: Respond succinctly, addressing one topic at most. Embrace Variety: Use diverse language and rephrasing to enhance clarity without repeating content.\n- Be Conversational: Use everyday language, making the chat feel like talking to a friend but always remain professional. Address folks by their first name. \n- Ask one question at a time. Don't ask too many in one go.\n- Adapt and Guess: Try to understand transcripts that may contain transcription errors. Avoid mentioning \"transcription error\" in the response.\n- Name Usage: Use the caller's first name naturally in conversation, but not in every response. Skip the name when it would sound forced or repetitive — especially in quick back-to-back exchanges. Never use their name twice in the same response.\n  Use the name:\n    · When greeting them or transitioning between topics\n    · When confirming important information back to them\n    · When reassuring or empathizing\n  Skip the name:\n    · In short acknowledgments (\"Got it\", \"Perfect\")\n    · When asking quick follow-up questions\n    · In back-to-back responses where you just used it\n    · When reading back a summary (use it once at the start, not throughout)\n\n## Handling General Questions Mid-Flow\n\nIf the user asks a general question about the clinic (hours, locations, insurance accepted, services, parking, what to bring, etc.) during any part of the conversation, answer it briefly using what you know, then steer back to where you were.\n\nFor example:\n- User: \"Do you accept Cigna?\" → \"Yes, Premier MD does accept Cigna! Now, back to your appointment...\"\n\n- User: \"What are your hours?\" → \"We're open Monday through Friday 7:45am to 5pm, and Saturdays 8am to 2pm. We're closed on Sundays.\" Then, if relevant, mention whether the clinic is currently open or closed based on {{is_open}}.\n\nKeep FAQ answers to one or two sentences. Do NOT go into lengthy detail. If the user wants more info, suggest they visit mypremiermd.com or ask when the clinic calls them back.\n\nDo NOT let a general question derail the current flow. \n\nAnswer it and continue.\n\n## Phone Number Rule\nNEVER suggest the caller dial (908) 450-7002 or tell them to \"call us back\" or \"call back later.\" That is the number they are currently calling — suggesting it creates a loop. Instead, always offer a callback from the clinic using the time context variables to set expectations on when they'll hear back.",
   "nodes": [
     {
@@ -61,6 +61,22 @@
           "transition_condition": {
             "type": "prompt",
             "prompt": "User mentions anything to do with wanting to schedule, reschedule, cancelling, or confirming an appointment"
+          }
+        },
+        {
+          "destination_node_id": "node-1776427191186",
+          "id": "edge-pharmacy-msg-urls",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User, who isn't a patient, is calling with question/message or request for provider (prior authorization, clarification, etc.) about a mutual's patient"
+          }
+        },
+        {
+          "destination_node_id": "node-1776647281386",
+          "id": "edge-patient-msg-urls",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User, who is a patient, is calling to send a message to their provider (medical question, update, non-urgent concern)"
           }
         },
         {
@@ -430,13 +446,73 @@
               "role": "user"
             }
           ]
+        },
+        {
+          "destination_node_id": "node-1776427191186",
+          "id": "ft-msg-ph-1",
+          "transcript": [
+            {
+              "content": "I'm calling from CVS about a prior authorization.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "destination_node_id": "node-1776427191186",
+          "id": "ft-msg-ph-2",
+          "transcript": [
+            {
+              "content": "This is Walgreens calling about a prescription.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "destination_node_id": "node-1776427191186",
+          "id": "ft-msg-ph-3",
+          "transcript": [
+            {
+              "content": "I'm a pharmacist calling about a patient's medication.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "destination_node_id": "node-1776647281386",
+          "id": "ft-msg-pa-1",
+          "transcript": [
+            {
+              "content": "I need to leave a message for my doctor.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "destination_node_id": "node-1776647281386",
+          "id": "ft-msg-pa-2",
+          "transcript": [
+            {
+              "content": "I have a question for Dr. Smith about my medication.",
+              "role": "user"
+            }
+          ]
+        },
+        {
+          "destination_node_id": "node-1776647281386",
+          "id": "ft-msg-pa-3",
+          "transcript": [
+            {
+              "content": "I'd like to send a message to my provider about my test results.",
+              "role": "user"
+            }
+          ]
         }
       ],
       "id": "node-1772566858962",
       "type": "branch",
       "display_position": {
-        "x": -1098,
-        "y": 894
+        "x": -1026,
+        "y": 918
       }
     },
     {
@@ -784,27 +860,27 @@
       },
       "edges": [
         {
-          "destination_node_id": "node-1772566858962",
-          "id": "edge-1776490279502-kd9ncgsk0",
+          "destination_node_id": "node-1773088889217",
+          "id": "edge-1776722010492-6ue54wof2",
           "transition_condition": {
             "type": "prompt",
-            "prompt": "User has fully finished stating what they need help with"
+            "prompt": "User wants to end the call"
           }
         },
         {
           "destination_node_id": "node-1773088889217",
-          "id": "edge-1776492587148-4m1mda6cl",
-          "transition_condition": {
-            "type": "prompt",
-            "prompt": "User wants to end the call "
-          }
-        },
-        {
-          "destination_node_id": "node-1773088889217",
-          "id": "edge-1776492610576-a44kpd6ry",
+          "id": "edge-1776722018388-ri0w2yubt",
           "transition_condition": {
             "type": "prompt",
             "prompt": "User says they dont need help with anything else"
+          }
+        },
+        {
+          "destination_node_id": "node-1772566858962",
+          "id": "edge-1776722025558-g2d9bgru0",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User has another request"
           }
         }
       ],
@@ -864,6 +940,16 @@
               },
               {
                 "left": "{{has_visited_transfer_to_human_flow}}",
+                "operator": "==",
+                "right": "true"
+              },
+              {
+                "left": "{{has_visited_msg_from_pharmacy}}",
+                "operator": "==",
+                "right": "true"
+              },
+              {
+                "left": "{{has_visited_msg_from_patient}}",
                 "operator": "==",
                 "right": "true"
               }
@@ -985,7 +1071,7 @@
       "type": "end",
       "speak_during_execution": true,
       "display_position": {
-        "x": -1194,
+        "x": -1050,
         "y": 270
       }
     },
@@ -1368,6 +1454,14 @@
             "type": "prompt",
             "prompt": "User goes silent for a considerable amount of time"
           }
+        },
+        {
+          "destination_node_id": "node-1776390605788",
+          "id": "edge-or-to-lmc",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User mentions they want to leave a message or has question about their own matter to a provider"
+          }
         }
       ],
       "id": "node-1773249715321",
@@ -1506,8 +1600,8 @@
       },
       "type": "branch",
       "display_position": {
-        "x": -714,
-        "y": 774
+        "x": -618,
+        "y": 750
       }
     },
     {
@@ -1941,6 +2035,22 @@
           "transition_condition": {
             "type": "prompt",
             "prompt": "User wants to confirm an appointment"
+          }
+        },
+        {
+          "destination_node_id": "node-1776427191186",
+          "id": "edge-ic-to-pharmacy-msg",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User, who isn't a patient, is calling with question/message or request for provider (prior authorization, clarification, etc.) about a mutual's patient"
+          }
+        },
+        {
+          "destination_node_id": "node-1776647281386",
+          "id": "edge-ic-to-patient-msg",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User, who is a patient, is calling to send a message to their provider (medical question, update, non-urgent concern)"
           }
         },
         {
@@ -3383,6 +3493,493 @@
           "speak_during_execution": false
         }
       ]
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "id": "fe-1776427191186-sqrps1p4i",
+          "transcript": [
+            {
+              "content": "I'll help you get this information to the provider.",
+              "role": "agent"
+            },
+            {
+              "content": "Which pharmacy are you calling from, and may I have your name and callback number?",
+              "role": "agent"
+            },
+            {
+              "content": "Which patient is this regarding? May I have their name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "What do you need from the provider - is this a prior authorization, prescription clarification, or something else?",
+              "role": "agent"
+            },
+            {
+              "content": "What specifically do you need? Please give me all the details.",
+              "role": "agent"
+            },
+            {
+              "content": "Is this urgent - is the patient waiting for this medication?",
+              "role": "agent"
+            },
+            {
+              "content": "Let me confirm I have this correct: [reads back all information]",
+              "role": "agent"
+            }
+          ]
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "## Task Instructions\n\n1. Call function `mark_visited` to set {{has_visited_msg_from_pharmacy}} to true.\n\n2. Gather the following details from the user, ONE AT A TIME. Never skip asking for these details if the user hasn't provided them yet. Always call function `extract_messages_from_pharmacy_details` to extract details from the conversation:\n    - pharmacy name\n    - pharmacy contact person\n    - pharmacy phone\n    - pharmacy fax\n    - patient name\n    - patient date of birth\n    - type of request\n    - specific details\n    - urgency\n\n3. After collecting all the details, read back all the details, say: \"Let me confirm I have this correct: [reads back all information]\"."
+      },
+      "name": "Messages to Provider from Pharmacy",
+      "edges": [
+        {
+          "destination_node_id": "node-1776429472930",
+          "id": "edge-1776427191186-0-eru9blsyy",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirmed the correctness of the information"
+          }
+        }
+      ],
+      "id": "node-1776427191186",
+      "type": "subagent",
+      "display_position": {
+        "x": 942,
+        "y": 6990
+      },
+      "tools": [
+        {
+          "name": "extract_messages_from_pharmacy_details",
+          "description": "Extract these details: pharmacy name, pharmacy contact person, pharmacy phone, pharmacy fax, patient name, patient date of birth, type of request, specific details, urgency.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "pharmacy_name",
+              "description": "Extract the name of pharmacy from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pharmacy_contact_person",
+              "description": "Extract the name of person calling from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pharmacy_phone",
+              "description": "Extract the direct callback number from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "pharmacy_fax",
+              "description": "Extract the pharmacy fax number if applicable from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "first_name",
+              "description": "Extract the patient's first name the inquiry is regarding from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "last_name",
+              "description": "Extract the patient's last name the inquiry is regarding from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "date_of_birth",
+              "description": "Extract the patient's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "message_request_type",
+              "description": "Extract the type of request (Prior authorization, clarification on prescription, refill request, substitution question, other) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "message_specific_details",
+              "description": "Extract the details of what pharmacy needs from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "message_urgency",
+              "description": "Extract the whether patient is waiting or routine from the conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        },
+        {
+          "code": "return { result: true };",
+          "timeout_ms": 30000,
+          "speak_after_execution": true,
+          "name": "mark_visited",
+          "description": "Mark has_visited_msg_from_pharmacy = true",
+          "response_variables": {
+            "has_visited_msg_from_pharmacy": "result"
+          },
+          "type": "code",
+          "speak_during_execution": false
+        }
+      ]
+    },
+    {
+      "variables": [
+        {
+          "name": "has_visited_msg_from_pharmacy",
+          "type": "boolean",
+          "description": "Whether the user has visited the \"Message to Provider from Pharmacy\" workflow"
+        },
+        {
+          "name": "pharmacy_name",
+          "type": "string",
+          "description": "Extract the pharmacy name from the conversation"
+        },
+        {
+          "name": "pharmacy_contact_person",
+          "type": "string",
+          "description": "Extract the pharmacy's contact person from the conversation"
+        },
+        {
+          "name": "pharmacy_phone",
+          "type": "string",
+          "description": "Extract the pharmacy's phone from the conversation"
+        },
+        {
+          "name": "pharmacy_fax",
+          "type": "string",
+          "description": "Extract the pharmacy's fax from the conversation"
+        },
+        {
+          "name": "first_name",
+          "type": "string",
+          "description": "Extract the patient's first name from the conversation"
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "description": "Extract the patient's last name from the conversation"
+        },
+        {
+          "name": "date_of_birth",
+          "type": "string",
+          "description": "Extract the patient's date of birth from the conversation"
+        },
+        {
+          "name": "message_request_type",
+          "type": "string",
+          "description": "Extract the type of request (Prior authorization, clarification on prescription, refill request, substitution question, other) from the conversation"
+        },
+        {
+          "name": "message_specific_details",
+          "type": "string",
+          "description": "Extract the details of what pharmacy needs from the conversation"
+        },
+        {
+          "name": "message_urgency",
+          "type": "string",
+          "description": "Extract the whether patient is waiting or routine from the conversation"
+        }
+      ],
+      "else_edge": {
+        "destination_node_id": "node-1776393547444",
+        "id": "node-1776429472930-else-edge",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Messages to Provider from Pharmacy Details",
+      "edges": [],
+      "id": "node-1776429472930",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 1662,
+        "y": 6918
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Set expectation, say: \"I'll send this to Dr. [name]'s team immediately, and you should hear back soon.\""
+      },
+      "name": "Set expectation (Messages From Pharmacy)",
+      "edges": [],
+      "id": "node-1776393547444",
+      "type": "conversation",
+      "display_position": {
+        "x": 2166,
+        "y": 7110
+      },
+      "skip_response_edge": {
+        "destination_node_id": "node-1773066410086",
+        "id": "skip-response-edge-1776430240766-zx4o7khuu",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        }
+      }
+    },
+    {
+      "finetune_conversation_examples": [
+        {
+          "id": "fe-1776648004883",
+          "transcript": [
+            {
+              "content": "I can help you get a message to your provider.",
+              "role": "agent"
+            },
+            {
+              "content": "Before we continue, is this an urgent medical issue or emergency?",
+              "role": "agent"
+            },
+            {
+              "content": "May I have your name and date of birth?",
+              "role": "agent"
+            },
+            {
+              "content": "Which provider is this message for?",
+              "role": "agent"
+            },
+            {
+              "content": "What is this regarding - a medication question, test results, symptoms, or something else?",
+              "role": "agent"
+            },
+            {
+              "content": "Please go ahead and tell me your question or message.",
+              "role": "agent"
+            },
+            {
+              "content": "Do you need a response today, or is 2-3 business days okay?",
+              "role": "agent"
+            },
+            {
+              "content": "Would you like the provider to call you back, or is a message response okay?",
+              "role": "agent"
+            },
+            {
+              "content": "What's the best number to reach you?",
+              "role": "agent"
+            },
+            {
+              "content": "Let me make sure I have this right: [repeats message]. Is that correct?",
+              "role": "agent"
+            }
+          ]
+        }
+      ],
+      "instruction": {
+        "type": "prompt",
+        "text": "## Task Instructions\n\n1. Call function `mark_visited` to set {{has_visited_msg_from_patient}} to true.\n\n2. Gather the following details from the user, ONE AT A TIME. Never skip asking for these details if the user hasn't provided them yet. Always call function `extract_messages_from_patient_details` to extract details from the conversation:\n    - full name\n    - date of birth\n    - provider name\n    - message type\n    - message content\n    - urgency level\n    - callback preference (Whether user prefers phone call back or message response)\n    - callback number\n\n3. After collecting all the details, confirms message content with the user, say: \"Let me make sure I have this right: [repeats message]. Is that correct?\"."
+      },
+      "name": "Messages to Provider from Patient",
+      "edges": [
+        {
+          "destination_node_id": "node-1776650208623",
+          "id": "edge-1776647281386-0-7r4ega1kn",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User confirmed the correctness of the information"
+          }
+        }
+      ],
+      "id": "node-1776647281386",
+      "type": "subagent",
+      "display_position": {
+        "x": 942,
+        "y": 7734
+      },
+      "tools": [
+        {
+          "name": "extract_messages_from_patient_details",
+          "description": "Extract these details: name, date of birth, provider name, message type, message content, urgency level, callback preference, callback number.",
+          "variables": [
+            {
+              "type": "string",
+              "name": "first_name",
+              "description": "Extract the user's first name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "last_name",
+              "description": "Extract the user's last name from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "date_of_birth",
+              "description": "Extract the user's date of birth from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "provider_name",
+              "description": "Extract which provider the message is for from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "message_type",
+              "description": "Extract the type of message (medication question, test results question, symptom update, form/documentation request, other) from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "message_content",
+              "description": "Extract the actual message/question in user's own words from the conversation"
+            },
+            {
+              "type": "string",
+              "name": "urgency",
+              "description": "Extract the urgency level from the conversation. Routine (response in 2-3 business days), urgent (same day response needed), or emergency (needs immediate attention)"
+            },
+            {
+              "type": "string",
+              "name": "callback_preference",
+              "description": "Extract from the conversation whether patient prefers phone call back or message response"
+            },
+            {
+              "type": "string",
+              "name": "callback_number",
+              "description": "Extract the best callback number from the conversation"
+            }
+          ],
+          "type": "extract_dynamic_variable",
+          "speak_after_execution": true
+        },
+        {
+          "code": "return { result: true };",
+          "timeout_ms": 30000,
+          "speak_after_execution": true,
+          "name": "mark_visited",
+          "description": "Mark has_visited_msg_from_patient = true",
+          "response_variables": {
+            "has_visited_msg_from_patient": "result"
+          },
+          "type": "code",
+          "speak_during_execution": false
+        }
+      ]
+    },
+    {
+      "variables": [
+        {
+          "name": "has_visited_msg_from_patient",
+          "type": "boolean",
+          "description": "Whether the user has visited the \"Message to Provider from Patient\" workflow"
+        },
+        {
+          "name": "first_name",
+          "type": "string",
+          "description": "Extract the patient's first name from the conversation"
+        },
+        {
+          "name": "last_name",
+          "type": "string",
+          "description": "Extract the patient's last name from the conversation"
+        },
+        {
+          "name": "date_of_birth",
+          "type": "string",
+          "description": "Extract the patient's date of birth from the conversation"
+        },
+        {
+          "name": "urgency",
+          "type": "string",
+          "description": "Extract the urgency level from the conversation. Routine (response in 2-3 business days), urgent (same day response needed), or emergency (needs immediate attention)"
+        },
+        {
+          "name": "provider_name",
+          "type": "string",
+          "description": "Extract which provider the message is for from the conversation"
+        },
+        {
+          "name": "message_type",
+          "type": "string",
+          "description": "Extract the type of message (medication question, test results question, symptom update, form/documentation request, other) from the conversation"
+        },
+        {
+          "name": "message_content",
+          "type": "string",
+          "description": "Extract the actual message/question in user's own words from the conversation"
+        },
+        {
+          "name": "callback_preference",
+          "type": "string",
+          "description": "Extract from the conversation whether patient prefers phone call back or message response"
+        },
+        {
+          "name": "callback_number",
+          "type": "string",
+          "description": "Extract the best callback number from the conversation"
+        }
+      ],
+      "else_edge": {
+        "destination_node_id": "node-1776648036681",
+        "id": "else_edge-1776650208623-1-ifz17pj0d",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "name": "Extract Messages to Provider from Patient Details",
+      "edges": [],
+      "id": "node-1776650208623",
+      "type": "extract_dynamic_variables",
+      "display_position": {
+        "x": 1662,
+        "y": 7686
+      }
+    },
+    {
+      "instruction": {
+        "type": "prompt",
+        "text": "Set expectation, say: \"Your message will go to Dr. [name]'s team, and you should hear back soon.\""
+      },
+      "name": "Set expectation (Messages From Patient)",
+      "edges": [],
+      "id": "node-1776648036681",
+      "type": "conversation",
+      "display_position": {
+        "x": 2190,
+        "y": 7806
+      },
+      "skip_response_edge": {
+        "destination_node_id": "node-1773066410086",
+        "id": "skip_response_edge-1776648036681-2-wnl6a3fih",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Skip response"
+        }
+      }
+    },
+    {
+      "else_edge": {
+        "destination_node_id": "node-1776647281386",
+        "id": "edge-1776391230024-zkpiv8jw1",
+        "transition_condition": {
+          "type": "prompt",
+          "prompt": "Else"
+        }
+      },
+      "instruction": {
+        "type": "prompt",
+        "text": "Infer from the conversation with the user so far. If it's unclear that the user is calling from the pharmacy or calling about the mutual patient, ask for clarification about where they're calling from."
+      },
+      "name": "Leaving Message Clarification",
+      "edges": [
+        {
+          "destination_node_id": "node-1776427191186",
+          "id": "edge-1776390605788-hmemoaw7t",
+          "transition_condition": {
+            "type": "prompt",
+            "prompt": "User clarifies that they're calling from the pharmacy or is calling about mutual patient"
+          }
+        }
+      ],
+      "id": "node-1776390605788",
+      "type": "conversation",
+      "display_position": {
+        "x": 534,
+        "y": 6366
+      }
     }
   ],
   "components": [
@@ -6467,24 +7064,38 @@
     "high_priority": false
   },
   "default_dynamic_variables": {
+    "has_visited_msg_from_patient": "false",
+    "pharmacy_contact_person": "",
     "has_completed_sa_flow": "false",
-    "has_completed_ra_flow": "false",
-    "emergency_exit_reason": "",
+    "pharmacy_fax": "",
     "date_of_birth": "",
     "has_started_ra_flow": "false",
     "has_visited_general_information_flow": "false",
-    "tth_exit_reason": "",
-    "last_name": "",
+    "has_visited_msg_from_pharmacy": "false",
+    "message_specific_details": "",
     "has_visited_other_request_flow": "false",
     "has_visited_sa_general_information_flow": "false",
     "has_visited_transfer_to_human_flow": "false",
     "has_visited_confirm_appointment_flow": "false",
+    "message_content": "",
     "has_started_ca_flow": "false",
-    "has_visited_emergency_flow": "false",
     "has_completed_ca_flow": "false",
+    "pharmacy_name": "",
     "prev_node": "welcome",
+    "pharmacy_phone": "",
+    "callback_number": "",
+    "provider_name": "",
     "first_name": "",
-    "has_started_sa_flow": "false"
+    "has_started_sa_flow": "false",
+    "has_completed_ra_flow": "false",
+    "emergency_exit_reason": "",
+    "tth_exit_reason": "",
+    "message_urgency": "",
+    "last_name": "",
+    "message_type": "",
+    "message_request_type": "",
+    "has_visited_emergency_flow": "false",
+    "callback_preference": ""
   },
   "knowledge_base_ids": [
     "knowledge_base_a577cdffa2f953cc",

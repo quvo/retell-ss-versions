@@ -1,22 +1,22 @@
 {
   "agent_id": "agent_646255208c7d7a3436cf24f490",
   "channel": "voice",
-  "last_modification_timestamp": 1776713043948,
+  "last_modification_timestamp": 1776724107920,
   "agent_name": "Premier MD Base Agent - Prod v3",
-  "version_description": "Flow v52 changes:\n- Switched 4 'End Call' nodes from local component (component_b5365747cd30) to shared component (conversation_flow_component_5e20b3d2e2d6) for consistent end-call behavior.\n- Returning Node (node-1773066400352): replaced unconditional always_edge with a guarded edge that only fires when 'User has fully finished stating what they need help with', preventing premature progression.\n- NP Agent Transfer Node (node-np-agent-transfer): removed agent_version pin (0 -> null) so transfers now go to the latest published New Patient agent, matching Cancel behavior.\n- Minor cosmetic display_position adjustments on Welcome Node and Extract Caller Identity.",
+  "version_description": "v5: Post-conversion refinements\n- Builds on v4 (Premier MD conversion — final)\n- Additional edits to parent flow after 44/44 integration test verification",
   "response_engine": {
     "type": "conversation-flow",
-    "version": 1,
+    "version": 5,
     "conversation_flow_id": "conversation_flow_4968edbd6605"
   },
-  "webhook_url": "https://aviatic-leanora-sprawly.ngrok-free.dev/webhook/retellai",
+  "webhook_url": "https://smartsupport.ubiehealth.com/webhook/retellai",
   "webhook_timeout_ms": 5000,
   "language": "en-US",
   "data_storage_setting": "everything",
   "end_call_after_silence_ms": 60000,
-  "version": 1,
+  "version": 5,
   "is_published": false,
-  "version_title": "End Call shared + Returning gating + NP transfer to latest",
+  "version_title": "Add Messages to Provider flows (Pharmacy + Patient) with Leaving Message Clarification routing",
   "handbook_config": {
     "natural_filler_words": true,
     "speech_normalization": true

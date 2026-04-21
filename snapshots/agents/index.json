@@ -655,7 +655,7 @@
     ]
   },
   "agent_646255208c7d7a3436cf24f490": {
-    "current_version": 1,
+    "current_version": 5,
     "agent_name": "Premier MD Base Agent - Prod v3",
     "snapshots": [
       {
@@ -665,11 +665,19 @@
         "checksum": "sha256:6782c27654d38f43071c86a2fec350eba68363cd830863ced9f1179d19d72c05",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 5,
+        "timestamp": "2026-04-21T11:05:25.794Z",
+        "file": "Premier_MD_Base_Agent_-_Prod_v3_646255208c7d7a3436cf24f490.json",
+        "checksum": "sha256:6840ba63b33c521b64d611b3e562d8f63a96d49550c2b8fe1d4977d3079ee3a6",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
     ]
   },
   "agent_96331cc9dd80f3e54e40575774": {
-    "current_version": 2,
+    "current_version": 3,
     "agent_name": "Premier MD Reschedule Agent",
     "snapshots": [
       {
@@ -679,11 +687,19 @@
         "checksum": "sha256:0ef34b15dee233276087459b0e159e2a01bf93553d3aa60b952e6cc5ef122d9f",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 3,
+        "timestamp": "2026-04-21T11:05:26.047Z",
+        "file": "Premier_MD_Reschedule_Agent_96331cc9dd80f3e54e40575774.json",
+        "checksum": "sha256:602a08851c9d82b60970a4248ea7b23a1e194c3488c4ff5be3a806b3ffbc9538",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
     ]
   },
   "agent_96e9b9cb4a603f2c9c7b3e2ca5": {
-    "current_version": 1,
+    "current_version": 2,
     "agent_name": "Premier MD Returning Patient Agent",
     "snapshots": [
       {
@@ -693,11 +709,19 @@
         "checksum": "sha256:5e2625c4beadbfa5ece14c04fbbd5350011385e575d4f0f1a75656b06c879924",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 2,
+        "timestamp": "2026-04-21T11:05:25.855Z",
+        "file": "Premier_MD_Returning_Patient_Agent_96e9b9cb4a603f2c9c7b3e2ca5.json",
+        "checksum": "sha256:147e12fd8bbd800c575f854f18c9f15bb19e16c5e76d0d59f647ea76b7c58285",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
     ]
   },
   "agent_6188eb77e703fafb960e53ae6d": {
-    "current_version": 1,
+    "current_version": 2,
     "agent_name": "Premier MD New Patient Agent",
     "snapshots": [
       {
@@ -707,11 +731,19 @@
         "checksum": "sha256:ac0a3924f0ec9b6eaebedfb723d6253f59ccab8510e9fdce8038d4845d53186c",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
+      },
+      {
+        "version": 2,
+        "timestamp": "2026-04-21T11:05:25.895Z",
+        "file": "Premier_MD_New_Patient_Agent_6188eb77e703fafb960e53ae6d.json",
+        "checksum": "sha256:6ecaeb00423b23694b15798c074031dead4ecc51e79fbba654b2a83cee36ba10",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
       }
     ]
   },
   "agent_7db26b2c83394f235affd72488": {
-    "current_version": 1,
+    "current_version": 2,
     "agent_name": "Premier MD Cancel Agent",
     "snapshots": [
       {
@@ -719,6 +751,14 @@
         "timestamp": "2026-04-20T19:48:02.979Z",
         "file": "Premier_MD_Cancel_Agent_7db26b2c83394f235affd72488.json",
         "checksum": "sha256:6f0cd4899dff0398f4dac00d5f310460a7267295e6c25473d30878171031623d",
+        "voice_id": "11labs-Cimo",
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 2,
+        "timestamp": "2026-04-21T11:05:25.935Z",
+        "file": "Premier_MD_Cancel_Agent_7db26b2c83394f235affd72488.json",
+        "checksum": "sha256:6b922464220e18744e74d8d1b274289d7a66daa8f9fe3a4c45eb760f5bd8f860",
         "voice_id": "11labs-Cimo",
         "captured_by": "github-actions"
       }
