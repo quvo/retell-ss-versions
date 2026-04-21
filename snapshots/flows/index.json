@@ -2819,7 +2819,7 @@
     ]
   },
   "conversation_flow_ef88f84a2653": {
-    "current_version": 5,
+    "current_version": 6,
     "snapshots": [
       {
         "version": 1,
@@ -2863,6 +2863,15 @@
         "file": "flow_ef88f84a2653/v5_20260420025516.json",
         "checksum": "sha256:5dc089a2d74ca38af47c1790cef0e213a170216d050c700076997fe4f869cd5a",
         "node_count": 65,
+        "tool_count": 4,
+        "captured_by": "github-actions"
+      },
+      {
+        "version": 6,
+        "timestamp": "2026-04-21T15:42:00.795Z",
+        "file": "LI_-_Base_Agent_-_local_copy_conversation_flow_ef88f84a2653.json",
+        "checksum": "sha256:6c04c0ce3f56312a8308b25793178525054f8ed6b78b2c001bcbb1dab1814e6a",
+        "node_count": 67,
         "tool_count": 4,
         "captured_by": "github-actions"
       }
