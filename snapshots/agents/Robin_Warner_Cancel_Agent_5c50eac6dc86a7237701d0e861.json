@@ -1,0 +1,32 @@
+{
+  "agent_id": "agent_5c50eac6dc86a7237701d0e861",
+  "channel": "voice",
+  "last_modification_timestamp": 1776812591397,
+  "agent_name": "Robin Warner Cancel Agent",
+  "version_description": "v1 — Initial Robin Warner Neurology setup. Copied from base agent with client customization.",
+  "response_engine": {
+    "type": "conversation-flow",
+    "version": 2,
+    "conversation_flow_id": "conversation_flow_4a2e47938bba"
+  },
+  "language": "en-US",
+  "data_storage_setting": "everything",
+  "opt_in_signed_url": false,
+  "version": 2,
+  "is_published": false,
+  "version_title": "v1 — Robin Warner Initial",
+  "post_call_analysis_model": "gpt-4.1-mini",
+  "pii_config": {
+    "mode": "post_call",
+    "categories": []
+  },
+  "handbook_config": {
+    "natural_filler_words": true,
+    "speech_normalization": false
+  },
+  "voice_id": "11labs-Cimo",
+  "max_call_duration_ms": 3600000,
+  "normalize_for_speech": false,
+  "allow_user_dtmf": true,
+  "user_dtmf_options": {}
+}
